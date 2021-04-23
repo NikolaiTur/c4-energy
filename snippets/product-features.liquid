@@ -1,0 +1,30 @@
+{% if product.metafields.c4energy.features_title %}
+	<div id="product-features" {% if product.metafields.c4energy.product_features_image != blank %} style="background-image:url('{{ product.metafields.c4energy.product_features_image }}')" {% endif %}>
+		<div class="container-fluid container-fluid--extra">
+			{% if product.metafields.c4energy.product_features_title != blank %}
+				<h2 class="product-features-title">{{ product.metafields.c4energy.product_features_title }}</h2>
+			{% endif %}
+			<div id="product-features--wrapper" class="hidden-xs hidden-sm hidden-md">
+				{% for feature in product.metafields.c4energy.feature_title %}
+					<div class="product-feature">
+						<h3 class="feature-title">{{ feature }}</h3>
+						<h4 class="feature-subtitle">{{ product.metafields.c4energy.feature_subtitle[forloop.index0] }}</h4>
+						<p class="feature-description">{{ product.metafields.c4energy.feature_description[forloop.index0] }}</p>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid visible-xs visible-sm visible-md">
+		<div id="product-features--wrapper">
+			{% for feature in product.metafields.c4energy.feature_title %}
+				<div class="product-feature">
+					<h3 class="feature-title">{{ feature }}</h3>
+					<h4 class="feature-subtitle">{{ product.metafields.c4energy.feature_subtitle[forloop.index0] }}</h4>
+					<p class="feature-description">{{ product.metafields.c4energy.feature_description[forloop.index0] }}</p>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endif %}

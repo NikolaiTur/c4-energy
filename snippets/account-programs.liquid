@@ -1,0 +1,127 @@
+{% assign colors = 'Military:#72A279|Medical:#7F776C|First-Responder:#D44864|University:#357B90' | split: '|' %}
+
+{%- include 'svg-sheerid' -%}
+{%- assign sheer_id_programs = 'Military:5f2c26032bb48118d149e19c|Medical:5f32f7a44f87a518a191a8f6|First-Responder:5f2c26ed2bb48118d149ed6b|University:5e4c56d5f7bd641b8cb93eb8' | split: '|' -%}
+
+{%- assign sheer_verified = false -%}
+{%- assign sheer_classification = false -%}
+{% for tag in customer.tags %}
+	{% if tag contains "SheerID" %}
+		{% if tag contains "Verified" %}
+			{%- assign sheer_verified = true -%}
+		{% endif %}
+
+		{% unless tag contains "Verified" %}
+			{%- assign sheer_classification = tag | remove: "SheerID-" -%}
+		{% endunless %}
+	{% endif %}
+{% endfor %}
+
+{% assign email_with_tags = '<strong>' | append: customer.email | append: '</strong>' %}
+
+<div class="account__profile account__programs">
+	<h2 class="account__profile__title">Special Programs</h2>
+	
+	<p>Be sure to use the same email as your account when registering: <strong>{{ customer.email }}</strong>.</p>
+
+	<div class="account__programs__list">
+		{% for program in sheer_id_programs %}
+			{% assign program_name = program | split: ':' | first %}
+			{% assign program_svg_id = program_name | handleize | append: '-trial' %}
+			{% assign program_title = program_name | replace: '-', ' ' | capitalize -%}
+			{% assign program_id = program | split: ':' | last -%}
+			{% for color in colors %}
+				{% if color contains program_name %}
+					{% assign program_color = color | split: ':' | last %}
+				{% endif %}
+			{% endfor %}
+
+			{%- if sheer_classification and sheer_classification contains program_name -%}
+				{% capture program_link_attrs %}
+					class="account__programs__list__card is-verified" href="#"
+				{% endcapture %}
+			{%- else -%}
+				{% capture program_link_attrs %}
+					class="account__programs__list__card {% if sheer_verified %}is-complete{% endif %}" {% unless sheer_verified %}href="https://services.sheerid.com/verify/{{program_id}}/" data-sheerid-iframe="true"{% endunless %}
+			 	{% endcapture %}
+			{%- endif -%}
+
+			<a {{program_link_attrs}} data-program="{{program_name | handleize}}" style="background-color: {{ program_color }};">
+				{%- comment -%}<svg class="verify-icon" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100"><use xlink:href="#{{program_svg_id}}"></use></svg>{%- endcomment -%}
+				<div class="account__programs__list__card__icon">
+					<img src="{{ program_name | handleize | prepend: 'account-programs-' | append: '.svg' | asset_url }}" alt="{{ program_title }}">
+				</div>
+				
+				<p class="account__programs__list__card__title">{{program_title}}</p>
+			</a>
+		{% endfor %}
+
+
+	</div>
+</div>
+
+<!-- Sheer ID Scripts -->
+<script src="https://services.sheerid.com/jsapi/SheerID.js"></script> 
+<script> SheerID.setBaseUrl("https://services.sheerid.com/jsapi"); SheerID.load('iframe', '1.2', { config : { lightbox: true, mobileRedirect: false, mobileThreshold: 600, top: '25px', closeBtnRight: '25px' } }); </script> <script src="https://cdn.jsdelivr.net/npm/@sheerid/jslib@1/sheerid.js"></script> 
+<script> sheerId.conversion.listenForVerificationId(); </script>
+
+
+<!-- <div class="mt-4">
+	{% comment %}{%- include 'programs-sheerid' -%}{% endcomment %}
+
+	<div>
+
+
+		<div class="account-card mb-4">
+			<p class="mtn">
+			    <span class="d-block mb-3">Be sure to use the same email as your account when registering: <strong>{{customer.email}}</strong>.</span>
+			</p>
+
+			<p>
+				{% if sheer_classification %}
+					{% capture classification_with_icon %}
+						<svg class="account__program__icon" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100"><use xlink:href="#{{sheer_classification | handleize | append: '-trial'}}"></use></svg>{{sheer_classification}}
+					{% endcapture %}
+
+					{{classification_with_icon}}
+				{% else %}
+					Unverified
+				{% endif %}
+			</p>
+		</div>
+		
+
+		<div class="row">
+			{% for program in sheer_id_programs %}
+				{% assign program_name = program | split: ':' | first %}
+				{% assign program_svg_id = program_name | handleize | append: '-trial' %}
+				{% assign program_title = program_name | replace: '-', ' ' | capitalize -%}
+				{% assign program_id = program | split: ':' | last -%}
+
+				{%- if sheer_classification and sheer_classification contains program_name -%}
+					{% capture program_link_attrs %}
+						class="account__card--program is-verified" href="#"
+					{% endcapture %}
+				{%- else -%}
+					{% capture program_link_attrs %}
+					 	class="account__card--program {% if sheer_verified %}is-complete{% endif %}" {% unless sheer_verified %}href="https://services.sheerid.com/verify/{{program_id}}/" data-sheerid-iframe="true"{% endunless %}
+				 	{% endcapture %}
+				{%- endif -%}
+
+				<div class="col-12 col-md-6 col-lg-3 mb-4">
+					<a {{program_link_attrs}} data-program="{{program_name | handleize}}">
+						<svg class="verify-icon" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100"><use xlink:href="#{{program_svg_id}}"></use></svg>
+
+						<p style="text-transform: uppercase;">{{program_title}}</p>
+					</a>
+				</div>
+			{% endfor %}
+		</div>
+
+		<script src="https://services.sheerid.com/jsapi/SheerID.js"></script> 
+		<script> SheerID.setBaseUrl("https://services.sheerid.com/jsapi"); SheerID.load('iframe', '1.2', { config : { lightbox: true, mobileRedirect: false, mobileThreshold: 600, top: '25px', closeBtnRight: '25px' } }); </script> <script src="https://cdn.jsdelivr.net/npm/@sheerid/jslib@1/sheerid.js"></script> 
+		<script> sheerId.conversion.listenForVerificationId(); </script>
+	</div>
+</div>
+
+ -->

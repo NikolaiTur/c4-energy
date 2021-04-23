@@ -1,0 +1,130 @@
+{%- if section.settings.enabled and section.blocks.size > 0 -%}
+	<section class="eyebrow-callout">
+		<div class="container-fluid">
+			<div class="eyebrow-slider">
+				{%- for block in section.blocks -%}
+					{%- if block.settings.callout_enabled -%}
+						{%- assign blurb_target = block.settings.callout_blurb_info | sha1 -%}
+						{%- assign blurb_target = blurb_target | prepend: "eyebrow-" -%}
+						<div class="eyebrow-callout__slide">
+							<p>
+								{{block.settings.callout_text | remove: '<p>'  | remove: '</p>'}}&nbsp;<span style="border-bottom: dotted 1px; font-style:italic;"{% if block.settings.callout_blurb_reveal_text != "" %}data-toggle="modal" data-target="#{{blurb_target}}"{% endif %}>{{block.settings.callout_blurb_reveal_text | remove: '<p>'  | remove: '</p>' }}</span>
+							</p>
+						</div>
+					{%- endif -%}
+				{%- endfor -%}
+			</div>
+		</div>
+	</section>
+
+	{%- if section.settings.neochrome_animate_enabled -%}
+		{%- assign neo_aqua = '#28F3FA' -%}
+		{%- assign neo_purple = '#A538A8' -%}
+		{%- assign neo_grey = '#B3B3B3' -%}
+
+		<style>
+			@keyframes gradientSwitch {
+			  0% {
+			    background-position: 0% 50%;
+			  }
+			  50% {
+			    background-position: 100% 50%;
+			  }
+			  100% {
+			    background-position: 0% 50%;
+			  }
+			}
+			.eyebrow-callout {
+				background-color: #CE375C;
+				background: -webkit-linear-gradient(right, {{neo_aqua}}, {{neo_purple}});
+				background: -o-linear-gradient(right, {{neo_aqua}}, {{neo_purple}});
+				background: linear-gradient(270deg, {{neo_aqua}}, {{neo_purple}});
+				background-size: 400% 400%;
+				-webkit-animation: gradientSwitch 15s ease infinite;
+          		animation: gradientSwitch 7s ease infinite;
+			}
+		</style>
+	{%- endif -%}
+
+	{%- if section.blocks.size > 0 -%}
+		{%- for block in section.blocks -%}
+			{%- if block.settings.callout_enabled -%}
+				{%- assign blurb_target = block.settings.callout_blurb_info | sha1 -%}
+				{%- assign blurb_target = blurb_target | prepend: "eyebrow-" -%}
+
+				<div class="modal fade" id="{{blurb_target}}" tabindex="-1" role="dialog" aria-hidden="true">
+				  
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+
+				      	<h4 class="m-0">{{block.settings.title}}</h4>
+				        <button class="eyebrow-modal-close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <div class="modal-body eyebrow-modal-body">
+				        {{block.settings.callout_blurb_info}}
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			{%- endif -%}
+		{%- endfor -%}
+	{%- endif -%}
+
+{%- endif -%}
+
+{% schema %}
+	{
+	  	"name": "Eyebrow Callout",
+	  	"class": "shopify-section-eyebrow-callout",
+	  	"settings": [
+	    	{
+	      		"type": "checkbox",
+	      		"id": "enabled",
+	      		"label": "Enabled?",
+	      		"default": false
+	    	},
+	    	{
+	          "type": "checkbox",
+	          "id": "neochrome_animate_enabled",
+	          "label": "Enable Neochrome Animation",
+	          "default": false
+	        }
+	  	],
+	    "blocks": [
+		    {
+		      "type": "url",
+		      "name": "Callout",
+		      "settings": [
+		        {
+		          "type": "checkbox",
+		          "id": "callout_enabled",
+		          "label": "Enable Callout"
+		        },
+		        {
+		          "type": "text",
+		          "id": "title",
+		          "label": "Callout Title"
+		        },
+		        {
+		          "type": "richtext",
+		          "id": "callout_text",
+		          "label": "Callout Text"
+		        },
+		        {
+		          "type": "richtext",
+		          "id": "callout_blurb_reveal_text",
+		          "label": "Callout Blurb Reveal Text"
+		        },
+		        {
+		          "type": "richtext",
+		          "id": "callout_blurb_info",
+		          "label": "Callout Blurb (more info)"
+		        }
+		      ]
+		    }
+	  	]
+	}
+{% endschema %}

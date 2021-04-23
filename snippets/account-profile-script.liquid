@@ -1,0 +1,311 @@
+{% assign customer_email_encoded = customer.email | url_encode %}
+{% assign customer_email_hash = customer.email | hmac_sha256: profile_secret %}
+
+<script type="text/javascript">
+  const profileConfig = {
+    // progress: document.querySelector(".js-profile-progress"),
+    // percentageProgress: document.querySelector(".js-profile-percent"),
+    // verbalProgress: document.querySelector(".js-profile-verbal"),
+    formFields: document.querySelectorAll(".js-profile-field"),
+    profileReveal: document.querySelector(".js-profile-reveal"),
+    phoneError: document.querySelector(".js-profile-phone-error"),
+    submitButton: document.querySelector(".js-profile-submit"),
+    loadingHTML: document.querySelector(".js-profile-loading"),
+    profileMessage: document.querySelector(".js-profile-message"),
+    animationElem: document.querySelector(".js-profile-animation"),
+    containerElem: document.querySelector(".js-profile-container"),
+    completedClass: 'is-complete'
+  };
+
+  // function updateProgress( res ) {
+  //   if ( res ) {
+  //     profileConfig.progress.style.width = `${res.completion_percentage}%`;
+  //     profileConfig.percentageProgress.innerHTML = `${Math.round(res.completion_percentage)}%`;
+  //     profileConfig.verbalProgress.innerHTML = `${res.completed_questions}/${res.total_questions}`;
+  //   }
+  // }
+
+  function populateForm( res ) {
+
+    // The button is disabled by default, then on change, we change it to true. 
+    profileConfig.submitButton.disabled = true; 
+    $('.js-profile-field').on('change', function(event) {
+        profileConfig.submitButton.disabled = false; 
+    }); 
+
+    if ( res ) {
+      const answeredQuestions = res.answered_questions;
+      const accountDescription = document.querySelector(".js-account-description");
+
+      // as a side item, we populate the id with the klaviyo ID from the form. 
+      $('.js-profile-field[name=id]').val( res.id ); 
+
+      if ( res.completion_percentage == 100 && accountDescription) {
+        accountDescription.style.display = 'none';
+      }
+
+      if ( answeredQuestions ) {
+        for (let i = 0; i < profileConfig.formFields.length; i++) {
+          let field = profileConfig.formFields[i];
+          let fieldName = field.getAttribute('name');
+          let fieldMatch = Object.keys(answeredQuestions).indexOf(fieldName) != -1;
+
+          // If Exists
+          if ( fieldMatch ) {
+            switch(field.type) {
+              case 'checkbox':
+                if (answeredQuestions[fieldName] == 'true' ) {
+                  field.checked = true;
+                } else {
+                  let multipleAnswers = answeredQuestions[fieldName].split(",");
+
+                  if ( multipleAnswers.indexOf(field.value) != -1 ) {
+                    field.checked = true;
+                  }
+                }
+
+                break;
+              case 'radio':
+                if ( answeredQuestions[fieldName] == field.value ) field.checked = true;
+
+                break;
+              case 'select-one':
+                // code block
+                field.value = answeredQuestions[fieldName];
+                break;
+              case 'text':
+                field.value = answeredQuestions[fieldName];
+                
+                break;
+              case 'tel':
+                if (answeredQuestions[fieldName] != 'false') iti.setNumber(answeredQuestions[fieldName]);
+
+                break;
+            }
+          }
+
+          // if ( fieldName === 'profile_phone_consent' && field.checked ) {
+          //   field.style.pointerEvents = "none";
+          // } else if (fieldName === 'profile_phone_consent' && !field.checked) {
+          //   field.style.pointerEvents = "all";
+          // }
+        }
+      }
+    }
+  }
+
+  function setElements ( complete ) {
+    let innerButtonHTML = complete ? profileConfig.submitButton.dataset.label : profileConfig.loadingHTML.innerHTML;
+
+    profileConfig.submitButton.innerHTML = innerButtonHTML;
+    profileConfig.submitButton.disabled = true; // after a submit, we always disable the button, until an input is changed. 
+  }
+
+  function setServerMessage ( message ) {
+    profileConfig.profileMessage.innerHTML = message ? message : '';
+  }
+
+  function congratulateUser () {
+    profileConfig.animationElem.classList.add(profileConfig.completedClass)
+  }
+
+  function profileCall( postRequest, formData, initialLoad ) {
+    formData = formData || null;
+    initialLoad = false || initialLoad;
+
+    let method = postRequest ? "POST" : "GET";
+
+    // if ( !postRequest ) {
+    //   // Toggle elems
+    //   // document.querySelector('#profile-progress').classList.remove('is-hidden');
+    // }
+
+    var requestObj = {
+      type: method,
+      headers: {
+        'customer-hash': '{{ customer_email_hash }}', 
+      }, 
+      dataType: 'json', 
+      beforeSend: function(xhrObj){
+        setElements( false );
+      },
+      success: function(res) {
+        // updateProgress(res);
+        {% unless klaviyo_profile_id %}
+        if(!postRequest){
+          window.location.reload();
+        }
+        {% endunless %}
+        if ( !postRequest ) populateForm(res);
+        if ( res.first_time ) congratulateUser();
+      },
+      complete: function (res) {
+        setElements( true );
+
+        let message = res.responseJSON ? res.responseJSON.message : profileConfig.profileMessage.dataset.successMessage;
+
+        if ( postRequest && res.status == 200 ) {
+          setServerMessage(message);
+        }
+      },
+      error: function (res) {
+        console.log("Error:");
+        console.log(res);
+
+        // if ( res.status == 422 ) {
+        //   updateProgress(res.responseJSON);
+        // }
+
+        if ( res.status == 404 ) {
+          profileConfig.containerElem.style.display = 'none';
+        } else {
+          if ( res.responseJSON && res.responseJSON.message ) setServerMessage(res.responseJSON.message);
+        }
+      }
+    };
+    
+    let rootURI = 'https://nb-api-gateway.herokuapp.com/api/klaviyo';
+    let routeParam = `?email={{customer_email_encoded}}`;
+
+    if ( postRequest ) {
+        requestObj.url = rootURI + '/post-profile'; 
+    } else { // it is GET. 
+        {% if klaviyo_profile_id %}
+          routeParam += `{% if customer.metafields.klaviyo_profile_complete and customer.metafields.klaviyo_profile_complete != ''%}&profile_check=true{% endif %}{% if klaviyo_profile_id %}&id={{klaviyo_profile_id}}{% endif %}`;
+        {% endif %}
+
+        requestObj.url = `${rootURI}/get-profile${routeParam}`;
+    }
+
+    if ( formData ) {
+      requestObj.data = formData; 
+      // requestObj.data = JSON.stringify(formData); 
+    }
+
+    if ( initialLoad ) {
+      profileConfig.profileReveal.click();
+    }
+
+    $.ajax(requestObj);
+    
+  }
+
+  function getProfile() {
+    profileCall( initialLoad = true );
+  }
+
+  function appendToObject( obj, key, value ) {
+    if ( obj[key] ) {
+      let initialValue = obj[key];
+
+      obj[key] = `${initialValue},${value}`;
+    } else {
+      obj[key] = value;
+    }
+  }
+
+  function createRequestData() {
+    let dataObj = {};
+
+    Array.from(profileConfig.formFields).filter((field)=>{
+      let fieldKey = field.getAttribute("name");
+      // console.log(fieldKey); 
+
+      if ( field.type == 'checkbox' ) {
+        if ( field.value == 'true' || field.value == 'false' ) {
+          let fieldStatus = field.checked;
+
+          if ( field.checked ) dataObj[fieldKey] = JSON.parse(field.value);
+        } else {
+          let selectedOptions = Array.from(document.querySelectorAll(`[name="${fieldKey}"]`)).filter((item)=>{
+            return item.checked;
+          })
+
+          if ( !selectedOptions.length && !field.checked ) {
+            dataObj[fieldKey] = 'unselected';
+          } else if ( field.checked ) {
+            appendToObject( dataObj, fieldKey, field.value);
+          }
+        }
+      } 
+      else if ( field.type == 'radio' ) {
+        if ( field.checked ) dataObj[fieldKey] = JSON.parse(field.value);
+      } else if ( field.type == 'select' ) {
+        if ( field.value != '' ) appendToObject( dataObj, fieldKey, field.value );
+      } else {
+        if (field.value != '') appendToObject( dataObj, fieldKey, field.value );
+      }
+      return field.value;
+    })
+
+    // TODO: Refactor?
+    if ( !dataObj.profile_phone_consent ) dataObj.profile_phone_consent = false;
+
+    return dataObj;
+  }
+
+  function postToProfile() {
+    
+    var formData = createRequestData();
+
+    if( typeof iti !== 'undefined') {
+      var validNumber = iti.isValidNumber();
+
+      // Validate
+      if ( iti.a.value ) {
+        if ( !validNumber ) {
+          let errorNumber = iti.getValidationError();
+
+          let foundError = Object.keys(intlTelInputUtils.validationError).filter((key)=>{
+            return intlTelInputUtils.validationError[key] === errorNumber;
+          })[0];
+
+          if ( foundError ) {
+            let foundErrorFormatted = foundError.replace("_", " ").toLowerCase();
+
+            togglePhoneError(foundErrorFormatted);
+          }
+        } else {
+          formData.profile_country = iti.s.iso2;
+          formData.profile_phone = iti.getNumber();
+
+          togglePhoneError(false);
+
+          profileCall(true, formData);
+        }
+      } else {
+        togglePhoneError(false);
+        profileCall(true, formData);
+      }
+    } else {
+        profileCall(true, formData);
+    }
+
+    // console.log(formData)
+  }
+
+  function togglePhoneError ( message ) {
+    if ( message ) {
+      profileConfig.phoneError.innerHTML = message;
+      profileConfig.phoneError.classList.remove("is-hidden");
+    } else {
+      profileConfig.phoneError.classList.add("is-hidden");
+    }
+  }
+
+  // This loads the initial profile call. 
+  profileCall(false, initialLoad = true );
+</script>
+
+{% comment %}
+  profile_phone: true,
+  profile_gender: true,
+  profile_student: true,
+  profile_fitness_goals: true,
+  profile_stimulant_tolerance: true,
+  profile_frequent_shop_location: true,
+  profile_drink_rtd: true,
+  profile_instagram_handle: false,
+  profile_facebook_handle: false,
+  profile_twitter_handle: false 
+{% endcomment %}

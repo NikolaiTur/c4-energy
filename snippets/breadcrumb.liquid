@@ -1,0 +1,58 @@
+<div id="breadcrumb--wrapper">
+<div class="container-fluid">
+<nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+  <a href="/"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="15" height="13" viewBox="0 0 15 13"><image id="Vector_Smart_Object" data-name="Vector Smart Object" width="15" height="13" xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAANCAQAAADcF/zKAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAKqNIzIAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAHdElNRQfkCB8WEAArYjKvAAAArklEQVQY03XOsUqCcRTG4ceChrZ2l0avw6GhqxAEr8BLUHButsAbcGlIugRdm3L4QHBw+gaXJHwbTPpb9hvPw+EcfmoY+DTQMBLvTrr0JLbi0YOoSrz2LKbuTMXHkS/AjVf3xpZeLI1dlZtNb2JoIiImhqLWhJaVvb7ZN0bM9O2ttFjb6VoUGLHQtbOmo23+CyPm2jqH69UZLj4/1nOrVw5OeaOy+Z//dOD6jNTwBZI8VPUin2Z2AAAAAElFTkSuQmCC"/></svg></a>
+  {% if template contains 'page' %}
+    {% if template.suffix == 'brain-body-bundle' %}
+      <span aria-hidden="true">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+      <span>Bundles</span>
+    {% endif %}
+    <span aria-hidden="true">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+    <span class="current-page">{{ page.title }}</span>
+  {% elsif template contains 'product' %}
+    {% comment %}
+    {% if collection.url %}
+      <span aria-hidden="true">&rsaquo;</span>
+      {{ collection.title | link_to: collection.url }}
+    {% endif %}
+    {% endcomment %}
+    
+    {% assign current_collection = product.collections[1] %}
+    {% comment %} We are using product.collections[1] because the 'first' collection is 'ALL' {% endcomment %}
+    {% if current_collection.url %}
+      <span aria-hidden="true">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+      <span>{{ current_collection.title | link_to: current_collection.url }}</span>
+    {% endif %}
+    <span aria-hidden="true">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+    <span class="current-page">{{ product.title }}</span>
+  {% elsif template contains 'collection' and collection.handle %}
+    <span aria-hidden="true">&rsaquo;</span>
+    {% if current_tags %}
+      {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+      {{ collection.title | link_to: url }}
+      <span aria-hidden="true">&rsaquo;</span>
+      <span>{{ current_tags | join: " + " }}</span>
+    {% else %}
+      <span>{{ collection.title }}</span>
+    {% endif %}
+  {% elsif template == 'blog' %}
+    <span aria-hidden="true">&rsaquo;</span>
+    {% if current_tags %}
+      {{ blog.title | link_to: blog.url }}
+      <span aria-hidden="true">&rsaquo;</span>
+      <span>{{ current_tags | join: " + " }}</span>
+    {% else %}
+    <span>{{ blog.title }}</span>
+    {% endif %}
+  {% elsif template == 'article' %}
+    <span aria-hidden="true">&rsaquo;</span>
+    {{ blog.title | link_to: blog.url }}
+    <span aria-hidden="true">&rsaquo;</span>
+    <span>{{ article.title }}</span>
+  {% else %}
+   <span aria-hidden="true">&rsaquo;</span>
+   <span>{{ page_title }}</span>
+  {% endif %}
+  </div>
+</nav>
+</div></div>

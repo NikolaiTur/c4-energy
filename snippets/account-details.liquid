@@ -1,0 +1,134 @@
+{% comment %}<h2 class="account__heading">{{ 'customer.account.details_heading' | t }}</h2> 
+{% endcomment %}
+
+{%- assign customer_hash = customer.email | remove: ' ' | strip_newlines | downcase | md5 -%}
+{%- assign customer_gravatar_img = 'https://www.gravatar.com/avatar/' | append: customer_hash | append: '?s=200' -%}
+{%- assign default_image = 'account-silhouette.jpg' | asset_url -%}
+{%- assign default_image_encoded = 'https:' | append: default_image | url_encode -%}
+
+<div class="account__overview__mobile-heading">
+  <div>
+    <img class="account__overview__mobile-heading__image" src="{{customer_gravatar_img}}&d={{default_image_encoded}}">
+  </div>
+  <div>
+    <p class="account__overview__mobile-heading__image">{{ customer.name }}</p>
+  </div>
+</div>
+
+<section class="account__overview__details account-card mt-4">
+  <h3 class="account__subheading">{{customer.name}}</h3>
+  <div class="row">
+    <div class="col col-third">
+      <div class="info">
+        <span class="d-block">
+          <strong>Email</strong>
+        </span>
+        <span class="d-block">
+          {{customer.email}}
+        </span>
+      </div>
+      {%- comment -%}
+            <div class="info">
+        <span class="d-block">
+          <strong>Password</strong>
+        </span>
+        <span class="d-block">
+          ********
+        </span>
+        <div class="edit">
+          <i class="fas fa-edit"></i> <a class="account-link" href="/account/">Change Password</a>
+        </div>
+      </div>
+      {%- endcomment -%}
+    </div>
+    <div class="col col-third">
+      <div class="info">
+        <span class="d-block">
+          <strong>Address</strong>
+        </span>
+        {% if customer.default_address != nil %}
+          <span class="d-block">
+            {{ customer.default_address.address1 }}
+          </span>
+
+          <span class="d-block">
+            {% if customer.default_address.address2 != "" %}
+              {{ customer.default_address.address2 }}
+            {% endif %}
+          </span>
+
+          <span class="d-block">
+            {% if customer.default_address.city != "" %}
+              {{ customer.default_address.city }},
+            {% endif %}
+
+            {% if customer.default_address.province_code != "" %}
+              {{ customer.default_address.province_code | upcase }},
+            {% endif %}
+
+            {% if customer.default_address.zip != "" %}
+              {{ customer.default_address.zip | upcase }}
+            {% endif %}
+          </span>
+
+          <span class="d-block">
+            {% if customer.default_address.country != "" %}
+              {{ customer.default_address.country }}<br>
+            {% endif %}
+          </span>
+
+          <span class="d-block">
+            {% if customer.default_address.phone != "" %}
+              {{ customer.default_address.phone }}
+            {% endif %}
+          </span>
+        {% else %}
+          <span class="d-block">
+            {{ 'customer.addresses.none' | t | default: "No addresses found"}}
+          </span>
+        {% endif %}
+        <div class="edit">
+          <i class="fas fa-edit"></i> <a class="account-link" href="/account/addresses">Manage Address</a>
+        </div>
+      </div>
+
+    </div>
+    <div class="col col-third">
+      {%- if settings.loyalty_status_display_enabled -%}
+      <div class="account__loyalty">
+        
+        <div class="user__avatar big">
+          <a class="account-image__link" href="https://en.gravatar.com/site/login" target="_blank">
+            <img class="account-image" src="{{customer_gravatar_img}}&d={{default_image_encoded}}">
+          </a>
+        </div>
+        {%- if customer.metafields.loyaltylion.loyalty_tier -%}
+        <div class="account-tag {{ customer.metafields.loyaltylion.loyalty_tier | handleize }}" data-tier="{{customer.metafields.loyaltylion.loyalty_tier}}"><a href="/account?view=loyalty"><i class="fas fa-medal"></i> {{customer.metafields.loyaltylion.loyalty_tier}}</a></div>
+        {%- else -%}
+        <div class="account-tag"><a href="/account?view=loyalty"><i class="fas fa-medal"></i> <span></span></a></div>
+        {%- endif -%}
+        <div class="account-points">
+          <span id="stamped-rewards-points-placeholder" data-type="points-only" class="account-points__value"></span>
+          <span class="account-points__suffix">{{settings.loyalty_points}}</span>
+        </div>
+      </div>
+        
+      {%- endif -%}
+
+    </div>
+  </div>
+</section>
+<section class="account__shortcuts">
+  <a href="/account?view=order-history" class="col" style="background-image: url({{'account-order-history-bg.jpg' | asset_url }});">
+    <i class="fas fa-shopping-bag"></i>
+    <h4>{{ 'customer.orders.title' | t }}</h4>
+  </a>
+  <a href="/account?view=profile" class="col" style="background-image: url({{'account-profile-bg.jpg' | asset_url }});">
+    <i class="fas fa-user"></i>
+    <h4>{{ 'layout.customer.account_profile'| t }}</h4>
+  </a>
+  <a href="/tools/recurring/login/" class="col" style="background-image: url({{'account-manage-subscription-bg.jpg' | asset_url }});">
+    <i class="fas fa-redo-alt"></i>
+    <h4>{{ 'layout.customer.manage_subscriptions'| t }}</h4>
+  </a>
+</section>

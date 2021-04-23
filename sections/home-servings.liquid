@@ -1,0 +1,49 @@
+<section id="home-servings" role="contentinfo">
+	<div id="home-servings--wrapper">    
+    <div class="container-fluid">
+      {% if section.settings.home_servings_title != blank %}
+        <h2 class="home-servings--title text-upper"><span>{{ section.settings.home_servings_title }}</span></h2>
+      {% endif %}
+
+      {% if section.settings.home_servings_content != blank %}
+        <p class="home-servings--content">{{ section.settings.home_servings_content }}</p>
+      {% endif %}
+
+      {% if section.settings.home_servings_footnote != blank %}
+        <p class="home-servings--footnote">{{ section.settings.home_servings_footnote }}</p>
+      {% endif %}
+    </div>
+	</div>
+</section>
+
+
+
+{% schema %}
+{
+  "name": "Home Servings",
+  "settings": [ 
+    {
+      "type": "text",
+      "id": "home_servings_title",
+      "label": "Title"
+    },
+    {
+      "type": "textarea",
+      "id": "home_servings_content",
+      "label": "Content"
+    },
+    {
+      "type": "textarea",
+      "id": "home_servings_footnote",
+      "label": "Footnote"
+    }
+  ],
+  "presets": [
+    {
+      "category": "Homepage",
+      "name": "Home Servings",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

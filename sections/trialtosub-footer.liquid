@@ -1,0 +1,17 @@
+<div class="trialtosub__footer">
+    <div class="container-fluid">
+        {{ section.settings.footer_content | replace: '|year|', year }}
+    </div>
+</div>
+{% schema %}
+{
+    "name": "Page Footer",
+    "settings": [
+        {
+            "type": "html",
+            "id": "footer_content",
+            "label": "Footer content"
+        }
+    ]
+}
+{% endschema %}

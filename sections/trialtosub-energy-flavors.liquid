@@ -1,0 +1,85 @@
+{% if section.settings.enable %}
+{% assign flavor_count = section.blocks.size %}
+
+<div id="product-flavors">	
+	<div class="image-container">
+		{% if section.settings.background_image %}
+			<img src="{{ section.settings.background_image | img_url: '2000x' }}" class="objfit" alt="{{ section.settings.background_image.alt }}">
+		{% endif %}
+	</div>
+
+	<div class="product-flavors--wrapper">
+		<div class="product-flavors--left">
+			<h2 class="flavors-title"><span>Try All</span><br/>{{ flavor_count }} Flavors</h2>
+
+				{% if section.blocks.size > 0 %}
+                    <div id="flavor-info--slider">
+                        {% for block in section.blocks %}
+                            <div class="flavor-info">
+                                <div class="flavor-info--content">
+                                    <h3 class="flavor-item-title">{{ block.settings.title }}</h3>
+                                    <p class="flavor-item-description">{{ block.settings.body }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div id="flavor-info--navigation"></div>
+				{% endif %}
+		</div>
+		<div class="product-flavors--right">
+				{% if section.blocks.size > 0 %}
+				<div id="flavor-image--slider">
+					{% for block in section.blocks %}
+						<div class="flavor-image--item">
+							<img src="{{ block.settings.image | img_url: '800x' }}" alt="{{ block.settings.image.alt }}" class="flavor-image">
+						</div>
+					{% endfor %}
+				</div>
+				{% endif %}
+		</div>
+	</div>
+</div>
+{% endif %}
+
+{% schema %}
+{
+    "name": "Flavors",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "enable",
+            "label": "Enable Flavors",
+            "default": true
+        },
+        {
+            "type": "image_picker",
+            "id": "background_image",
+            "label": "Background Image"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "flavor",
+            "name": "Flavor",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title"
+                },
+                {
+                    "type": "textarea",
+                    "id": "body",
+                    "label": "Body"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

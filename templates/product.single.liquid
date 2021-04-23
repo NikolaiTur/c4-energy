@@ -1,0 +1,24 @@
+{% render 'shogun-products', content: product %}
+{{product.metafields.shogun.above}}
+{% include 'elspw_product' %}
+<!-- /templates/product.single.liquid -->
+{% comment %}
+  The contents of the product.single.liquid template can be found in /sections/product-template-single.liquid
+{% endcomment %}
+
+{% include 'breadcrumb' %}
+{% section 'product-template-single' %}
+{% include 'product-testimonial' %}
+{% include 'product-benefits' %}
+{% include 'product-ingredients' %}
+<div class="single-details">
+{% include 'product-details' %}
+</div>
+{% include 'product-features' %}
+{% section 'product-recommendations' %}
+{% include 'product-custom-reviews' %}
+{% include 'product-reviews' %}
+
+
+{{product.metafields.shogun.below}}
+

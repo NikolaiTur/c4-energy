@@ -1,0 +1,19 @@
+{% if product.metafields.c4energy.benefit_title != blank %}
+	<div id="product-benefits">
+		<div class="container-fluid container-fluid--extra">
+			<div id="product-benefits--wrapper">
+				{% for benefit in product.metafields.c4energy.benefit_title limit: 4 %}
+					<div class="product-benefit">
+						<div class="product-benefit--left">
+							{{ product.metafields.c4energy.benefit_icon[forloop.index0] }}
+						</div>
+						<div class="product-benefit--right">
+							<p class="benefit-title text-upper">{{ benefit }}</p>
+							<p class="benefit-description">{{ product.metafields.c4energy.benefit_description[forloop.index0] }}</p>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+{% endif %}

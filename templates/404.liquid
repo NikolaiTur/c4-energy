@@ -1,0 +1,10 @@
+<!-- /templates/404.liquid -->
+
+<div id="c4-page">
+	<header class="section-header section-header--404 text-center">
+  		<h1 class="h2">{{ 'general.404.title' | t }}</h1>
+  		<p>{{ 'general.404.subtext_html' | t: link: routes.root_url }}</p>
+	</header>
+</div>
+
+{% include 'SEOManager-404' %}

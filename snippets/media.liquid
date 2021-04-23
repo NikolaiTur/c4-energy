@@ -1,0 +1,66 @@
+{% comment %}
+  Renders a media element for the product gallery.
+  Media types include: image, video, external_video and model.
+  Accepts:
+  - media: {Object} Media Liquid object (required)
+  - enable_image_zoom: {Boolean} Image zoom setting (required for media type image)
+  - stacked: {Boolean} Layout type set as stacked (required)
+  - featured: {Boolean} Media is set as featured (required)
+  - height: {Number} Height to be passed to the image-style snippet
+  - width: {Number} Width to be passed to the image-style snippet
+
+  Usage:
+  {%- for media in product.media -%}
+    {% include 'media', media: media, enable_image_zoom: true, featured: true, stacked: true %}
+  {%- endfor -%}
+{% endcomment %}
+
+{% capture media_id %}{{ section.id }}-{{ media.id }}{% endcapture %}
+{% capture img_id_class %}product-single__media-{{ media_id }}{% endcapture %}
+{% capture wrapper_id %}ProductMediaWrapper-{{ media_id }}{% endcapture %}
+{% capture image_size %}{{ height }}x{{ height }}{% endcapture %}
+
+<div id="{{ wrapper_id }}" class="product-single__media-wrapper {% unless stacked or featured %} hide{% endunless %}"
+{% if media.media_type == 'video' or media.media_type == 'external_video' %} data-product-media-type-video data-enable-video-looping="{{ section.settings.enable_video_looping }}"{% endif %}
+{% if media.media_type == 'model' %} data-product-media-type-model{% endif %}
+{% if media.media_type == 'external_video' %} data-video-id="{{ media.external_id }}"{% endif %}
+data-product-single-media-wrapper
+data-media-id="{{ media_id }}"
+tabindex="-1">
+  {% case media.media_type %}
+  {% when 'image' %}
+    {% include 'image-style' with image: media, width: width, height: height, small_style: true, wrapper_id: wrapper_id, img_id_class: img_id_class %}
+    <div class="product-single__media" style="padding-top:{{ 1 | divided_by: media.aspect_ratio | times: 100}}%;">
+      {% assign img_url = media | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+      <img class="mfp-image lazyload {{ img_id_class }}"
+        src="{{ media | img_url: '300x300' }}"
+        data-src="{{ img_url }}"
+        data-widths="[180, 360, 590, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+        data-aspectratio="{{ media.aspect_ratio }}"
+        data-sizes="auto"
+        {% if enable_image_zoom %} data-mfp-src="{{ media | img_url: '1024x1024' }}"{% endif %}
+        data-media-id="{{ media.id }}"
+        alt="{{ media.alt | escape }}">
+    </div>
+  {% when 'external_video' %}
+    <div class="product-single__media product-single__media--video" style="padding-top: {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%;">
+      {{ media | external_video_tag }}
+    </div>
+  {% when 'video' %}
+    <div class="product-single__media product-single__media--video" style="padding-top: {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%;">
+      {{ media | video_tag: controls: false, class: 'media-video', image_size: image_size }}
+    </div>
+  {% when 'model' %}
+    <div class="product-single__media" style="padding-top:100%;">
+      {{ media | model_viewer_tag: image_size: image_size, reveal: 'interaction', toggleable: true, data-model-id: media.id}}
+    </div>
+  {% else %}
+    <div class="product-single__media" style="padding-top: {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%;">
+      {{ media | media_tag: class: 'media-item', image_size: image_size }}
+    </div>
+  {% endcase %}
+  <noscript>
+    <img class="product-single__media" src="{{ media | img_url: 'master' }}"
+      alt="{{ media.alt | escape }}">
+  </noscript>
+</div>

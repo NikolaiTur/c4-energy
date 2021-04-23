@@ -1,0 +1,14 @@
+{% if product.metafields.c4energy.testimonial_description != blank %}
+	<div id="product-testimonial">
+		<div class="container-fluid container-fluid--extra">
+			<div id="product-testimonial--wrapper">
+				<blockquote class="testomonial-description">
+					“{{ product.metafields.c4energy.testimonial_description }}”
+				</blockquote>
+				{% if product.metafields.c4energy.testimonial_name != blank %}
+				<p class="testomonial-name">{{ product.metafields.c4energy.testimonial_name }} - Verified reviewer</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+{% endif %}

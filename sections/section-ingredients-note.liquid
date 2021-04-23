@@ -1,0 +1,32 @@
+<!-- Ingredients Note -->
+<div class="container-fluid">
+	<div id="ingredients-note">
+	    <div id="ingredients-note--content">
+	      	{% for block in section.blocks %}
+	        	<div class="ingredient-note text-upper">{{ block.settings.ingredient_note }}</div>
+	      	{% endfor %}
+	    </div>
+	</div>
+</div>
+
+{% schema %}
+{
+  "name": "Ingredients Note",
+  "max_blocks": 3,
+  "settings": [ 
+  ],
+  "blocks": [
+    {
+      "type": "note",
+      "name": "Note",
+      "settings": [
+        {
+          "type": "text",
+          "id": "ingredient_note",
+          "label": "Ingredient Note"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

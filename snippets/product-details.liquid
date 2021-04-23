@@ -1,0 +1,40 @@
+<div id="product-details">
+	<div id="product-details--left">
+		{% if product.metafields.c4energy.product_detail_image != blank %}
+			<div class="image-container">
+				<img src="{{ product.metafields.c4energy.product_detail_image }}" class="product-details-img img-responsive">
+
+				{% if product.metafields.c4energy.product_detail_text != blank %}
+					<h2 class="product-details-text">{{ product.metafields.c4energy.product_detail_text }}</h2>
+				{% endif %}
+			</div>
+		{% endif %}
+	</div>
+	<div id="product-details--right">
+		{% assign accordion_list_links = 'Details|Use|Nutrition Label|Warning' | split: "|" %}
+		{% assign product_includes = 'product-copy|product-use-global|product-nutrition-label|product-warning' | split: "|" %}
+
+		<div id="product-details--accordion">
+			{% for link in accordion_list_links %}
+				{% if product.tags contains 'hide-use' and link == 'Use' %}
+					{% continue %}
+				{% endif %}
+				{% if product.tags contains 'hide-label' and link == 'Nutrition Label' %}
+					{% continue %}
+				{% endif %}
+				{% if product.tags contains 'hide-warning' and link == 'Warning' %}
+					{% continue %}
+				{% endif %}
+				
+				{% assign target =  'product-' | append: link | downcase | handelize %}
+				{% assign include = product_includes[forloop.index0] %}
+
+				<div class="accordion-group {% if forloop.index == 1 %}active{% endif %}">
+					<div class="accordion-trigger">{{ link }}</div>
+					<div class="accordion-content">{%- include include -%}</div>
+				</div>
+
+			{% endfor %}
+		</div>
+	</div>
+</div>

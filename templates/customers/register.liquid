@@ -1,0 +1,55 @@
+<!-- /templates/customers/register.liquid -->
+
+<script type="text/javascript">
+  const accountPath = 'https://my.nutrabolt.com/register';
+  const userLocation = sessionStorage.getItem('userReturnLocation') || '{{shop.url}}';
+  const userPath = `${accountPath}?redirect=${encodeURIComponent(userLocation)}`
+
+  {% if customer %}
+    window.location = '/account';
+  {% else %}
+    window.location = userPath;
+  {% endif %}
+</script>
+
+{% comment %}
+<div id="account-page">
+  <div class="page-content">
+    <div class="container-fluid">
+
+      <header class="section-header">
+        <h1 class="text-upper h2 text-center">{{ 'customer.register.title' | t }}</h1>
+      </header>
+
+      <div class="form-vertical">
+        {% form 'create_customer' %}
+
+        {{ form.errors | default_errors }}
+
+        <label for="FirstName" class="hidden-label">{{ 'customer.register.first_name' | t }}</label>
+        <input type="text" name="customer[first_name]" id="FirstName" class="input-full" placeholder="{{ 'customer.register.first_name' | t }}" {% if form.first_name %}value="{{ form.first_name }}"{% endif %} autocapitalize="words" autofocus>
+
+        <label for="LastName" class="hidden-label">{{ 'customer.register.last_name' | t }}</label>
+        <input type="text" name="customer[last_name]" id="LastName" class="input-full" placeholder="{{ 'customer.register.last_name' | t }}" {% if form.last_name %}value="{{ form.last_name }}"{% endif %} autocapitalize="words">
+
+        <label for="Email" class="hidden-label">{{ 'customer.register.email' | t }}</label>
+        <input type="email" name="customer[email]" id="Email" class="input-full{% if form.errors contains 'email' %} error{% endif %}" placeholder="{{ 'customer.register.email' | t }}" {% if form.email %} value="{{ form.email }}"{% endif %} autocorrect="off" autocapitalize="off">
+
+        <label for="CreatePassword" class="hidden-label">{{ 'customer.register.password' | t }}</label>
+        <input type="password" name="customer[password]" id="CreatePassword" class="input-full{% if form.errors contains 'password' %} error{% endif %}" placeholder="{{ 'customer.register.password' | t }}">
+
+        <div class="form-action-container">
+          <input type="submit" value="{{ 'customer.register.submit' | t }}" class="c4-btn medium yellow">
+        </div>
+
+        <a href="{{ shop.url }}">{{ 'customer.register.cancel' | t }}</a>
+
+      {% endform %}
+    </div>
+  </div>
+
+  </div>
+
+</div>
+
+{% endcomment %}

@@ -1,0 +1,59 @@
+<section id="home-textwithcta" role="contentinfo">
+  {% if section.settings.home_textwithcta_background_image != blank %}
+    <img src="{{ section.settings.home_textwithcta_background_image | img_url: 'master' }}" class="objfit"><div class="home-textwithcta--overlay"></div>
+  {% endif %}
+
+	<div id="home-textwithcta--wrapper">    
+    <div class="container-fluid">
+      {% if section.settings.home_textwithcta_content != blank %}
+        <h3 class="home-textwithcta--content text-upper">{{ section.settings.home_textwithcta_content }}</h3>
+      {% endif %}
+
+      {% if section.settings.home_textwithcta_cta_label != blank and section.settings.home_textwithcta_cta_url != blank %}
+        <a class="c4-btn home-textwithcta--cta" href="{{ section.settings.home_textwithcta_cta_url }}">{{ section.settings.home_textwithcta_cta_label }}{% if section.settings.home_textwithcta_cta_sublabel != blank %}<span>{{ section.settings.home_textwithcta_cta_sublabel }}</span>{% endif %}</a>
+      {% endif %}
+    </div>
+	</div>
+</section>
+
+
+
+{% schema %}
+{
+  "name": "Home Text with CTA",
+  "settings": [ 
+    {
+      "type": "textarea",
+      "id": "home_textwithcta_content",
+      "label": "Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "home_textwithcta_background_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "home_textwithcta_cta_label",
+      "label": "CTA Label"
+    },
+    {
+      "type": "text",
+      "id": "home_textwithcta_cta_sublabel",
+      "label": "CTA Sublabel"
+    },
+    {
+      "type": "url",
+      "id": "home_textwithcta_cta_url",
+      "label": "CTA Url"
+    }
+  ],
+  "presets": [
+    {
+      "category": "Homepage",
+      "name": "Home Text with CTA",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

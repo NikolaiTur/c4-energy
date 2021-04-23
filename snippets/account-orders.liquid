@@ -1,0 +1,51 @@
+
+{% assign customer_order_limit = settings.pagination_customer_orders | default: orders_per_page %}
+
+<h2 class="account__subheading mt4">Recent Orders</h2>
+
+{% paginate customer.orders by customer_order_limit %}
+
+  {% if customer.orders.size != 0 %}
+  <div class="account-card recents">
+    <ul class="account-orders__list" id="order-history">
+      {% for order in customer.orders %}
+
+        {%- assign subscription_order = false -%}
+        {%- for item in order.line_items -%}
+          {%- comment -%}Check for subscription{%- endcomment -%}
+          {%- for prop in item.properties -%}
+            {%- if prop contains product_subscription_key -%}
+              {%- assign subscription_order = true -%}
+              {% break %}
+            {%- endif %}
+          {%- endfor %}
+        {%- endfor %}
+
+        <li>
+          <div class="row">
+            <div class="order-content">
+              <div class="order-infos row">
+                <div class="col"><strong>Order #</strong><span>
+                  
+                  <a href="{{ order.order_status_url }}" target="_blank">{{ order.name | remove: '#' }}</a>
+                  <!-- <a href="{{ order.customer_url }}" target="_blank">{{ order.name | remove: '#' }}</a> -->
+                </span></div>
+                <div class="col"><strong>Shipped To</strong><span>{{ order.shipping_address.first_name }} {{ order.shipping_address.last_name }}</span></div>
+                <div class="col"><strong>Total</strong><span>{{ order.total_net_amount | money }}</span></div>
+                <div class="col"><strong>Status</strong><span>{{ order.financial_status_label }}/{{ order.fulfillment_status_label }}</span></div>
+              </div>
+            </div>
+            <div class="order-actions col">
+              <a href="{{ order.order_status_url }}" target="_blank" class="order-status-link">View Order</a>
+            </div>
+          </div>
+        </li>
+
+      {%- endfor %}
+    </ul>
+  </div>
+  {% else %}
+    <p>{{ 'customer.orders.none' | t }}</p>
+  {% endif %}
+  
+{% endpaginate %}

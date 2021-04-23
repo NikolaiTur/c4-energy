@@ -1,0 +1,88 @@
+<div class="trialtosub__features">
+    <h2 class="text-center trialtosub__features__title">{{ section.settings.title }}</h2>
+    <div class="trialtosub__features__inner">
+        <div class="trialtosub__features__image">
+            <img src="{{ section.settings.image | img_url: '1000x' }}" alt="{{ section.settings.image.alt }}">
+        </div>
+        <div class="trialtosub__features__content">
+            <div class="trialtosub__features__list">
+                {% for block in section.blocks %}
+                <div class="trialtosub__features__feature">
+                    <div>
+                        <div class="trialtosub__features__feature__header">
+                            <div class="trialtosub__features__feature__header__titles">
+                                <h3>{{ block.settings.title }}</h3>
+                                <h5>{{ block.settings.subtitle }}</h5>
+                            </div>
+                            <div class="trialtosub__features__feature__header__icons">
+                                {% if block.settings.icon != blank %}
+                                    <span class="icon">{{ block.settings.icon }}</span>
+                                {% endif %}
+                                {% if block.settings.icon2 != blank %}
+                                    <span class="icon">{{ block.settings.icon2 }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <p>{{ block.settings.body }}</p>
+                    </div>
+                </div>    
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% schema %}
+{
+    "name": "Features",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Image",
+            "default": "Elevate<br><span>Your Energy</span>"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "feature",
+            "name": "Feature",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title"
+                },
+                {
+                    "type": "text",
+                    "id": "subtitle",
+                    "label": "subtitle"
+                },
+                {
+                    "type": "textarea",
+                    "id": "body",
+                    "label": "Body"
+                },
+                {
+                    "type": "html",
+                    "id": "icon",
+                    "label": "First Icon",
+                    "info": "Paste the SVG code."
+                },
+                {
+                    "type": "html",
+                    "id": "icon2",
+                    "label": "Second Icon",
+                    "info": "Paste the SVG code."
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,5 @@
+{% if product.metafields.c4energy.warnings != blank %}
+  <p>{{ product.metafields.c4energy.warnings }}</p>
+{% else %}
+  {% include 'product-warning-global' %}
+{% endif %}

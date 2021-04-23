@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="{{ 'intlTelInput.css' | asset_url }}">
+
+<style>
+  .iti__flag {
+    height: 15px;
+    box-shadow: 0px 0px 1px 0px #888;
+    background-image: url("{{'flags.png' | asset_url}}");
+    background-repeat: no-repeat;
+    background-color: #DBDBDB;
+    background-position: 20px 0; 
+  }
+
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .iti__flag {
+      background-image: url("{{'flags@2x.png' | asset_url}}"); } 
+  }
+</style>
+
+<script src="{{ 'intlTelInput.min.js' | asset_url }}"></script>
+
+<script>
+  const telInput = document.querySelector('.js-intl-phone');
+
+  const iti = window.intlTelInput(telInput, {
+    initialCountry: "us",
+    utilsScript: "{{ 'intlTelInput.utils.js' | asset_url }}"
+  });
+</script>

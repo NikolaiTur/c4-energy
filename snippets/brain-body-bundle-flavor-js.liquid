@@ -1,0 +1,277 @@
+{%- assign recharge_id = all_products[section.settings.bundle_brain_product].selected_or_first_available_variant.metafields.subscriptions.discount_variant_id | append: all_products[section.settings.bundle_body_product].selected_or_first_available_variant.metafields.subscriptions.discount_variant_id -%}
+
+{% if section.settings.future_item_image -%}
+  {%- assign future_image_path = section.settings.future_item_image | img_url: 'original' -%}
+{% else -%}
+{%- assign future_image_path = section.settings.future_item_image_path -%}
+{%- endif -%}
+
+<script type="text/javascript">
+
+var rechargeTrialInformation = {
+  id: {{recharge_id}},
+  disclaimer: "{{section.settings.future_message_content }}",
+  heading: "{{section.settings.future_message_heading}}",
+  image_path: "{{future_image_path}}",
+  item_heading: "{{section.settings.future_item_heading}}",
+  regular_price: "{{section.settings.future_item_regular_price}}",
+  discounted_price: "{{section.settings.future_item_discounted_price}}",
+  shipping_rate: "{{section.settings.future_item_shipping_rate}}",
+  total_price: "{{section.settings.future_item_total_price}}",
+  payment_disclaimer_prefix: "{{section.settings.future_disclaimer_prefix}}",
+  next_charge_days: "{{section.settings.future_next_charge_days}}"
+}; 
+
+var rechargeTrialKey = 'future_info';
+var rechargeTrialURLInformation = Object.keys(rechargeTrialInformation).map((k)=> {
+return encodeURIComponent(k) + "|" + encodeURIComponent(rechargeTrialInformation[k]);
+}).join('!');
+var rechargeTrialURLString = `${rechargeTrialKey}=${rechargeTrialURLInformation}`;
+
+
+(function($){
+
+	$(document).ready(function(){
+    $('body').on('click','#anchor-div',function(e){
+      $('html,body').animate({scrollTop: $('.bundle-flavor--selection-section').offset().top - 50}, 500);
+    });
+
+		$(".js-checkout--btn").one("click", function (e) {
+      $('.js-checkout--btn').html('Processing...');
+      ajaxClearItems();
+      e.preventDefault();
+    });
+	});
+
+  $('body').on('click','.bundle-flavor--selector',function(e){
+    $(this).toggleClass('open');
+    $(this).siblings('.flavor-items').slideToggle();
+
+    $(this).parent().siblings('.bundle-flavor--selector-wrapper').find('.bundle-flavor--selector').removeClass('open');
+    $(this).parent().siblings('.bundle-flavor--selector-wrapper').find('.flavor-items').slideUp();
+  });
+
+  $('body').on('click','.bundle-flavor--selection-section .flavor-items li',function(e){
+    if($(this).hasClass('sold-out') || $(this).hasClass('is-selected')) {
+      return false;
+    } else {
+      $(this).addClass('is-selected').siblings().removeClass('is-selected');
+      $(this).parents('.bundle-flavor--selector-wrapper').find('.bundle-flavor--selector').addClass('is-selected');
+      $(this).parents('.bundle-flavor--selector-wrapper').find('.flavor-name').text($(this).find('span').text());
+      updateArray(e);
+      $(this).parent().slideUp();
+
+      var $variant_id = $(this).data('originalVariantid');
+
+      if($(this).data('bundleGroup') == 'brain') {
+        $('#bundle-flavor-selection').attr('data-brain-variant',$variant_id);
+        $('.bundle-media.brain').find('.flavor-can-image').addClass('hide');
+        $('.bundle-media.brain').find('.flavor-can-image[data-variant-id="' + $variant_id + '"]').removeClass('hide');
+      } else if($(this).data('bundleGroup') == 'body') {
+        $('#bundle-flavor-selection').attr('data-body-variant',$variant_id);
+        $('.bundle-media.body').find('.flavor-can-image').addClass('hide');
+        $('.bundle-media.body').find('.flavor-can-image[data-variant-id="' + $variant_id + '"]').removeClass('hide');
+      }
+      
+      if($(window).width() < 768) {
+        $('html,body').animate({scrollTop: $('#bundle-selection--section-left').offset().top - 50}, 750);  
+      }
+      
+    }
+  });
+
+})(jQuery);
+
+var selectedItemCount = 0;
+var selectedVariantArray = [];
+
+function updateArray(e) {
+	let variant = e.target.dataset.variant;
+	let numericVariant = Number(variant);
+	let numericQuantity = 1;
+
+  while (selectedVariantArray.length > 0) {
+    selectedVariantArray.pop();
+  }
+
+  var $brain_selected_flavor = 0;
+  var $body_selected_flavor = 0;
+  selectedItemCount = 0;
+
+  if($('li[data-bundle-group="brain"].is-selected').length) {
+    $brain_selected_flavor = $('li[data-bundle-group="brain"].is-selected').data('variant');
+    selectedItemCount++;
+
+    let variantObjectBrain = {
+      id: $brain_selected_flavor,
+      quantity: numericQuantity
+    };
+
+    selectedVariantArray.push(variantObjectBrain);
+  }
+
+  if($('li[data-bundle-group="body"].is-selected').length) {
+    $body_selected_flavor = $('li[data-bundle-group="body"].is-selected').data('variant');
+    selectedItemCount++;
+
+    let variantObjectBody = {
+      id: $body_selected_flavor,
+      quantity: numericQuantity
+    };
+
+    selectedVariantArray.push(variantObjectBody);
+  }
+
+	updateButtonStatus();
+}
+
+
+function updateButtonStatus() {
+  	var button = document.querySelectorAll(".js-checkout--btn");
+  	let validQuantity = selectedItemCount == 2;
+
+    console.log(selectedVariantArray);
+    console.log(selectedItemCount);
+
+  	for(i=0;i<button.length;i++) {
+  		button[i].disabled = !validQuantity;
+  	}
+}
+
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+function reChargeProcessCart() {
+  function get_cookie(name) {
+    return (document.cookie.match('(^|; )' + name + '=([^;]*)') || 0)[2]
+  }
+  do {
+    token = get_cookie('cart');
+  }
+  
+  while (token == undefined);
+  
+  var myshopify_domain = '{{ shop.permanent_domain }}';
+  // var myshopify_domain = 'c4energy.myshopify.com';
+  
+  try {
+    var ga_linker = ga.getAll()[0].get('linkerParam')
+  } catch (err) {
+    var ga_linker = ''
+  }
+  
+  var customerEmailEncoded = '';
+
+  {% if customer %}
+    customerEmailEncoded = encodeURIComponent(customer.email);
+    var customer_param = '&customer_email=' + customerEmailEncoded;
+  {% else %}
+    var customer_param = '';
+  {% endif %}
+
+  var promoCode = "&populatecode=" + "{{section.settings.bundle_coupon_code}}";
+
+  var populateEmail = "&populateemail=" + customerEmailEncoded;
+
+  checkout_domain = 'https://checkout.c4energy.com'
+  // checkout_domain = 'https://checkout.rechargeapps.com';
+
+  checkout_url = checkout_domain + "/r/checkout?myshopify_domain=" + myshopify_domain + "&cart_token=" + token + "&" + ga_linker + customer_param + promoCode + populateEmail;
+
+  var rechargeTrialString = '&' + rechargeTrialURLString;
+
+  if ( {{section.settings.future_message_enabled}} ) {
+    checkout_url += rechargeTrialString;
+  }
+
+  window.location = checkout_url;
+}
+
+function shopifyProcessCart() {
+
+  function get_cookie(name) {
+    return (document.cookie.match('(^|; )' + name + '=([^;]*)') || 0)[2]
+  }
+    
+  do {
+    token = get_cookie('cart');
+  }
+    
+  while (token == undefined);
+    
+  var myshopify_domain = '{{ shop.permanent_domain }}';
+    
+  try {
+    var ga_linker = ga.getAll()[0].get('linkerParam')
+  } catch (err) {
+    var ga_linker = ''
+  }
+    
+  {% if customer %}
+    var customer_param = '&customer_id={{customer.id}}&customer_email={{customer.email}}';
+  {% else %}
+    // let emailInput = $(".js-purchase-email").val();
+    // var customer_param = `&customer_email=${emailInput}`;
+    var customer_param = '';
+  {% endif %}
+
+  var promoCode = "&populatecode=" + "{{section.settings.sub_coupon_code}}";
+  var populateEmail = getCookie('populateemail')!= undefined ? "&populateemail=" + getCookie('populateemail') : "";
+
+  checkout_url = '/checkout?cart_token=' + token + '&' + ga_linker + customer_param + promoCode + populateEmail;
+
+  window.location = checkout_url;
+}
+
+
+function ajaxClearItems() {
+  $.ajax({
+      type: "POST",
+      url: '/cart/clear.js',
+      dataType: 'json',
+      success: function(){
+        ajaxAddItem(0);
+      },
+      error: function (data) {
+        console.log("Error clearing cart.");
+      }
+  });
+}
+
+function ajaxAddItem( index ) {
+  if ( selectedVariantArray[index] ) {
+    $.ajax({
+      url: '/cart/add.js',
+      dataType: 'json',
+      type: 'post',
+      data: {
+        quantity: selectedVariantArray[index].quantity,
+        id: selectedVariantArray[index].id,
+        properties: {
+          // custom_bundle_quantity: 2,
+          // custom_bundle_percentage: 60,
+          // custom_bundle_name: 'Brain Body Bundle',
+          // custom_bundle_charge_code: 'WEB_C4BB'
+          shipping_interval_frequency: 4,
+          shipping_interval_unit_type: "Weeks",
+        } 
+      },
+      success: function(data) {
+        let newIndex = index + 1;
+        ajaxAddItem( newIndex );
+      },
+      error: function (data) {
+        console.log(data);
+      }
+    })
+  } else {
+    console.log("Done adding items.");
+    reChargeProcessCart();
+    // shopifyProcessCart();
+  }
+}
+
+</script>

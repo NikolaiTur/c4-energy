@@ -1,0 +1,130 @@
+<footer id="site-footer" role="contentinfo">
+  <div class="container-fluid">
+    <div id="site-footer--wrapper">
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          <div class="site-footer-column col-{{ section.blocks.size | plus: 1 }}">
+            {% if forloop.first %}
+              <a class="footer-logo" href="/">{% include 'c4-logo-white' %}</a>
+            {% else %}
+              <h4 class="footer-column-title">{{ block.settings.footer_column_title }}</h4>
+            {% endif %}
+            <ul class="menu vertical c4-footer-nav">
+              {% for link in linklists[block.settings.footer_column_linklist].links %}
+                <li class="menu-item"><a href="{{ link.url }}" class="nav-item" title="">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      {% if section.settings.klaviyo_list_id != blank %}
+        <div class="site-footer-column col-{{ section.blocks.size | plus: 1 }}">
+          <h4 class="footer-column-title">Join our list</h4>
+          {% render 'c4-newsletter-form', form_id: 'klaviyo-footer-form', email_placeholder: 'email@domain.com', list_id: section.settings.klaviyo_list_id %}
+        </div>
+      {% endif %}
+    </div>
+
+
+
+    <div id="site-footer-utility--wrapper">
+      <div id="site-footer-utility--wrapper-left">
+        <nav class="footer-utility-menu-wrapper" aria-label="Footer Utility Navigation" role="navigation">
+          <div class="c4-nav--container">
+            <ul class="menu c4-footer-utility-nav">
+              <li class="menu-item">&copy; C4 Energy {{ 'now' | date: "%Y" }}</li>
+              {% for link in linklists[section.settings.footer_utility_menu].links %}
+                <li class="menu-item"><a href="{{ link.url }}" class="nav-item {% if link.active %}site-nav--active{% endif %}" title="">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </nav>
+
+        {% if section.settings.footnote_text != blank %}
+          <p class="footnote-text">{{ section.settings.footnote_text }}</p>
+        {% endif %}
+
+        {% if section.settings.footer_fda_text != blank %}
+          <p class="footer-fda-text">{{ section.settings.footer_fda_text }}</p>
+        {% endif %}
+      </div>
+
+      <div id="site-footer-utility--wrapper-right">
+        
+        <nav class="footer-social-menu-wrapper" aria-label="Footer Social Navigation" role="navigation">
+          <div class="c4-nav--container">
+            <ul class="menu c4-footer-social-nav">
+              <li class="social-fb"><a href="https://www.facebook.com/C4Energy/" target="_blank"><img src="{{ 'social-fb-icon.png' | asset_url }}"></a></li>
+              <li class="social-instagram"><a href="https://www.instagram.com/c4energy/" target="_blank"><img src="{{ 'social-instagram-icon.png' | asset_url }}"></a></li>
+            </ul>
+          </div>
+        </nav>
+
+      </div>
+
+    </div>
+
+  </div>
+</footer>
+
+{% comment %}{% include 'footer-search' %} {% endcomment %}
+
+<script type="text/javascript" src="//www.klaviyo.com/media/js/public/klaviyo_subscribe.js"></script>
+
+<script type="text/javascript">
+  KlaviyoSubscribe.attachToForms('#klaviyo-footer-form', {
+    hide_form_on_success: true,
+    success_message: "Thanks!",
+    extra_properties: { $source: 'Footer' }, 
+    success: function($form){
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Footer",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "footer_utility_menu",
+      "label": "Footer Utility Menu"
+    },
+    {
+      "type": "textarea",
+      "id": "footnote_text",
+      "label": "Footnote Text"
+    },
+    {
+      "type": "textarea",
+      "id": "footer_fda_text",
+      "label": "Footer FDA Text"
+    },
+    {
+      "type": "text",
+      "id": "klaviyo_list_id",
+      "label": "Klaviyo List ID"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "footercolumn",
+      "name": "Footer Column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "footer_column_title",
+          "label": "Column Title"
+        },
+        {
+          "type": "link_list",
+          "id": "footer_column_linklist",
+          "label": "Column Linklist"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

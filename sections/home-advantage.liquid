@@ -1,0 +1,40 @@
+<section id="home-advantage" role="contentinfo">
+  {% if section.settings.home_advantage_background_image != blank %}
+    <img src="{{ section.settings.home_advantage_background_image | img_url: 'master' }}" class="objfit"><div class="home-advantage--overlay"></div>
+  {% endif %}
+
+	<div id="home-advantage--wrapper">    
+    <div class="container-fluid">
+      {% if section.settings.home_advantage_content != blank %}
+        <h3 class="home-advantage--content text-upper">{{ section.settings.home_advantage_content }}</h3>
+      {% endif %}
+    </div>
+	</div>
+</section>
+
+
+
+{% schema %}
+{
+  "name": "Home Advantage",
+  "settings": [ 
+    {
+      "type": "textarea",
+      "id": "home_advantage_content",
+      "label": "Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "home_advantage_background_image",
+      "label": "Background Image"
+    }
+  ],
+  "presets": [
+    {
+      "category": "Homepage",
+      "name": "Home Advantage",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

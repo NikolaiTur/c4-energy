@@ -1,0 +1,51 @@
+<div id="search-page">
+  {% paginate search.results by section.settings.search_products_limit %}
+    <section id="search-grid" role="contentinfo">
+      <div class="container-fluid">
+        <header class="search-header section-header text-center">
+          {% if search.performed %}
+            {% if search.results_count == 0 %}
+              <h1 class="search-title h2 text-center">{{ 'general.search.no_results_html' | t: terms: search.terms }}</h1>
+            {% else %}
+              <h1 class="search-title h2 text-center">{{ 'general.search.results_for_html' | t: terms: search.terms, count: search.results.size }}</h1>
+            {% endif %}
+          {% else %}
+            <h1 class="search-title h2 text-center">{{ 'general.search.title' | t }}</h1>
+          {% endif %}
+          <hr class="hr--small">
+        </header>
+
+        {% if search.performed %}
+          <div id="search-grid--content" class="product-grid">
+            {% for item in search.results %}
+              {% assign product = item %}
+              {% include 'item-product' %}
+            {% endfor %}
+          </div>
+        {% else %}
+          <p>No items found.</p>
+        {% endif %}
+
+        {% if paginate.pages > 1 %}
+          {% include 'pagination' %}
+        {% endif %}
+      </div>
+    </section>
+  {% endpaginate %}
+</div>
+
+{% schema %}
+{
+  "name": "Search Grid",
+  "settings": [
+    {
+      "type": "range",
+      "id": "search_products_limit",
+      "label": "Products Limit",
+      "min": 6,
+      "max": 18,
+      "default": 6
+    }
+  ]
+}
+{% endschema %}

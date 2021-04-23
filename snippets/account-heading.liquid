@@ -1,0 +1,26 @@
+<section class="account-header">
+	<div class="container-fluid">
+		<div class="account-header__top">
+			<h1 class="account-header__heading">{{ 'customer.account.title' | t }}</h1>
+			<div class="account-logout">
+				<div class="infos">
+					<h3>{{ customer.name }}</h3>
+					{{ 'layout.customer.log_out'| t | customer_logout_link }}
+				</div>
+				<div class="user__avatar">
+					{%- assign customer_hash = customer.email | remove: ' ' | strip_newlines | downcase | md5 -%}
+					{%- assign customer_gravatar_img = 'https://www.gravatar.com/avatar/' | append: customer_hash | append: '?s=200' -%}
+
+					<a class="account-image__link" href="https://en.gravatar.com/site/login" target="_blank">
+						{% comment %}https%3A%2F%2Fexample.com%2Fimages%2Favatar.jpg{% endcomment %}
+						{%- assign default_image = 'account-silhouette.jpg' | asset_url -%}
+						{%- assign default_image_encoded = 'https:' | append: default_image | url_encode -%}
+						<img class="account-image" src="{{customer_gravatar_img}}&d={{default_image_encoded}}">
+					</a>
+				</div>
+				
+			</div>
+		</div>
+		{% include 'account-navbar' %}
+	</div>
+</section>

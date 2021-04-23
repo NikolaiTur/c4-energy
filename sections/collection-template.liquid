@@ -1,0 +1,48 @@
+<div id="collection-page">
+  {% paginate collection.products by section.settings.collection_products_limit %}
+    <section id="collection-grid" role="contentinfo">
+      <div class="container-fluid">
+        <header class="collection-header">
+          <h1 class="collection-title text-center h2">{{ collection.title }}</h1>
+        </header>
+
+        <div id="collection-filters">
+          <div id="collection-filters--left">
+          </div>
+          <div id="collection-filters--right">
+            {% include 'collection-sort' %}
+          </div>
+        </div>
+
+        {% unless collection.products == empty %}
+          <div id="collection-grid--content" class="product-grid">
+            {% for product in collection.products %}
+              {% include 'item-product' %}
+            {% endfor %}
+          </div>
+        {% else %}
+          <p>No items found.</p>
+        {% endunless %}
+      </div>
+    </section>
+    {%- if paginate.pages > 1 -%}
+      {%- include 'pagination' -%}
+    {%- endif -%}
+  {% endpaginate %}
+</div>
+
+{% schema %}
+{
+  "name": "Collection Grid",
+  "settings": [
+    {
+      "type": "range",
+      "id": "collection_products_limit",
+      "label": "Products Limit",
+      "min": 6,
+      "max": 18,
+      "default": 6
+    }
+  ]
+}
+{% endschema %}

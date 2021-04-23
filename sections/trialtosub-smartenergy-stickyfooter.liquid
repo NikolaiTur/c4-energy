@@ -1,0 +1,16 @@
+{% if section.settings.stickyfooter_text != blank %}
+    <a href="#hero" class="trialtosub__stickyfooter">{{ section.settings.stickyfooter_text }}</a>
+{% endif %}
+{% schema %}
+{
+    "name": "Sticky Footer",
+    "settings": [
+        {
+            "type": "text",
+            "id": "stickyfooter_text",
+            "label": "Sticky Footer Text",
+            "default": "Get Your Free 6-Pack* Today"
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,70 @@
+<section class="account-navbar account-card mt-4">
+	<ul class="js-current-list account-list pl-0">
+	  	{% for link in linklists.account-menu.links -%}
+			
+
+		 	 {%- if link.title == "Subscriptions" -%}
+				<li>
+					<a class="account-navbar__link has-subscriptions {% if request.path contains 'tools/recurring' %}is-current{% endif %}" href="/tools/recurring/login/">
+						Subscriptions
+
+						<span class="bars"><i class="fas fa-bars"></i></span>
+						<span class="arrow"><i class="fas fa-chevron-right"></i></span>
+					</a>
+				</li>
+				{%- comment -%}
+					{%- if customer.metafields.subscriptions.customer_string -%}
+					{%- assign subscription_url_main_prefix = "/tools/recurring/customer" -%}
+					{%- assign subscription_url_portal_prefix = "/tools/recurring/customer_portal" -%}
+					{%- assign customer_meta_string = customer.metafields.subscriptions.customer_string -%}
+					{%- assign subscription_url_main = subscription_url_main_prefix | append: "/" | append: customer_meta_string -%}
+					{%- assign subscription_url_portal = subscription_url_portal_prefix | append: "/" | append: customer_meta_string -%}
+
+					{% if canonical_url contains customer_meta_string %}
+						{%- assign recharge_nav_active = true -%}
+					{%- else -%}
+						{%- assign recharge_nav_active = false -%}
+					{%- endif -%}
+
+					<li>
+						<a class="account-navbar__link {% if recharge_nav_active %}is-current{% endif %}" href="{{subscription_url_main}}/subscriptions/">
+							{% if recharge_nav_active %}
+								<span class="account-navigation__trigger" data-toggle="collapse" href="#recharge-nav" aria-expanded="false" data-target="#recharge-nav">{{link.title}}</span>
+							{% else %}
+					 			<span>{{link.title}}</span>
+							 {% endif %}
+
+							 <span class="bars"><i class="fas fa-bars"></i></span>
+							 <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+					 	</a>
+					</li>
+				 
+			 	
+			 		{%- if recharge_nav_active -%}
+					 	<ul class="account-list pl-3" id="recharge-nav">
+						 	{%- for sub_link in link.links -%}
+						 		{%- assign subscription_url_link = subscription_url_portal | append: sub_link.url -%}
+						 		<li>
+						 			<a class="account-navbar__link--sub {% if page_slug == subscription_url_link %}is-current{% endif %}" href="{{subscription_url_link}}">
+					 					{{sub_link.title}}
+					 				</a>
+						 		</li>
+						 	{%- endfor -%}
+					 	</ul>
+				 	{%- endif -%}
+			 	{%- endif -%}
+				{%- endcomment -%}
+			{%- else -%}
+				<li>
+					<a class="account-navbar__link{% if link.url contains '&new' %} is-new {% endif %}" href="{{link.url}}" {% if link.url.first != "/" %}target="_blank"{% endif %}>
+						{{link.title}}
+
+						<span class="bars"><i class="fas fa-bars"></i></span>
+						<span class="arrow"><i class="fas fa-chevron-right"></i></span>
+					</a>
+				</li>
+			{%- endif -%}
+	  	{%- endfor -%}
+	</ul>
+
+</section>

@@ -1,0 +1,186 @@
+{%- assign order_heading = 'Order #' | append: order.name | append: ' Detail' -%}
+
+{% include 'account-heading' with order_heading %}
+{% include 'account-template-open' %}
+
+<section class="account-card mt-4">
+  <div class="row">
+    <div class="col-lg-4 col-md-4 col-6">
+      <h5 style="font-weight:bold">Order Details</h5>
+      <small>
+        <span class="d-block">Order: {{ order.name }}</span>
+        <span class="d-block">Placed: {{ order.created_at | date: "%B %d, %Y" }}</span>
+        {% if order.cancelled %}
+          <span class="d-block">
+          Canceled: {{ order.cancelled_at | date: "%B %d, %Y" }}</span>
+        {% else %}
+           <span class="d-block">
+            Payment Status: 
+              {%- assign financial_status = order.financial_status -%}
+              {%- if order.financial_status contains '_' -%}
+                {%- assign financial_status = order.financial_status | replace: '_', ' ' -%}
+              {%- endif %}
+
+              {{financial_status | capitalize}}
+          </span>
+          <span class="d-block">
+            Fulfillment Status: 
+              {%- assign fulfillment_status = order.fulfillment_status -%}
+              {%- if order.fulfillment_status contains '_' -%}
+                {%- assign fulfillment_status = order.fulfillment_status | replace: '_', ' ' -%}
+              {%- endif %}
+              {{ fulfillment_status | capitalize }}
+          </span>
+        {% endif %}
+      </small>
+    </div>
+    <div class="col-lg-4 col-md-4 col-6">
+      <h5 style="font-weight:bold">Billing Address</h5>
+      <small>
+        <span class="d-block">{{ order.billing_address.name }}</span>
+        <span class="d-block">{{ order.billing_address.company }}</span>
+        <span class="d-block">{{ order.billing_address.street }}</span>
+
+        <span class="d-block">{{ order.billing_address.city }}{% if order.billing_address.province_code %}, {{ order.billing_address.province_code }}, {% endif %}{% if order.billing_address.country != 'United States' %}{{ order.billing_address.country }}, {% endif %} {{ order.billing_address.zip }}</span>
+
+        {%- if order.billing_address.phone -%}
+          <span class="d-block">{{ order.billing_address.phone }}</span>
+        {%- endif -%}
+      </small>
+    </div>
+    <div class="col-lg-4 col-md-4 col-6">
+      <h5 style="font-weight:bold">Shipping Address</h5>
+      <small>
+        <span class="d-block">{{ order.shipping_address.name }}</span>
+        <span class="d-block">{{ order.shipping_address.company }}</span>
+        <span class="d-block">{{ order.shipping_address.street }}</span>
+
+        <span class="d-block">{{ order.shipping_address.city }}{% if order.shipping_address.province_code %}, {{ order.shipping_address.province_code }}, {% endif %}{% if order.shipping_address.country != 'United States' %}{{ order.shipping_address.country }}, {% endif %} {{ order.shipping_address.zip }}</span>
+
+        {%- if order.shipping_address.phone -%}
+          <span class="d-block">{{ order.shipping_address.phone }}</span>
+        {%- endif -%}
+      </small>
+    </div>
+  </div>
+
+  {% for line_item in order.line_items %}
+    {% assign order_subscription_item = false -%}
+
+    {%- assign product_title = line_item.title -%}
+    {% for prop in line_item.properties %}
+      {% if prop contains product_subscription_key -%}
+        {%- assign order_subscription_item = true -%}
+        {% break %}
+      {%- endif -%}
+    {% endfor %}
+
+    {%- if order_subscription_item -%}
+      {%- assign product_title = product_title | remove: "20.00% Off Auto renew" -%}
+    {%- endif -%}
+
+    {%- assign product_title_split = product_title | split: "-" -%}
+
+    <section class="clearfix mt-2">
+      <div class="float-left relative-container">
+        <img src="{{line_item.image.src | img_url: '100x100' }}" class="mrs">
+        {%- if line_item.quantity > 1 -%}
+          <span class="account-order__quantity" data-quantity="{{ line_item.quantity }}"></span>
+        {%- endif -%}
+      </div>
+      <div class="float-left">
+        <div class="mts">
+          <div class="row">
+            <div class="col-9">
+              <span class="d-inline-block bold-weight {% if order_subscription_item %}pre-icon--subscription{% endif %}">
+                {{product_title_split[0]}}<br>
+                <small>{{product_title_split[1]}}</small>
+              </span>
+            </div>
+            <div class="col-3">
+               {%- if order_subscription_item -%}
+                <a class="d-inline-block" href="{{subscription_url_portal}}">
+                  <small style="text-decoration: underline;">Edit</small>
+                </a>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        <small class="d-block">
+          {{ 'customer.order.sku' | t }} : {{ line_item.sku }}
+        </small>
+
+        <small class="d-block"> 
+          {{line_item.price | money }}
+        </small>
+
+        {% if line_item.fulfillment %}
+          {% if line_item.fulfillment.tracking_number %}
+            <a class="account-order__link--tracking pre-icon--truck" href="{{ line_item.fulfillment.tracking_url }}" target="_blank">
+              <strong class="petite-text">
+                {{ line_item.fulfillment.tracking_number}}
+              </strong>
+            </a>
+          {% endif %}
+        {% endif %}
+      </div>
+    </section>
+  {% endfor %}
+
+  <section class="account-order__summary mt-4">
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-6">
+        <strong>{{ 'customer.order.subtotal' | t }}</strong>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+        <span>{{ order.subtotal_price | money }}</span>
+      </div>
+    </div>
+
+    {%- if order.discounts.first.savings -%}
+      {% for discount in order.discounts %}
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <strong>{{ 'customer.order.discount' | t }} {%- if discount.code -%}({{ discount.code }}){%- endif -%}</strong>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+            <span>{{ discount.savings | money }}</span>
+          </div>
+        </div>
+      {% endfor %}
+    {%- endif -%}
+
+    {%- for shipping_method in order.shipping_methods -%}
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+          <strong>{{ 'customer.order.shipping' | t }} ({{ shipping_method.title }})</strong>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+          <span>{{ shipping_method.price | money }}</span>
+        </div>
+      </div>
+    {%- endfor -%}
+
+    {%- for tax_line in order.tax_lines -%}
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+          <strong>{{ 'customer.order.tax' | t }} ({{ tax_line.title }} {{ tax_line.rate | times: 100 }}%)</strong>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+          <span>{{ tax_line.price | money }}</span>
+        </div>
+      </div>
+    {%- endfor -%}
+
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-6">
+        <strong>{{ 'customer.order.total' | t }}</strong>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+        <span>{{ order.total_price | money }}</span>
+      </div>
+    </div>
+  </section>
+
+{% include 'account-template-close' %}

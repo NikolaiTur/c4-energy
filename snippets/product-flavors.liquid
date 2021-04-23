@@ -1,0 +1,56 @@
+{% if product.metafields.c4energy.enable_flavors_slider %}
+
+{% assign flavor_count = 0 %}
+
+{% for option in product.options_with_values %}
+	{% if option.name == 'Flavor' %}
+		{% assign flavor_count = option.values.size %}
+	{% endif %}
+{% endfor %}
+
+<div id="product-flavors">	
+	<div class="image-container">
+		{% if product.metafields.c4energy.flavors_image %}
+			<img src="{{ product.metafields.c4energy.flavors_image }}" class="objfit">
+		{% endif %}
+	</div>
+
+	<div class="product-flavors--wrapper">
+		<div class="product-flavors--left">
+			<h2 class="flavors-title"><span>Try All</span><br/>{{ flavor_count }} Flavors</h2>
+
+			{% for option in product.options_with_values %}
+				{% if option.name == 'Flavor' %}
+				<div id="flavor-info--slider">
+					{% for value in option.values %}
+						{% assign variant = product.variants[forloop.index0] %}
+						<div class="flavor-info">
+							<div class="flavor-info--content">
+								<h3 class="flavor-item-title">{{ value }}</h3>
+								<p class="flavor-item-description">{{ variant.metafields.c4energy.tooltip }}</p>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+
+				<div id="flavor-info--navigation"></div>
+				{% endif %}
+			{% endfor %}
+		</div>
+		<div class="product-flavors--right">
+			{% for option in product.options_with_values %}
+				{% if option.name == 'Flavor' %}
+				<div id="flavor-image--slider">
+					{% for value in option.values %}
+						{% assign variant = product.variants[forloop.index0] %}
+						<div class="flavor-image--item">
+							<img src="{{ variant.metafields.c4energy.bottle_image }}" class="flavor-image">
+						</div>
+					{% endfor %}
+				</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endif %}

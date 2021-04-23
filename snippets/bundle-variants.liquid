@@ -1,0 +1,26 @@
+
+{% for variant in product_variants %}
+  {%- if variant.title contains '12 Pack / 16oz' -%}
+    {%- if variant.available and variant.inventory_quantity >= 4 or variant.inventory_policy != deny -%}
+      {%- assign max_quantity = 1 -%}
+      {%- assign input_id = 'quantity-' | append: variant.id -%}
+      
+      <div class="flavor-option">
+        <div class="flavor-option__media">
+
+          <!-- For Recharge Checkout -->
+          <input id="{{input_id}}" class="combined-quantity-select__input js-quantity flavor-select__input" type="number" name="" max="{{max_quantity}}" min="0" value="0" data-id="{{selected_product.metafields.subscriptions.subscription_id}}" data-variant="{{variant.metafields.subscriptions.discount_variant_id}}" data-bundle-group="{{ bundle_group }}" onclick="updateArray(event)" onwheel="this.blur()" onfocus="this.blur()">
+
+          <!-- For Shopify Checkout -->
+          <!-- <input id="{{input_id}}" class="combined-quantity-select__input js-quantity flavor-select__input" type="number" name="" max="{{max_quantity}}" min="0" value="0" data-id="{{selected_product.id}}" data-variant="{{ variant.id }}" data-bundle-group="{{ bundle_group }}" onclick="updateArray(event)" onwheel="this.blur()" onfocus="this.blur()"> -->
+
+          <div class="flavor-select__image__contain" id="variant-{{variant.id}}">
+            <img class="flavor-select__image__display" src="{{ variant.image | img_url: '600x' }}">
+          </div>
+        </div>
+        <h4 class="flavor-select-heading text-center text-upper">{{variant.title | split: "/" | last }}</h4>
+      </div>
+
+    {%- endif -%}
+  {%- endif -%}
+{% endfor %}

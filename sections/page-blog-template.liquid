@@ -1,0 +1,218 @@
+{% assign featured_article = articles[section.settings.featured_article] %}
+<div id="blogs_page">
+    {% if template == 'blog' %}
+    <div class="container-fluid">
+        <div class="back_to_blog">
+            <a href="/pages/blog"><i class="fas fa-chevron-left"></i> Back to Blogs</a>
+        </div>
+    </div>
+    {% endif %}
+    <div id="c4-page">
+        
+        {% if featured_article != blank and template != 'blog' %}
+        <div class="container-fluid">
+            <div class="page-content">
+                <div class="featured_article">
+                    {% unless featured_article.image == blank %}
+                    <div class="featured_article_image">
+                        <a href="{{ featured_article.url }}">
+                        <noscript>
+                            {{ featured_article.image | img_url: '2048x2048' | img_tag: featured_article.title | escape }}
+                        </noscript>
+                        <div class="article__featured-image-wrapper">
+                            {% assign img_url = featured_article.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+                            <img class="article__featured-image lazyload"
+                            src="{{ article.image | img_url: '300x300' }}"
+                            data-src="{{ img_url }}"
+                            data-widths="[360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                            data-aspectratio="{{ featured_article.image.aspect_ratio }}"
+                            data-sizes="auto"
+                            alt="{{ featured_article.title | escape }}">
+                        </div>
+                        </a>
+                    </div>
+                    {% endunless %}
+                    <div class="featured_article_content">
+                        <div class="featured_article_top-infos">
+                            {% for link in linklists.categories.links %}
+                                {% assign b = link.object %}
+                                {% for art in b.articles limit: 500 %}
+                                    {% if featured_article.handle == art.handle %}
+                                        {% assign featured_category = b.title %}
+                                        {% break %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if featured_category %}
+                                    {% break %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if settings.enable_blog_category and featured_category %}<span class="category">{{ featured_category }}</span>{% endif %}
+                            {% if settings.enable_blog_date %}<span class="date">{{ featured_article.published_at | date: "%B %d, %Y" }}</span>{% endif %}
+                        </div>
+                        <div class="featured_article_bottom-infos">
+                            <h2>{{ featured_article.title | escape }}</h2>
+                            <p>{{ featured_article.excerpt_or_content | strip_html | truncatewords: 45 }}</p>
+                            <a href="{{ featured_article.url }}">Read</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if template == 'blog' %}
+        <div class="container-fluid">
+            <div class="page-content">
+                <h2>{{ blog.title }}</h2>
+            </div>
+        </div>
+        {% endif %}
+        {% if section.settings.enable_explore_category != blank %}
+        <div class="explore">
+            <div class="container-fluid">
+                <h3>Explore by category</h3>
+                <div class="categories_list">
+                    <a href="#" class="category_item" style="background-image:url('{{ featured_article.image | img_url: '740x800' | crop: 'center' }}');">
+                        <div class="overlay"></div>
+                        <h4>Motivation</h4>
+                    </a>
+                    <a href="#" class="category_item" style="background-image:url('{{ featured_article.image | img_url: '740x800' | crop: 'center' }}');">
+                        <div class="overlay"></div>
+                        <h4>Training</h4>
+                    </a>
+                    <a href="#" class="category_item" style="background-image:url('{{ featured_article.image | img_url: '740x800' | crop: 'center' }}');">
+                        <div class="overlay"></div>
+                        <h4>Nutrition</h4>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="container-fluid">
+            
+            <div class="page-content">
+                <div class="articles">
+                    <div class="articles_titlebar">
+                        <div class="topics">
+                            <h3>Topics</h3>
+                            <ul>
+                                {% if template == 'blog' %}
+                                    {% for tag in blog.all_tags limit: 5 %}
+                                    <li><a href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a></li>
+                                    {% endfor %}
+                                {% else %}
+                                    {% for link in linklists.categories.links limit: 5 %}
+                                        {% assign blog_object = link.object %}
+                                        {% for tag in blog_object.all_tags limit: 5 %}
+                                            <li><a href="{{ blog_object.url }}/tagged/{{ tag | handle }}">{{ tag }}</a></li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endif %}
+                            </ul>
+                            <button class="trigger">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <button class="search">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    {% if template == 'blog' %}
+                    {% if blog.articles_count > 0 %}
+                        {% paginate blog.articles by 6 %}
+                            <div class="articles_list">
+                                {% for article in blog.articles %}
+                                    {% include 'single-article-item' with article, blog: blog %}
+                                {% endfor %}
+                            </div>
+                            {% if paginate.pages > 1 %}
+                                {% include 'pagination' %}
+                            {% endif %}
+                        {% endpaginate %}
+                    {% endif %}
+
+                    {% else %}
+                        <div class="articles_list">
+
+                            {% for link in linklists.categories.links %}
+                                {% assign blog_obj = link.object %}
+                                {% if blog_obj.articles_count > 0 %}
+                                    {% paginate blog_obj.articles by 6 %}
+                                        {% for article in blog_obj.articles %}
+                                            {% include 'single-article-item' with article, blog: blog_obj %}
+                                        {% endfor %}
+                                        
+                                        {% if paginate.pages > 1 %}
+                                            {% include 'pagination' %}
+                                        {% endif %}
+                                    {% endpaginate %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                        </div>
+                    {% endif %}
+                    
+                    
+                    {%- comment -%}
+                    <ul class="pagination">
+                        <li><a href="">1</a></li>
+                        <li><a href="" class="active">2</a></li>
+                        <li><a href="">3</a></li>
+                        <li><a href="">4</a></li>
+                        <li><a href="">5</a></li>
+                    </ul>
+                    {%- endcomment -%}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    let topicsOpen = false;
+    function handleTopics () {
+        if (window.matchMedia("(max-width: 767px)").matches) {
+            $('.articles_titlebar .topics ul').slideUp(0);
+            $('body').on('click','.articles_titlebar .trigger', function(e){
+                topicsOpen = !topicsOpen;
+                topicsOpen ? $('.articles_titlebar .topics ul').slideDown() : $('.articles_titlebar .topics ul').slideUp();
+            });
+            return;
+        } else {
+            topicsOpen = true;
+            $('.articles_titlebar .topics ul').slideDown(0);
+        }
+    }
+    handleTopics();
+    $(window).on('resize', function(){
+        handleTopics();
+    });
+  });
+</script>
+{% schema %}
+{
+    "name": "Blog",
+    "settings": [
+        {
+            "type": "header",
+            "content": "General Featured Article"
+        },
+        {
+            "type": "article",
+            "id": "featured_article",
+            "label": "Article"
+        },
+        {
+            "type": "header",
+            "content": "Explore by Category"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_explore_category",
+            "label": "Enable",
+            "default": false,
+            "info": "Will be enabled by default in 'phase 2'"
+        }
+    ]
+}
+{% endschema %}

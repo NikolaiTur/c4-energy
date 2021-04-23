@@ -1,0 +1,50 @@
+{% if section.blocks.size > 0 %}
+  <section id="section-reviews" role="contentinfo">
+    <div class="container-fluid">
+      <div id="section-reviews--slider">
+        {% for block in section.blocks %}
+          <div class="review-item">
+            <div class="review-item--content">
+              {% if block.settings.review_text != blank %}
+                <div class="review-stars">{% include '5-stars' %}</div>
+                <h4 class="text-upper review-text">{{ block.settings.review_text }}&rdquo;</h4>
+              {% endif %}
+              {% if block.settings.reviewer_name != blank %}
+                <h5 class="text-upper reviewer-name">{{ block.settings.reviewer_name }}</h5>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+
+
+{% schema %}
+{
+  "name": "Section Reviews",
+  "settings": [ 
+    
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "review_text",
+          "label": "Review Text"
+        },
+        {
+          "type": "text",
+          "id": "reviewer_name",
+          "label": "Reviewer Name"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

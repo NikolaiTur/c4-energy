@@ -1,0 +1,82 @@
+<section id="bundle-faqs" role="contentinfo">
+	<div id="bundle-faqs--wrapper">
+    <div class="container-fluid">
+      {% if section.settings.bundle_faqs_title != blank %}
+        <h2 class="text-upper text-center faqs-title">{{ section.settings.bundle_faqs_title }}</h2>
+      {% endif %}
+
+      {% if section.blocks.size > 0 %}
+        <div id="bundle-faqs--accordion">
+          {% for block in section.blocks %}
+
+            <div class="accordion-group {% if forloop.index == 1 %}active{% endif %}">
+              <div class="accordion-trigger">{{ block.settings.faq_question }}</div>
+              <div class="accordion-content">{{ block.settings.faq_answer }}</div>
+            </div>
+
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div id="bundle-more-questions">
+        {% if section.settings.bundle_more_questions_title != blank %}
+          <p class="more-questions--title text-center">{{ section.settings.bundle_more_questions_title }}</p>
+        {% endif %}
+
+        {% if section.settings.bundle_more_questions_cta_label != blank and section.settings.bundle_more_questions_cta_url != blank %} 
+          <div class="text-center"><a href="{{ section.settings.bundle_more_questions_cta_url }}" class="more-questions--cta">{{ section.settings.bundle_more_questions_cta_label }}</a></div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+{% schema %}
+{
+  "name": "Bundle FAQs",
+  "settings": [
+    {
+      "type": "text",
+      "id": "bundle_faqs_title",
+      "label": "FAQs Title"
+    },
+    {
+      "type": "text",
+      "id": "bundle_more_questions_title",
+      "label": "More Questions Title"
+    },
+    {
+      "type": "text",
+      "id": "bundle_more_questions_cta_label",
+      "label": "More Questions CTA Label"
+    },
+    {
+      "type": "url",
+      "id": "bundle_more_questions_cta_url",
+      "label": "More Questions CTA Url"
+    }
+
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "faq_question",
+          "label": "Question"
+        },
+        {
+          "type": "textarea",
+          "id": "faq_answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

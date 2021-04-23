@@ -1,0 +1,62 @@
+{% assign addr = address | default: customer.new_address %}
+<div class="account__profile__addresses__form account__profile__box" id="Address-Form-{% if address %}{{ address.id }}{% else %}New{% endif %}">
+    {% form 'customer_address', addr %}
+    <h3>{% if address %}Edit Address{% else %}Add Address{% endif %}</h3>
+
+    <div class="account__profile__addresses__inputs">
+        <div class="form-group form-group--inline">
+            <input type="text" required value="{{ form.first_name }}" name="address[first_name]">
+            <label for="">First Name</label>
+        </div>
+
+        <div class="form-group form-group--inline">
+            <input type="text" required value="{{ form.last_name }}" name="address[last_name]">
+            <label for="">Last Name</label>
+        </div>
+
+        <div class="form-group form-group--inline">
+            <input type="text" required value="{{ form.address1 }}" name="address[address1]">
+            <label for="">Street Address</label>
+        </div>
+
+        <div class="form-group form-group--inline">
+            <input type="text" value="{{ form.address2 }}" name="address[address2]">
+            <label for="">Apt, suite, etc (optional)</label>
+        </div>
+
+        <div class="form-group form-group--inline">
+            <input type="text" required value="{{ form.city }}" name="address[city]">
+            <label for="">City</label>
+        </div>
+
+        <div class="form-group form-group--inline">
+            <input type="tel" required value="{{ form.phone }}" name="address[phone]">
+            <label for="">Phone Number</label>
+        </div>
+
+        <div class="form-group form-group--inline" data-selected="{{ form.province }}">
+            <select name="address[province]">
+                <option value=""></option>
+            </select>
+            <label for="">State</label>
+
+            <select name="address[country]" class="hidden">
+                {{ country_option_tags }}
+            </select>
+        </div>
+
+        <div class="form-group form-group--inline">
+            <input type="text" required value="{{ form.zip }}" name="address[zip]">
+            <label for="">Zip Code</label>
+        </div>
+
+        <div class="form-group form-group--checkbox">
+            {{ form.set_as_default_checkbox }}
+            <label for="">Set as your preferred address</label>
+        </div>
+    </div>
+
+    <button type="submit" class="account__profile__button" disabled>Save</button>
+
+    {% endform %}
+</div>

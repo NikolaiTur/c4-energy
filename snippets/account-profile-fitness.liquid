@@ -1,0 +1,152 @@
+<section class="account__profile__fitness">
+    <section class="js-profile-container">
+      
+      {% assign profile_secret = "(G+KbPeShVmYq3t6w9z$C&F)J@McQfTj" %}
+      {% assign klaviyo_tag_prefix = 'Klaviyo-C4-' %}
+      {% assign klaviyo_profile_id = false %}
+      
+  
+      {% for tag in customer.tags %}
+        {% if tag contains klaviyo_tag_prefix %}
+          {% assign tag_split = tag | split: klaviyo_tag_prefix -%}
+          {% assign klaviyo_profile_id = tag_split[1] | trim %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+ 
+      {%- assign shortened_shop_url = shop.url | split: "//" | last -%}
+  
+      {%- assign profile_gender_options = settings.profile_gender_options | split: "#" -%}
+      {%- assign profile_goal_options = settings.profile_fitness_goals_options | split: "#" -%}
+      {%- assign profile_tolerance_options = settings.profile_stimulant_options | split: "#" -%}
+      {%- assign profile_frequent_shop_location_options = shortened_shop_url | append: "#" | append:
+      settings.profile_frequently_shop_options | split: "#" -%}
+      {%- assign profile_exercise_frequency_options = settings.profile_exercise_frequency_options | split: "#" -%}
+  
+      <section class="profile-form collapse" id="account-form">
+        <div class="tw-flex tw-flex-wrap tw--mx-2">
+
+        <div class="row">
+              <div class="form-group">
+                <label for="">{{ settings.profile_rtd_label }}</label>
+                <div class="form-group--radio-buttons">
+                    <input class="js-profile-field" type="radio" name="profile_drink_rtd" value="true"><span>Yes</span>
+                    <input class="js-profile-field" type="radio" name="profile_drink_rtd" value="false"><span>No</span>
+                </div>
+              </div>
+              
+        </div>
+
+        <div class="row">
+              <div class="form-group">
+                <label for="">{{ settings.profile_gender_label }}<sup>*</sup></label>
+                <select class="js-profile-field" name="profile_gender" id="">
+                    <option value="">---</option>
+                    {% for option in profile_gender_options %}
+                        <option value="{{ option }}">{{ option }}</option>
+                    {% endfor %}
+                </select>
+          </div>
+
+          <div class="form-group">
+                <label for="">{{ settings.profile_stimulant_label }}<sup>*</sup></label>
+                <select class="js-profile-field" name="profile_stimulant_tolerance" id="">
+                    <option value="">---</option>
+                    {% for option in profile_tolerance_options %}
+                        <option value="{{ option }}">{{ option }}</option>
+                    {% endfor %}
+                </select>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="form-group tw-mx-2 md:tw-w-3/4 tw-mb-4">
+            <label for="">{{ settings.profile_frequently_shop_label }}<sup>*</sup></label>
+            <select class="js-profile-field" name="profile_frequent_shop_location" id="">
+                <option value="">---</option>
+                {% for option in profile_frequent_shop_location_options %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="form-group tw-mx-2 md:tw-w-3/4 tw-mb-4">
+            <label for="">{{ settings.profile_exercise_frequency_label }}<sup>*</sup></label>
+            <select class="js-profile-field" name="profile_exercise_frequency" id="">
+                <option value="">---</option>
+                {% for option in profile_exercise_frequency_options %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="form-group">
+            <label for="">{{ settings.profile_fitness_goals_label }}<sup>*</sup></label>
+            <div class="form-group--checkboxes">
+                {% for option in profile_goal_options %}
+                    <input class="js-profile-field" type="checkbox" name="profile_goals" value="{{ option }}"><span>{{ option }}</span>
+                {% endfor %}
+            </div>
+          </div>
+        </div>
+          <span style="display: none;">{%- include 'account-profile-field' with field: 'profile_phone_consent', type: 'checkbox', label: settings.profile_phone_consent_label -%}</span>       
+          <input class="js-profile-field" type="hidden" name="email" value="{{ customer.email }}">
+          <input class="js-profile-field" type="hidden" name="id" value="{{ klaviyo_profile_id }}">
+        </div>
+  
+        <span class="profile__divider"></span>
+
+        <div>
+          <div class="profile__animation js-profile-animation">
+            {% for i in (1..64) %}
+            <span class="profile__animation--piece--{{i}}"></span>
+            {% endfor %}
+          </div>
+          <div class="js-profile-loading is-hidden">
+            <svg class="profile__button--loader" version="1.1" id="L4" width="24" xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 60 60"
+              enable-background="new 0 0 0 0" xml:space="preserve">
+              <circle fill="#fff" stroke="none" cx="6" cy="50" r="6">
+                <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.1"></animate>
+              </circle>
+              <circle fill="#fff" stroke="none" cx="26" cy="50" r="6">
+                <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.2"></animate>
+              </circle>
+              <circle fill="#fff" stroke="none" cx="46" cy="50" r="6">
+                <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.3"></animate>
+              </circle>
+            </svg>
+          </div>
+  
+          <button class="account__profile__button profile__button js-profile-submit"
+            data-label="{{settings.profile_post_action_text}}"
+            disabled
+            onclick="postToProfile()">{{settings.profile_post_action_text}}</button>
+  
+          <div class="account__profile__message js-profile-message petite-text bold-weight"
+            data-success-message="{{settings.profile_success_message}}"></div>
+        </div>
+      </section>
+
+      {%- comment -%}
+      <div id="profile-progress" class="is-hidden">
+        <div class="clearfix mt-5">
+          <span class="js-profile-percent secondary-font uppercase-text float-right"></span>
+          <span class="js-profile-verbal secondary-font uppercase-text float-left"></span>
+        </div>
+  
+        <div class="profile-bar__container">
+          <div class="js-profile-progress profile-bar--progress"></div>
+          <div class="js-profile-total profile-bar--background">
+          </div>
+        </div>
+      </div>
+      {%- endcomment -%}
+  
+      {%- include 'account-profile-script' -%}  
+    </section>
+  </section>

@@ -1,0 +1,44 @@
+<style>
+    .trialtosub__hero {
+        background: {{ section.settings.background_color }};
+    }
+
+    .trialtosub__hero__image__desktop .overlay {
+        background: linear-gradient(90deg, {{ section.settings.background_color }} 0%, rgba(255, 255, 255, 0) 20%); 
+    }
+
+    .trialtosub__hero__logo {
+        background: {{ section.settings.logo_bg_color }};
+    }
+
+    .trialtosub__hero__banner {
+        color: {{ section.settings.announcement_text_color }};
+        background: {{ section.settings.announcement_bg_color }};
+    }
+
+    .trialtosub__hero__content {
+        color: {{ section.settings.body_text_color }}; 
+    }
+
+    .trialtosub__hero__form button[type=submit] {
+        color: {{ section.settings.button_text_color }} !important; 
+        background: {{ section.settings.button_bg_color }} !important; 
+    }
+
+    .trialtosub__hero__form .form-group {
+        background: {{ section.settings.email_input_bg_color }};
+        border: 3px solid {{ section.settings.email_input_border_color }};
+    }
+
+    .trialtosub__hero__form .form-group span.icon {
+        color: {{ section.settings.email_input_placeholder_color }}; 
+    }
+
+    .trialtosub__hero__form input {
+        color: {{ section.settings.email_input_color }};
+    }
+
+    .trialtosub__hero__form input::placeholder {
+            color: {{ section.settings.email_input_placeholder_color }};
+    }
+</style>

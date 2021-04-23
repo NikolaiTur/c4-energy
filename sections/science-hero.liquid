@@ -1,0 +1,50 @@
+<section id="science-hero" role="contentinfo">
+	<div id="science-hero--wrapper">    
+    <div class="science-hero--title-container">
+      <div class="science-hero--title-wrapper">
+        <h1 class="science-hero--title text-upper">{{ section.settings.hero_title }}</h1>
+      </div> 
+    </div>
+
+    {% if section.settings.hero_video_url != blank %}
+      <div class="science-hero--video-container">
+        <video class="full-bleed-video" autoplay loop muted playsinline preload="metadata"><source type="video/mp4" src="{{ section.settings.hero_video_url }}"></video>
+      </div>
+    {% endif %}    
+	</div>
+
+  {% if section.settings.hero_intro_text != blank %}
+    <div class="science-hero--intro-text">
+      <div class="container-fluid">
+        <div class="science-hero--intro-text--wrapper">
+          {{ section.settings.hero_intro_text }}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+
+
+{% schema %}
+{
+  "name": "Science Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero Title"
+    },
+    {
+      "type": "text",
+      "id": "hero_video_url",
+      "label": "Hero Video URL"
+    },
+    {
+      "type": "richtext",
+      "id": "hero_intro_text",
+      "label": "Hero Intro Text"
+    }
+  ]
+}
+{% endschema %}

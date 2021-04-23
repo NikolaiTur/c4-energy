@@ -1,0 +1,324 @@
+<section id="home-product-intro" role="contentinfo">
+  
+  <div class="container-fluid">
+    {% if section.settings.home_product_intro_title %}
+      <h2 class="product-intro--title text-upper">{{ section.settings.home_product_intro_title }}</h2>
+    {% endif %}
+  </div>
+
+  <div id="home-product-intro--images">
+    <div id="home-product-intro--images-left">
+      {% if section.settings.home_product_intro_smart_energy_image != blank %}
+        <img src="{{ section.settings.home_product_intro_smart_energy_image | img_url: 'master' }}" class="home-product-smart-energy-image img-responsive">
+      {% endif %}
+    </div>
+    <div id="home-product-intro--images-right" class="hidden-xs hidden-sm">
+      {% if section.settings.home_product_intro_c4_energy_image != blank %}
+        <img src="{{ section.settings.home_product_intro_c4_energy_image | img_url: 'master' }}" class="home-product-c4-energy-image img-responsive">
+      {% endif %}
+    </div>
+  </div>
+  
+  
+  <div class="container-fluid">
+    <div id="home-product-intro--content">
+
+      <div id="home-product-intro--content-left">
+        <div id="home-product-intro--content-left--wrapper">
+          {% if section.settings.home_product_intro_smart_energy_title != blank %}
+            <h3 class="text-upper">{{ section.settings.home_product_intro_smart_energy_title }}</h3>
+          {% endif %}
+
+          {% if section.settings.home_product_intro_smart_energy_content != blank %}
+            {{ section.settings.home_product_intro_smart_energy_content }}
+          {% endif %}
+
+          <div class="feature-grid">
+            {% if section.settings.home_product_intro_smart_energy_item1_title != blank %}
+              <div class="feature-item blue">
+                {% if section.settings.home_product_intro_smart_energy_item1_icon != blank %}
+                  <div class="feature-item-icon">
+                    {{ section.settings.home_product_intro_smart_energy_item1_icon }}
+                  </div>
+                {% endif %}
+
+                <h4 class="feature-item-title">{{ section.settings.home_product_intro_smart_energy_item1_title }}</h4>
+                {% if section.settings.home_product_intro_smart_energy_item1_subtitle !=blank %}
+                  <p class="feature-item-subtitle text-upper">{{ section.settings.home_product_intro_smart_energy_item1_subtitle }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            {% if section.settings.home_product_intro_smart_energy_item2_title != blank %}
+              <div class="feature-item blue">
+                {% if section.settings.home_product_intro_smart_energy_item2_icon != blank %}
+                  <div class="feature-item-icon">
+                    {{ section.settings.home_product_intro_smart_energy_item2_icon }}
+                  </div>
+                {% endif %}
+
+                <h4 class="feature-item-title">{{ section.settings.home_product_intro_smart_energy_item2_title }}</h4>
+                {% if section.settings.home_product_intro_smart_energy_item2_subtitle !=blank %}
+                  <p class="feature-item-subtitle text-upper">{{ section.settings.home_product_intro_smart_energy_item2_subtitle }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            {% if section.settings.home_product_intro_smart_energy_item3_title != blank %}
+              <div class="feature-item blue">
+                {% if section.settings.home_product_intro_smart_energy_item3_icon != blank %}
+                  <div class="feature-item-icon">
+                    {{ section.settings.home_product_intro_smart_energy_item3_icon }}
+                  </div>
+                {% endif %}
+
+                <h4 class="feature-item-title">{{ section.settings.home_product_intro_smart_energy_item3_title }}</h4>
+                {% if section.settings.home_product_intro_smart_energy_item3_subtitle !=blank %}
+                  <p class="feature-item-subtitle text-upper">{{ section.settings.home_product_intro_smart_energy_item3_subtitle }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+
+      <div id="home-product-intro--images-right" class="hidden-md hidden-lg">
+        {% if section.settings.home_product_intro_c4_energy_image != blank %}
+          <img src="{{ section.settings.home_product_intro_c4_energy_image | img_url: 'master' }}" class="home-product-c4-energy-image img-responsive">
+        {% endif %}
+      </div>
+
+      <div id="home-product-intro--content-right">
+        <div id="home-product-intro--content-right--wrapper">
+          {% if section.settings.home_product_intro_c4_energy_title != blank %}
+            <h3 class="text-upper">{{ section.settings.home_product_intro_c4_energy_title }}</h3>
+          {% endif %}
+
+          {% if section.settings.home_product_intro_c4_energy_content != blank %}
+            {{ section.settings.home_product_intro_c4_energy_content }}
+          {% endif %}
+
+          <div class="feature-grid">
+            {% if section.settings.home_product_intro_c4_energy_item1_title != blank %}
+              <div class="feature-item orange">
+                {% if section.settings.home_product_intro_c4_energy_item1_icon != blank %}
+                  <div class="feature-item-icon">
+                    {{ section.settings.home_product_intro_c4_energy_item1_icon }}
+                  </div>
+                {% endif %}
+
+                <h4 class="feature-item-title">{{ section.settings.home_product_intro_c4_energy_item1_title }}</h4>
+                {% if section.settings.home_product_intro_c4_energy_item1_subtitle !=blank %}
+                  <p class="feature-item-subtitle text-upper">{{ section.settings.home_product_intro_c4_energy_item1_subtitle }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            {% if section.settings.home_product_intro_c4_energy_item2_title != blank %}
+              <div class="feature-item orange">
+                {% if section.settings.home_product_intro_c4_energy_item2_icon != blank %}
+                  <div class="feature-item-icon">
+                    {{ section.settings.home_product_intro_c4_energy_item2_icon }}
+                  </div>
+                {% endif %}
+
+                <h4 class="feature-item-title">{{ section.settings.home_product_intro_c4_energy_item2_title }}</h4>
+                {% if section.settings.home_product_intro_c4_energy_item2_subtitle !=blank %}
+                  <p class="feature-item-subtitle text-upper">{{ section.settings.home_product_intro_c4_energy_item2_subtitle }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            {% if section.settings.home_product_intro_c4_energy_item3_title != blank %}
+              <div class="feature-item orange">
+                {% if section.settings.home_product_intro_c4_energy_item3_icon != blank %}
+                  <div class="feature-item-icon">
+                    {{ section.settings.home_product_intro_c4_energy_item3_icon }}
+                  </div>
+                {% endif %}
+
+                <h4 class="feature-item-title">{{ section.settings.home_product_intro_c4_energy_item3_title }}</h4>
+                {% if section.settings.home_product_intro_c4_energy_item3_subtitle !=blank %}
+                  <p class="feature-item-subtitle text-upper">{{ section.settings.home_product_intro_c4_energy_item3_subtitle }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+    
+
+    {% if section.blocks.size > 0 %}
+      <!-- Ingredients Note -->
+      <div id="home-product-intro--ingredients-note">
+        <div id="home-product-intro--ingredients-note--content">
+          {% for block in section.blocks %}
+            <div class="ingredient-note text-upper">{{ block.settings.ingredient_note }}</div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+
+
+  </div>
+</section>
+
+
+
+{% schema %}
+{
+  "name": "Home Product Intro",
+  "max_blocks": 3,
+  "settings": [ 
+    {
+      "type": "text",
+      "id": "home_product_intro_title",
+      "label": "Title"
+    },
+    {
+      "type": "image_picker",
+      "id": "home_product_intro_smart_energy_image",
+      "label": "Smart Energy Image"
+    },
+    {
+      "type": "text",
+      "id": "home_product_intro_smart_energy_title",
+      "label": "Smart Energy Title"
+    },
+    {
+      "type": "richtext",
+      "id": "home_product_intro_smart_energy_content",
+      "label": "Smart Energy Content"
+    },
+    {
+      "type": "textarea",
+      "id": "home_product_intro_smart_energy_item1_icon",
+      "label": "Smart Energy Item1 Icon (SVG Code)"
+    },
+    {
+      "type": "text",
+      "id": "home_product_intro_smart_energy_item1_title",
+      "label": "Smart Energy Item1 Title"
+    },
+    {
+      "type": "text",
+      "id": "home_product_intro_smart_energy_item1_subtitle",
+      "label": "Smart Energy Item1 Subtitle"
+    },
+    {
+      "type": "textarea",
+      "id": "home_product_intro_smart_energy_item2_icon",
+      "label": "Smart Energy Item2 Icon (SVG Code)"
+    },
+    {
+      "type": "text",
+      "id": "home_product_intro_smart_energy_item2_title",
+      "label": "Smart Energy Item2 Title"
+    },
+    {
+      "type": "text",
+      "id": "home_product_intro_smart_energy_item2_subtitle",
+      "label": "Smart Energy Item2 Subtitle"
+    },
+    {
+      "type": "textarea",
+      "id": "home_product_intro_smart_energy_item3_icon",
+      "label": "Smart Energy Item3 Icon (SVG Code)"
+    },
+    {
+      "type": "text",
+      "id": "home_product_intro_smart_energy_item3_title",
+      "label": "Smart Energy Item3 Title"
+    },
+    {
+      "type": "text",
+      "id": "home_product_intro_smart_energy_item3_subtitle",
+      "label": "Smart Energy Item3 Subtitle"
+    },
+    {
+      "type": "image_picker",
+      "id": "home_product_intro_c4_energy_image",
+      "label": "C4 Energy Image"
+    },
+    {
+      "type": "text",
+      "id": "home_product_intro_c4_energy_title",
+      "label": "C4 Energy Title"
+    },
+    {
+      "type": "richtext",
+      "id": "home_product_intro_c4_energy_content",
+      "label": "C4 Energy Content"
+    },
+    {
+      "type": "textarea",
+      "id": "home_product_intro_c4_energy_item1_icon",
+      "label": "C4 Energy Item1 Icon (SVG Code)"
+    },
+    {
+      "type": "text",
+      "id": "home_product_intro_c4_energy_item1_title",
+      "label": "C4 Energy Item1 Title"
+    },
+    {
+      "type": "text",
+      "id": "home_product_intro_c4_energy_item1_subtitle",
+      "label": "C4 Energy Item1 Subtitle"
+    },
+    {
+      "type": "textarea",
+      "id": "home_product_intro_c4_energy_item2_icon",
+      "label": "C4 Energy Item2 Icon (SVG Code)"
+    },
+    {
+      "type": "text",
+      "id": "home_product_intro_c4_energy_item2_title",
+      "label": "C4 Energy Item2 Title"
+    },
+    {
+      "type": "text",
+      "id": "home_product_intro_c4_energy_item2_subtitle",
+      "label": "C4 Energy Item2 Subtitle"
+    },
+    {
+      "type": "textarea",
+      "id": "home_product_intro_c4_energy_item3_icon",
+      "label": "C4 Energy Item3 Icon (SVG Code)"
+    },
+    {
+      "type": "text",
+      "id": "home_product_intro_c4_energy_item3_title",
+      "label": "C4 Energy Item3 Title"
+    },
+    {
+      "type": "text",
+      "id": "home_product_intro_c4_energy_item3_subtitle",
+      "label": "C4 Energy Item3 Subtitle"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "note",
+      "name": "Note",
+      "settings": [
+        {
+          "type": "text",
+          "id": "ingredient_note",
+          "label": "Ingredient Note"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Homepage",
+      "name": "Home Product Intro",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

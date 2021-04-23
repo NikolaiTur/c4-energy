@@ -1,0 +1,26 @@
+{% if option.name == 'Flavor' %}
+
+	{% assign variant = product.variants[forloop.index0] %}
+	{% assign gradient_first_color = variant.metafields.c4energy.gradient_first_color %}
+	{% assign gradient_second_color = variant.metafields.c4energy.gradient_second_color %}
+
+	{% if gradient_first_color == blank %}
+		{% assign gradient_first_color = '#000000' %}
+	{% endif %}
+
+	{% if gradient_second_color == blank %}
+		{% assign gradient_second_color = '#000000' %}
+	{% endif %}
+
+	<style type="text/css">
+		label[for="ProductSelect-option-{{ option.name | handleize }}-{{ value | escape }}"]:before,
+		.mobile-flavor--selector #flavor-info.{{ value | handleize }}:before,
+		#ProductSection--product-template[data-flavor="{{ value | escape }}"]:before {
+			background-image: linear-gradient(to bottom, {{ gradient_first_color }}, {{ gradient_second_color }});
+		}
+
+		label[for="ProductSelect-option-{{ option.name | handleize }}-{{ value | escape }}"] > .tooltip > .tooltip-content {
+			background-image: linear-gradient(to bottom, {{ gradient_first_color }}, {{ gradient_second_color }});
+		}
+	</style>
+{% endif %}

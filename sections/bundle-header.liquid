@@ -1,0 +1,41 @@
+<section id="bundle-header" role="contentinfo">
+	<div id="bundle-header--wrapper">
+    <div class="container-fluid">
+      {% if section.settings.bundle_page_title != blank %}
+        <h1 class="text-upper h2">{{ section.settings.bundle_page_title }}</h1>
+      {% endif %}
+      {% if section.settings.bundle_header_select_text != blank %}
+        <p class="bundle-header-select-text text-upper">{{ section.settings.bundle_header_select_text }}</p>
+      {% endif %}
+
+      {% if section.settings.bundle_header_choose_text != blank %}
+        <p class="bundle-header-choose-text">{{ section.settings.bundle_header_choose_text }}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+
+
+{% schema %}
+{
+  "name": "Bundle Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "bundle_page_title",
+      "label": "Page Title"
+    },
+    {
+      "type": "text",
+      "id": "bundle_header_select_text",
+      "label": "Select Text"
+    },
+    {
+      "type": "text",
+      "id": "bundle_header_choose_text",
+      "label": "Choose Text"
+    }
+  ]
+}
+{% endschema %}

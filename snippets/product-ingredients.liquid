@@ -1,0 +1,19 @@
+{% if product.metafields.c4energy.ingredient_title != blank %}
+	<div id="product-ingredients">
+		<div id="product-ingredients--wrapper">
+			{% for ingredient in product.metafields.c4energy.ingredient_title limit: 3 %}
+				<div class="product-ingredient">
+					<img src="{{ product.metafields.c4energy.ingredient_image[forloop.index0] }}" class="objfit">
+
+					<div class="product-ingredient--overlay"></div>
+
+					<div class="product-ingredient--content">
+						{{ product.metafields.c4energy.ingredient_icon[forloop.index0] }}
+						<h2 class="ingredient-title">{{ ingredient }}</h2>
+						<p class="ingredient-description text-upper">{{ product.metafields.c4energy.ingredient_description[forloop.index0] }}</p>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endif %}

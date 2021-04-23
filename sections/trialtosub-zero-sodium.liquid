@@ -1,0 +1,52 @@
+<div class="trialtosub__zero-sodium">
+    {% if section.settings.image != blank %}
+        <img src="{{ section.settings.image | img_url: '2000x' }}" class="trialtosub__zero-sodium__image desktop" alt="{{ section.settings.image.alt }}">    
+        <img src="{{ section.settings.image_mobile | img_url: '1000x' }}" class="trialtosub__zero-sodium__image mobile" alt="{{ section.settings.image_mobile.alt }}">    
+    {% endif %}
+    <div class="container-fluid">
+        {% if section.settings.main_image %}
+            <div>
+                <img class="trialtosub__zero-sodium__main-image" src="{{ section.settings.main_image | img_url: '800x' }}" alt="{{ section.settings.main_image.alt }}">    
+            </div>
+        {% endif %}
+        <!-- <p class="trialtosub__zero-sodium__text">
+            <span>{{ section.settings.first_word }}</span><br>
+            {{ section.settings.second_word }}
+        </p> -->
+    </div>
+</div>
+
+{% schema %}
+{    
+    "name": "Zero Sodium",
+    "settings": [
+        {
+            "type": "text",
+            "id": "first_word",
+            "label": "Large Word",
+            "default": "Zero"
+        },
+        {
+            "type": "text",
+            "id": "second_word",
+            "label": "Small Word",
+            "default": "Sodium"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Desktop Background Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "image_mobile",
+            "label": "Mobile Background Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "main_image",
+            "label": "Main Image"
+        }
+    ]
+}
+{% endschema %}

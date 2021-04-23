@@ -1,0 +1,596 @@
+$c4-yellow: #FFE500;
+
+#shopify-section-header,
+#shopify-section-footer,
+#shopify-section-eyebrow-callout {
+    display: none;
+}
+
+#PageContainer {
+    margin-top: 0;
+}
+
+
+.trialtosub__hero {
+    min-height: 600px;
+    position: relative;
+}
+
+.trialtosub__hero__banner {
+    background: #efefef;
+    color: #9F9FA5;
+    text-align: center;
+    padding: 16px 30px;
+    font-size: 14px; 
+    font-weight: 600;
+    letter-spacing: .5px;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+
+.trialtosub__hero__image__mobile {
+    width: 100%;
+    height: auto;
+    @media screen and (min-width: 768px) {
+        display: none;
+    }
+}
+
+.trialtosub__hero__image__desktop {
+    position: absolute;
+    top: 0; right: 0;
+    height: 100%;
+    width: 50vw;
+
+    @media screen and (max-width: 767px) {
+        display: none;
+    }
+
+    img {
+        display: block;
+        position: absolute;
+        top: 0; right: 0; 
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0; 
+        left: 0; 
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 20%);
+    }
+}
+
+.trialtosub__hero__inner {
+    display: flex;
+
+    @media screen and (max-width: 767px) {
+        flex-direction: column-reverse;
+    }
+}
+
+.trialtosub__hero__content {
+    width: 60%;
+    padding-top: 190px;
+    padding-bottom: 40px;
+
+    @media screen and (max-width: 1200px) {
+        width: 50%; 
+    }
+
+    @media screen and (max-width: 767px) {
+        width: 100%; 
+        padding-bottom: 0;
+        padding-top: 40px;
+    }
+
+    h1 {
+        font-size: 64px; 
+        margin-bottom: 40px;
+
+        @media screen and (max-width: 1200px) {
+            font-size: 56px;
+            margin-bottom: 30px;
+        }
+
+        @media screen and (max-width: 767px) {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    }
+
+    p {
+        font-weight: 500;
+        line-height: 1.6em;
+        font-size: 22px;
+        margin: 40px 0;
+
+        @media screen and (max-width: 1200px) {
+            font-size: 18px;
+            margin: 30px 0;
+        }
+
+        @media screen and (max-width: 767px) {
+            font-size: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    }
+}
+
+.trialtosub__hero__logo {
+    position: absolute;
+    width: 190px;
+    background: $c4-yellow;
+    z-index: 11;
+    top: -60px;
+
+    @media screen and (max-width: 767px) {
+        width: 120px;
+        top: -40px;
+        z-index: 9;
+    }
+
+    svg {
+        width: 80%;
+        position: absolute;
+        bottom: 10%;
+        left: 10%;
+    }
+
+    &:after {
+        content: '';
+        display: block;
+        padding-top: 94%;
+    }
+}
+
+.trialtosub__hero__form {
+    display: flex;
+    width: 100%;
+    align-items: center;
+
+    @media screen and (max-width: 1200px) {
+        flex-direction: column;
+    }
+
+    .form-group {
+        height: 80px;
+        border: 3px solid #E8E8E8;
+        border-radius: 6px;
+        display: flex;
+        flex: 1;
+        position: relative;
+        padding: 0 15px;
+
+        @media screen and (max-width: 1200px) {
+            width: 100%;            
+        }
+    }
+
+    input {
+        border: none;
+        width: 100%;
+        background: transparent; 
+
+        &::placeholder {
+            color: #98989f;
+        }
+    }
+
+    button[type=submit] {
+        flex-shrink: 0;
+        margin-left: 20px;
+        padding: 28px 25px;
+
+        @media screen and (max-width: 1200px) {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            margin-left: 0;
+            width: 100%;            
+        }
+    }
+
+    & + p.error {
+        margin: 0;
+        font-size: 13px;
+        color: red;
+        margin-top: 10px;
+        margin-left: 1px;
+    }
+}
+
+
+.trialtosub__hero__benefits {
+    list-style: none;
+    color: #98989f; 
+    padding: 0;
+    margin-bottom: 0;
+
+    @media screen and (max-width: 767px) {
+        text-align: center;
+    }
+
+    li {
+        display: inline-block;
+        font-size: 14px;
+        font-weight: 500;
+        margin-right: 20px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        span {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+    }
+}
+
+
+.trialtosub__hero__unavailable__success {
+    display: none;
+}
+
+.trialtosub__hero__footer {
+    display: block;
+    background: #1A1A1A;
+    font-family: Anton, sans-serif;
+    font-size: 20px;
+    color: #98989F;
+    text-align: center;
+    position: relative;
+    padding: 8px;
+    text-transform: uppercase;
+}
+
+
+.trialtosub__aftertrial {
+    background: $c4-yellow;
+    padding: 60px 0;
+    margin: 10px 10px 20px;
+
+    @media screen and (max-width: 767px) {
+        margin: 0 0 20px;
+        padding: 30px 0;
+    }
+}
+
+.trialtosub__aftertrial__inner {
+    display: flex;
+    align-items: center;
+
+    @media screen and (max-width: 767px) {
+        flex-direction: column;
+    }
+}
+
+.trialtosub__aftertrial__content {
+    width: 60%;
+    flex-shrink: 0;
+
+    @media screen and (max-width: 767px) {
+        width: 100%;
+    }
+}
+
+.trialtosub__aftertrial__video {
+    width: 40%;
+
+    img {
+        width: 100%;
+    }
+
+    @media screen and (max-width: 767px) {
+        width: 100%;
+        margin-top: 40px;
+    }
+}
+
+.trialtosub__aftertrial__video--container {
+    position: relative;
+    display: block;
+
+    a.icon {
+        position: absolute;
+        top: 13px;
+        left: 10px;
+        z-index: 2;
+        width: 30px;
+        line-height: 0;
+
+        &.unmute {
+            .cross {
+                display: none; 
+            }
+        }
+    }
+
+    video {
+        width: 100%;
+        position: relative;
+        z-index: 1;
+    }
+}
+
+.trialtosub__aftertrial__title {
+    font-size: 48px;
+    margin-bottom: 40px;
+
+    @media screen and (max-width: 767px) {
+        font-size: 32px;
+        text-align: center;
+
+    }
+}
+
+.trialtosub__aftertrial__block {
+    padding: 0 20px;
+    display: flex;
+    justify-content: flex-start;
+    text-align: left;
+    align-items: center;
+    margin-bottom: 40px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    h4 {
+        margin-bottom: 0;
+        font-size: 24px;
+
+        @media screen and (max-width: 767px) {
+            font-size: 22px;
+        }
+    }
+
+    p {
+        font-size: 18px;
+        margin-bottom: 0;
+        margin-top: 3px;
+
+        @media screen and (max-width: 767px) {
+            font-size: 15px;
+        }
+    }
+}
+
+.trialtosub__aftertrial__icon {
+    flex-shrink: 0;
+    display: block;
+    width: 80px;
+    height: 80px;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    margin-right: 25px;
+
+    svg {
+        width: 100%;
+    }
+}
+
+
+.trialtosub__zero-sodium {
+    height: 756px;
+    width: 100%;
+    position: relative;
+    display: flex; 
+    align-items: center;
+
+    @media screen and (max-width: 767px) {
+        height: 400px;
+    }
+}
+
+.trialtosub__zero-sodium__image {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+
+    &.desktop {
+        @media screen and (max-width: 767px) {
+            display: none;
+        }
+    }
+
+    &.mobile {
+        @media screen and (min-width: 768px) {
+            display: none;
+        }
+    }
+}
+
+.trialtosub__zero-sodium__text {
+    font-family: Anton;
+    font-size: 80px;
+    color: #fff;   
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1;
+    margin-bottom: 0;
+    width: 350px;
+
+    @media screen and (max-width: 767px) {
+        font-size: 50px;
+        margin: 0; 
+        text-align: center;
+        width: 100%;
+    }
+
+    span {
+        color: $c4-yellow;
+        font-size: 186px;
+
+        @media screen and (max-width: 767px) {
+            font-size: 125px;
+        }
+    }
+}
+
+.trialtosub__features {
+    padding: 60px 0;
+}
+
+.trialtosub__features__inner {
+    display: flex; 
+
+    @media screen and (max-width: 767px) {
+        flex-direction: column-reverse;
+    }
+}
+
+.trialtosub__features__title  {
+    font-size: 105px;
+
+    @media screen and (max-width: 1140px) {
+        font-size: 80px;
+    }
+
+    @media screen and (max-width: 767px) {
+        font-size: 48px;
+    }
+}
+
+.trialtosub__features__image {
+    width: 40vw;
+    display: block;
+    background-repeat: none;
+    background-size: cover;
+    position: relative;
+
+    @media screen and (max-width: 767px) {
+        width: 100%;
+        height: auto;
+    }
+
+    img {
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: calc(100% - 20px);
+        object-fit: cover;
+
+        @media screen and (max-width: 767px) {
+            position: static;
+            height: auto;
+            margin-top: 20px;
+        }
+    }
+}
+
+.trialtosub__features__content {
+    width: 60vw;
+    padding: 0 60px;
+
+    @media screen and (max-width: 767px) {
+        width: 100%;
+        padding: 0 30px;
+    }
+}
+
+.trialtosub__features__list {
+    display: flex;
+    flex-wrap: wrap; 
+    margin: -20px -20px 0;
+    max-width: 800px;
+
+    @media screen and (max-width: 1140px) {
+        margin: -20px 0 0;  
+    }
+
+    @media screen and (max-width: 767px) {
+        margin: 0;
+    }
+}
+
+.trialtosub__features__feature {
+    width: calc(50% - 40px);
+    margin: 20px;
+    border: 2px solid #1899CE;
+    padding: 25px 40px;
+
+    @media screen and (max-width: 1200px) {
+        padding: 15px 20px; 
+    }
+
+    @media screen and (max-width: 1140px) {
+        width: 100%;
+        margin: 20px 0; 
+    }
+
+    @media screen and (max-width: 767px) {
+        margin: 0 20px;
+    }
+
+    h3 {
+        font-size: 32px;
+        margin-bottom: 0;
+
+        @media screen and (max-width: 1200px) {
+            font-size: 26px;
+        }
+    }
+
+    h5 {
+        color: #6D6E70;
+        font-size: 22px;
+
+        @media screen and (max-width: 1200px) {
+            font-size: 18px;
+        }
+    }
+
+    p {
+        font-size: 18px;
+        line-height: 1.6em;
+        font-weight: normal;
+        margin-bottom: 0;
+
+        @media screen and (max-width: 1200px) {
+            font-size: 16px;
+            line-height: 1.4em;
+        }
+    }
+}
+
+.trialtosub__features__feature__icon {
+    float: right;
+}
+
+
+.trialtosub__footer {
+    background: #1A1A1A;
+    color: #fff;
+    padding: 50px 0;
+
+    span {
+        margin-right: 20px;
+        display: inline-block;
+    }
+
+    a {
+        color: #fff;
+        display: inline-block;
+        margin: 0 20px;
+    }
+
+    p.small {
+        font-size: 12px;
+        letter-spacing: 0.4px;
+    }
+}

@@ -1,0 +1,87 @@
+<section id="home-success" role="contentinfo">
+	<div id="home-success--wrapper">    
+    <div id="home-success--content">
+      <div id="home-success--content-left">
+        <div id="home-success--content-left--wrapper">
+          {% if section.settings.home_success_quote != blank %}
+            <h3 class="text-upper success-quote">{{ section.settings.home_success_quote }}&rdquo;</h3>
+          {% endif %}
+
+          {% if section.settings.home_success_quote_by != blank %}
+            <h4 class="text-upper success-quote-by">{{ section.settings.home_success_quote_by }}</h4>
+          {% endif %}
+
+          {% if section.settings.home_success_cta_label != blank and section.settings.home_success_cta_url != blank %}
+            <a class="c4-btn yellow home-success--cta" href="{{ section.settings.home_success_cta_url }}">{{ section.settings.home_success_cta_label }}{% if section.settings.home_success_cta_sublabel != blank %}<span>{{ section.settings.home_success_cta_sublabel }}</span>{% endif %}{% if section.settings.home_success_cta_membership_text != blank %}<span class="small">{{ section.settings.home_success_cta_membership_text }}</span>{% endif %}</a>
+          {% endif %}
+        </div>
+      </div>
+      <div id="home-success--content-right">
+        {% if section.settings.home_success_image != blank %}
+          <img src="{{ section.settings.home_success_image | img_url: 'master' }}" class="objfit">
+        {% endif %}
+
+        {% if section.settings.home_success_video_url != blank %}
+          <video class="full-bleed-video" autoplay loop muted playsinline preload="metadata"><source type="video/mp4" src="{{ section.settings.home_success_video_url }}"></video>
+        {% endif %}
+      </div>
+    </div>
+	</div>
+</section>
+
+
+
+{% schema %}
+{
+  "name": "Home Success",
+  "settings": [
+    {
+      "type": "text",
+      "id": "home_success_video_url",
+      "label": "Video Url"
+    },
+    {
+      "type": "image_picker",
+      "id": "home_success_image",
+      "label": "Image"
+    },
+    {
+      "type": "textarea",
+      "id": "home_success_quote",
+      "label": "Quote"
+    },
+    {
+      "type": "text",
+      "id": "home_success_quote_by",
+      "label": "Quote By"
+    },
+    {
+      "type": "text",
+      "id": "home_success_cta_label",
+      "label": "CTA Label"
+    },
+    {
+      "type": "text",
+      "id": "home_success_cta_sublabel",
+      "label": "CTA Sublabel"
+    },
+    {
+      "type": "text",
+      "id": "home_success_cta_membership_text",
+      "label": "CTA Membership Text"
+    },
+    {
+      "type": "url",
+      "id": "home_success_cta_url",
+      "label": "CTA Url"
+    }
+  ],
+  "presets": [
+    {
+      "category": "Homepage",
+      "name": "Home Success",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

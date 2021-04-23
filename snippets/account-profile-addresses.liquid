@@ -1,0 +1,40 @@
+<div class="account__profile__section account__profile__addresses">
+    <div class="account__profile__addresses__list">
+        {% for address in customer.addresses %}
+            <div class="account__profile__box account__profile__addresses__address" data-address-id="{{ address.id }}" data-address-form="Address-Form-{{ address.id }}">
+                <p>
+                    <strong>{{ address.name }}</strong><br>
+                    {{ address.address1 }}<br>
+                    {% if address.address2 %}{{ address.address2 }}<br>{% endif %}
+                    {{ address.city }}, {{ address.province_code }} {{ address.zip }}<br>
+                    {{ address.country }}
+                </p>
+
+                <ul>
+                    <li><a href="#" data-address-edit>Edit</a></li>
+                    <li>
+                        <form action="/account/addresses/{{ address.id }}" method="POST">
+                            <input type="hidden" name="_method" value="delete" />
+                            <button onclick="return confirm('Are you sure you want to delete this address?');" type="submit">Delete</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        {% endfor %}
+
+        <a href="#" data-address-edit class="account__profile__box account__profile__addresses__address account__profile__addresses__new-address" data-address-form="Address-Form-New">
+            <span>Add a delivery address</span>
+        </a>
+    </div>
+
+    <a href="#" data-address-edit class="account__profile__addresses__new-address--mobile" data-address-form="Address-Form-New">
+        <span>Add a delivery address</span>
+    </a>
+
+    <div class="account__profile__addresses__forms">
+        {% for address in customer.addresses %}
+            {% include 'account-profile-addresses-form' with address: address %}
+        {% endfor %}
+        {% include 'account-profile-addresses-form' %}
+    </div>
+</div>

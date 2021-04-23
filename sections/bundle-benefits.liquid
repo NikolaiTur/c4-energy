@@ -1,0 +1,92 @@
+{% if section.blocks.size > 0 %}
+<section id="bundle-benefits" role="contentinfo">
+	<div id="bundle-benefits--wrapper">    
+
+    <div class="container-fluid">
+      {% if section.settings.bundle_benefits_title != blank %}
+        <h2 class="benefits-title">{{ section.settings.bundle_benefits_title }}</h2>
+      {% endif %}
+
+      <ul class="benefits-list">
+        {% for block in section.blocks %}
+          <li class="benefit-item">
+            <div class="benefit-item--left">
+              <div class="benefit-item--left-content" style="width: {{ block.settings.benefit_icon_width }}px">
+                {% if block.settings.benefit_icon != blank %}
+                  {{ block.settings.benefit_icon }}
+                {% endif %}
+              </div>
+            </div>
+            <div class="benefit-item--right">
+              <div class="benefit-item--right-content">
+                {% if block.settings.benefit_title != blank %}
+                  <h3 class="benefit-title">{{ block.settings.benefit_title }}</h3>
+                {% endif %}
+                {% if block.settings.benefit_description != blank %}
+                  <p class="benefit-description">{{ block.settings.benefit_description }}</p>
+                {% endif %} 
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    {% if section.settings.bundle_benefits_can_image != blank %}
+      <img src="{{ section.settings.bundle_benefits_can_image | img_url: 'master' }}" class="bundle-benefits-can-image img-responsive">
+    {% endif %}
+    
+  </div>
+</section>
+{% endif %}
+
+
+
+{% schema %}
+{
+  "name": "Bundle Benefits",
+  "settings": [
+    {
+      "type": "text",
+      "id": "bundle_benefits_title",
+      "label": "Benefits Title"
+    },
+    {
+      "type": "image_picker",
+      "id": "bundle_benefits_can_image",
+      "label": "Benefits Can Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "benefit_icon",
+          "label": "Benefit Icon (SVG Code only)"
+        },
+        {
+          "type": "range",
+          "id": "benefit_icon_width",
+          "label": "Benefit Icon Width",
+          "min": 40,
+          "max": 80,
+          "default": 55
+        },
+        {
+          "type": "text",
+          "id": "benefit_title",
+          "label": "Benefit Title"
+        },
+        {
+          "type": "text",
+          "id": "benefit_description",
+          "label": "Benefit Description"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

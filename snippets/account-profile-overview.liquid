@@ -1,0 +1,138 @@
+<div class="account__profile__section account__profile__overview" id="#overview">
+    <div class="account__profile__box">
+      <div class="account__profile__overview__personal">
+        <div class="account__profile__overview__avatar">
+
+          {%- assign customer_hash = customer.email | remove: ' ' | strip_newlines | downcase | md5 -%}
+          {%- assign customer_gravatar_img = 'https://www.gravatar.com/avatar/' | append: customer_hash | append:
+          '?s=200' -%}
+          {%- assign default_image = 'account-silhouette.jpg' | asset_url -%}
+          {%- assign default_image_encoded = 'https:' | append: default_image | url_encode -%}
+
+          <img src="{{customer_gravatar_img}}&d={{default_image_encoded}}" alt="Magical Unicorn">
+          <h4>{{ customer.first_name }} {{ customer.last_name }}</h4>
+        </div>
+        <div class="account__profile__overview__data">
+          <h4>Your Personal Information</h4>
+
+          <div class="form-group">
+            <label for="">Full Name</label>
+            <input readonly type="text" value="{{ customer.first_name }} {{ customer.last_name }}">
+          </div>
+
+          <div class="form-group">
+            <label for="">Email Address</label>
+            <input readonly type="email" value={{ customer.email }}>
+          </div>
+
+          {%- comment -%}
+          <div class="form-group">
+            <label for="">Password</label>
+            <input readonly type="password" value="************">
+          </div>
+          {%- endcomment -%}
+        </div>
+      </div>
+    </div>
+
+    <div class="account__profile__overview__bottom">
+        <div class="account__profile__overview__communications js-profile-container">
+
+          {% assign profile_secret = "(G+KbPeShVmYq3t6w9z$C&F)J@McQfTj" %}
+          {% assign klaviyo_tag_prefix = 'Klaviyo-C4-' %}
+          {% assign klaviyo_profile_id = false %}
+          
+      
+          {% for tag in customer.tags %}
+            {% if tag contains klaviyo_tag_prefix %}
+              {% assign tag_split = tag | split: klaviyo_tag_prefix -%}
+              {% assign klaviyo_profile_id = tag_split[1] | trim %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+
+          <!-- <div class="col-12 col-md-6">
+            {%- include 'account-profile-field' with prefix: '@', field: '', type: 'text', label:
+            , placeholder: "my_handle", required: false -%}
+          </div>
+  
+          <div class="col-12 col-md-6">
+            {%- include 'account-profile-field' with class: 'js-intl-phone', field: 'profile_phone', type: 'tel', label:
+            settings.profile_phone_label, placeholder: settings.profile_phone_placeholder, required: true -%}
+          </div>
+   -->
+
+            <div class="form-group">
+              <label for="profile_instagram_handle">{{ settings.profile_instagram_label }}</label>
+              <span class="addon-left">@</span>
+              <input type="text" name="profile_instagram_handle" class="js-profile-field">
+            </div>
+
+            <div class="form-group">
+              <label for="profile_phone">{{ settings.profile_phone_label }}</label>
+              <input type="tel" name="profile_phone" class="js-profile-field js-intl-phone" required>
+              <span class="profile-error js-profile-phone-error is-hidden"></span>
+            </div>
+
+            <div class="form-group">
+
+              <label for="profile_phone_consent">{{ settings.profile_phone_consent_label }}</label>
+              <ul>
+                <li><input class="js-profile-field" name="profile_phone_consent" type="radio" value="true"> Yes</li>
+                <li><input class="js-profile-field" name="profile_phone_consent" type="radio" value="false"> No</li>
+              </ul>
+
+              <p>{{settings.profile_sms_description | strip_html }}</p>
+            </div>
+
+            <input class="js-profile-field" type="hidden" name="email" value="{{ customer.email }}">
+            <input class="js-profile-field" type="hidden" name="id" value="{{ klaviyo_profile_id }}">
+
+            <div>
+
+              <div class="profile__animation js-profile-animation">
+                {% for i in (1..64) %}
+                <span class="profile__animation--piece--{{i}}"></span>
+                {% endfor %}
+              </div>
+              <div class="js-profile-loading is-hidden">
+                <svg class="profile__button--loader" version="1.1" id="L4" width="24" xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 60 60"
+                  enable-background="new 0 0 0 0" xml:space="preserve">
+                  <circle fill="#fff" stroke="none" cx="6" cy="50" r="6">
+                    <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.1"></animate>
+                  </circle>
+                  <circle fill="#fff" stroke="none" cx="26" cy="50" r="6">
+                    <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.2"></animate>
+                  </circle>
+                  <circle fill="#fff" stroke="none" cx="46" cy="50" r="6">
+                    <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.3"></animate>
+                  </circle>
+                </svg>
+              </div>
+
+              <button class="account__profile__button profile__button js-profile-submit"
+              data-label="Save"
+              disabled
+              onclick="postToProfile()">Save</button>
+    
+            <div class="account__profile__message js-profile-message petite-text bold-weight"
+              data-success-message="{{settings.profile_success_message}}"></div>
+            </div>
+
+
+        </div>
+
+
+        <div class="account__profile__overview__points">
+          <div class="header"><i class="fas fa-medal"></i> &nbsp;&nbsp;<span>---</span></div>
+          <div class="body">
+            <p>You have <span id="stamped-rewards-points-placeholder" data-type="points-only"></span> Points</p>
+            <a href="/account?view=loyalty">Rep Rewards</a>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  {%- include 'account-profile-phone' -%}
+  {%- include 'account-profile-script' -%}

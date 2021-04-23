@@ -1,0 +1,121 @@
+{%- include 'account-template' with page_content: 'account-profile' -%}
+
+{%- comment -%}
+{%- assign addresses_heading = 'customer.addresses.title' | t -%}
+{% include 'account-heading' with addresses_heading %}
+{% include 'account-template-open' %}
+  <div class="mt-4">
+    {%- if customer.addresses_count > 0 -%}
+      <div class="row">
+        {%- for address in customer.addresses -%}
+          {% if address == customer.default_address %}
+            <div class="col-6 col-lg-4 col-md-4 pb-4">
+              <div class="account-card" style="height: 100%;">
+                <div class="account-address--primary">
+                  &#x2605; Primary
+                </div>
+                 {{ address | format_address | replace: '<p>': '<p class="customer-address mt-4">' }}
+                <span class="account-link mr-1" data-toggle="collapse" data-target="#edit-address-{{ address.id }}" onclick="goToAddress('#edit-address-{{ address.id }}')">{{ 'customer.addresses.edit_link' | t }}</span>
+                <span class="account-address__delete" onclick="Shopify.CustomerAddress.destroy({{ address.id }}); return false">&times;</span>
+              </div>
+            </div>
+            {% break %}
+          {% endif %}
+        {%- endfor -%}
+
+        {%- for address in customer.addresses -%}
+          {% if address != customer.default_address %}
+            <div class="col-6 col-lg-4 col-md-4 pb-4">
+              <div class="account-card" style="height: 100%;">
+                 {{ address | format_address | replace: '<p>': '<p class="customer-address">' }}
+                <span class="account-link mr-1" data-toggle="collapse" data-target="#edit-address-{{ address.id }}" onclick="goToAddress('#edit-address-{{ address.id }}')">{{ 'customer.addresses.edit_link' | t }}</span>
+                <span class="account-address__delete" onclick="Shopify.CustomerAddress.destroy({{ address.id }}); return false">&times;</span>
+              </div>
+            </div>
+          {% endif %}
+        {%- endfor -%}
+
+      </div>
+       
+    {%- else -%}
+      No addresses found.
+    {%- endif -%}
+
+    <div>
+      <button class="btn btn-primary mt-2" data-toggle="collapse" data-target="#addnew">{{ 'customer.addresses.add_address' | t }}</button>
+    </div>
+
+
+      {%- assign new_address_target = 'addnew' -%}
+      {%- assign new_address_title = 'New Address' -%}
+      {%- assign edit_address_title = 'Edit Address' -%}
+
+      <div id="address-targets">
+        {%- include 'account-address-target' with address_title: new_address_title, address_id: 'new', form_param: customer.new_address, address_target: new_address_target, btn_value: 'Save' -%}
+
+        {%- for address in customer.addresses -%}
+          {%- assign address_target = 'edit-address-' | append: address.id -%}
+          {%- include 'account-address-target' with address_title: edit_address_title, address_id: address.id, form_param: address,address_target: address_target, btn_value: 'Edit' -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% include 'account-template-close' %}
+
+
+
+{{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+{{ 'customer_area.js' | shopify_asset_url | script_tag }}
+
+<script>
+Shopify.CustomerAddress = {
+    toggleForm: function(id) {
+      var editEl = document.getElementById('EditAddress_'+id);
+      editEl.style.display = editEl.style.display == 'none' ? '' : 'none';
+      return false;
+    },
+    toggleNewForm: function() {
+      var el = document.getElementById('AddAddress');
+      el.style.display = el.style.display == 'none' ? '' : 'none';
+      return false;
+    },
+    destroy: function(id, confirm_msg) {
+      if (confirm(confirm_msg || "Are you sure you wish to delete this address?")) {
+        Shopify.postLink('/account/addresses/'+id, {'parameters': {'_method': 'delete'}});
+      }
+    }
+  }
+</script>
+
+<script>
+  function goToAddress( id ) {
+    // body...
+    let idElem = document.querySelector(id);
+    let accountElems = document.querySelectorAll(".account-target");
+
+    for (var i = accountElems.length - 1; i >= 0; i--) {
+      accountElems[i].style.display = 'none';
+    }
+
+    idElem.style.display = 'block';
+
+    document.querySelector('#address-targets').scrollIntoView({
+        behavior: 'smooth'
+    });
+  }
+</script>
+
+<script>
+
+  document.addEventListener('DOMContentLoaded', function() {
+    new Shopify.CountryProvinceSelector('address_country_new', 'address_province_new', {hideElement: 'address-province-container-new'});
+
+    {% for address in customer.addresses %}
+    new Shopify.CountryProvinceSelector('address_country_{{address.id}}', 'address_province_{{address.id}}', {hideElement: 'address-province-container-{{address.id}}'});
+    {% endfor %}
+  });
+</script>
+
+{%- endcomment -%}

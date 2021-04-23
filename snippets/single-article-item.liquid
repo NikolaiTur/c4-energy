@@ -1,0 +1,29 @@
+<a class="single_article" href="{{ article.url }}">
+  {% unless article.image == blank %}
+  <div class="article_image">
+      <noscript>
+          {{ article.image | img_url: '2048x2048' | img_tag: article.title | escape }}
+      </noscript>
+      {% assign img_url = article.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+      <img class="article__image lazyload"
+      src="{{ article.image | img_url: '300x300' }}"
+      data-src="{{ img_url }}"
+      data-widths="[360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+      data-aspectratio="{{ article.image.aspect_ratio }}"
+      data-sizes="auto"
+      alt="{{ article.title | escape }}" />
+  </div>
+  {% endunless %}
+  <div class="infos">
+      {% if settings.enable_blog_category %}
+      <span class="category">{{ blog.title }}</span>
+      {% endif %}
+      {% if settings.enable_blog_date %}
+      <span class="date">{{ article.published_at | date: "%B %d, %Y" }}</span>
+      {% endif %}
+  </div>
+  <div class="content">
+      <h5>{{ article.title | escape }}</h5>
+      <p>{{ article.excerpt_or_content | strip_html | truncatewords: 30 }}</p>
+  </div>
+</a>

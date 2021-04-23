@@ -1,0 +1,217 @@
+<section id="science-body" role="contentinfo">
+  <div class="container-fluid">
+	  <div id="science-body--wrapper">
+      <div id="science-body--left">
+        {% if section.settings.left_column_intro_title != blank %}
+          <h2 class="h1 text-upper intro-title"><img src="{{ 'down-arrow.png' | asset_url }}" class="intro-arrow">{{ section.settings.left_column_intro_title }}</h2>
+        {% endif %}
+
+        {% if section.settings.left_column_intro_image != blank %}
+          <img src="{{ section.settings.left_column_intro_image | img_url: 'master' }}" class="intro-image">
+        {% endif %}
+
+        <div id="science-body--left-content">
+          <div id="science-body--left-content--wrapper">
+            {% if section.settings.left_column_title != blank %}
+              <h3 class="text-upper title">{{ section.settings.left_column_title }}</h3>
+            {% endif %}
+
+            {% if section.settings.left_column_description != blank %}
+              <p class="description">{{ section.settings.left_column_description }}</p>
+            {% endif %}
+
+            <div class="science-items">
+              {% for block in section.blocks %}
+                {% if block.settings.item_type == 'c4_smart_energy' %}
+                  <div class="science-item">
+                    
+                    {% if block.settings.item_icon != blank %}
+                      <div class="science-item--icon">{{ block.settings.item_icon }}</div>
+                    {% endif %}
+
+                    {% if block.settings.item_title != blank %}
+                      <h4 class="science-item--title text-upper">{{ block.settings.item_title }}</h4>
+                    {% endif %}
+
+                    {% if block.settings.item_subtitle != blank %}
+                      <p class="science-item--subtitle text-upper">{{ block.settings.item_subtitle }}</p>
+                    {% endif %}
+
+                    {% if block.settings.item_content != blank %}
+                      <div class="science-item--content">{{ block.settings.item_content }}</div>
+                    {% endif %}
+
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            <div class="footnote">
+              {% if section.settings.left_column_footnote != blank %}
+                {{ section.settings.left_column_footnote }}
+              {% endif %}
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div id="science-body--right">
+        {% if section.settings.right_column_intro_title != blank %}
+          <h2 class="h1 text-upper intro-title">{{ section.settings.right_column_intro_title }}<img src="{{ 'down-arrow.png' | asset_url }}" class="intro-arrow"></h2>
+        {% endif %}
+
+        {% if section.settings.right_column_intro_image != blank %}
+          <img src="{{ section.settings.right_column_intro_image | img_url: 'master' }}" class="intro-image">
+        {% endif %}
+
+        <div id="science-body--right-content">
+          <div id="science-body--right-content--wrapper">
+            {% if section.settings.right_column_title != blank %}
+              <h3 class="text-upper title">{{ section.settings.right_column_title }}</h3>
+            {% endif %}
+
+            {% if section.settings.right_column_description != blank %}
+              <p class="description">{{ section.settings.right_column_description }}</p>
+            {% endif %}
+
+            <div class="science-items">
+              {% for block in section.blocks %}
+                {% if block.settings.item_type == 'c4_energy' %}
+                  <div class="science-item">
+                    
+                    {% if block.settings.item_icon != blank %}
+                      <div class="science-item--icon">{{ block.settings.item_icon }}</div>
+                    {% endif %}
+
+                    {% if block.settings.item_title != blank %}
+                      <h4 class="science-item--title text-upper">{{ block.settings.item_title }}</h4>
+                    {% endif %}
+
+                    {% if block.settings.item_subtitle != blank %}
+                      <p class="science-item--subtitle text-upper">{{ block.settings.item_subtitle }}</p>
+                    {% endif %}
+
+                    {% if block.settings.item_content != blank %}
+                      <div class="science-item--content">{{ block.settings.item_content }}</div>
+                    {% endif %}
+
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            <div class="footnote">
+              {% if section.settings.right_column_footnote != blank %}
+                {{ section.settings.right_column_footnote }}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+{% schema %}
+{
+  "name": "Science Body",
+  "settings": [
+    {
+      "type": "text",
+      "id": "left_column_intro_title",
+      "label": "Left Column Intro Title"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_column_intro_image",
+      "label": "Left Column Intro Image"
+    },
+    {
+      "type": "text",
+      "id": "left_column_title",
+      "label": "Left Column Title"
+    },
+    {
+      "type": "textarea",
+      "id": "left_column_description",
+      "label": "Left Column Description"
+    },
+    {
+      "type": "textarea",
+      "id": "left_column_footnote",
+      "label": "Left Column Footnote"
+    },
+    {
+      "type": "text",
+      "id": "right_column_intro_title",
+      "label": "Right Column Intro Title"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_column_intro_image",
+      "label": "Right Column Intro Image"
+    },
+    {
+      "type": "text",
+      "id": "right_column_title",
+      "label": "Right Column Title"
+    },
+    {
+      "type": "textarea",
+      "id": "right_column_description",
+      "label": "Right Column Description"
+    },
+    {
+      "type": "textarea",
+      "id": "right_column_footnote",
+      "label": "Right Column Footnote"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "item_type",
+          "label": "Item Type",
+          "options": [
+            {
+              "label": "C4 Smart Energy",
+              "value": "c4_smart_energy"
+            },
+            {
+              "label": "C4 Energy",
+              "value": "c4_energy"
+            }
+          ]
+        },
+        {
+          "type": "textarea",
+          "id": "item_icon",
+          "label": "Item Icon (SVG CODE)"
+        },
+        {
+          "type": "text",
+          "id": "item_title",
+          "label": "Item Title"
+        },
+        {
+          "type": "text",
+          "id": "item_subtitle",
+          "label": "Item Subtitle"
+        },
+        {
+          "type": "html",
+          "id": "item_content",
+          "label": "Item Content"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

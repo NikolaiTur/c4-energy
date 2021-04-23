@@ -1,0 +1,9 @@
+{% assign account_heading = "My Account" %}
+
+{% if settings.profile_form_show and customer.metafields.loyaltylion.points_total %}
+	{% assign account_includes = 'account-details, account-profile, account-orders, account-programs-cta' %}
+{% else %}
+	{% assign account_includes = 'account-details, account-orders, account-programs-cta' %}
+{% endif %}
+
+{%- include 'account-template' with orders_per_page: 5, page_heading: account_heading, page_content: account_includes -%}

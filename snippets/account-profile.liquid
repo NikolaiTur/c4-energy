@@ -1,0 +1,17 @@
+<div class="account__profile">
+  <h2 class="account__profile__title">Account Profile</h2>
+  <div class="account__profile__sections">
+
+    <div class="account__profile__navigation-wrapper">
+      {% include 'account-profile-navigation' %}
+    </div>
+
+    {% if request.path contains 'addresses' %}
+      {% include 'account-profile-addresses' %}
+    {% elsif template contains 'fitness' %}
+      {% include 'account-profile-fitness' %}
+    {% else %}
+      {% include 'account-profile-overview' %}
+    {% endif %}
+  </div>
+</div>

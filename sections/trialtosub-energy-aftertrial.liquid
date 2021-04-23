@@ -1,0 +1,97 @@
+<section class="trialtosub__aftertrial">
+    <div class="container-fluid">
+        <div class="trialtosub__aftertrial__inner">
+            <div class="trialtosub__aftertrial__content">
+                <h2 class="trialtosub__aftertrial__title">{{ section.settings.title }}</h2>
+                <div class="trialtosub__aftertrial__blocks">
+                    {% for block in section.blocks %}
+                        <div class="trialtosub__aftertrial__block">
+                            {% if block.settings.icon != blank %}
+                                <div class="trialtosub__aftertrial__icon">{{ block.settings.icon }}</div>
+                            {% endif %}
+                            <div>
+                                <h4>{{ block.settings.title }}</h4>
+                                <p>{{ block.settings.body }}</p>    
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="trialtosub__aftertrial__video">
+                <div class="trialtosub__aftertrial__video--container">
+                    <a href="#" class="icon">
+                        <svg version="1.1" id="mute-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                        viewBox="0 0 1280 1024" style="enable-background:new 0 0 1280 1024;" xml:space="preserve">
+                     <style type="text/css">
+                       .st0{fill:#666666;}
+                     </style>
+                     <g>
+                       <rect x="270.64" y="341.76" class="st0" width="102" height="300"/>
+                       <polygon class="st0 cross" points="965.96,496.15 1072.97,389.15 1018.98,335.16 911.98,442.17 805,335.19 751.01,389.17 858,496.15 
+                         749.98,604.16 803.97,658.15 911.98,550.14 1020.01,658.17 1074,604.19  "/>
+                       <polygon class="st0" points="422.64,641.76 725.64,879.76 725.64,105.76 422.64,341.76  "/>
+                     </g>
+                     </svg>
+                    </a>
+                    <video autoplay loop muted playsinline preload="metadata"><source type="video/mp4" src="{{ section.settings.video_url }}"></video>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready( function () {
+        $('body').on('click','.trialtosub__aftertrial__video .icon',function(e){
+            e.preventDefault();
+
+            var $video = $(this).next(); 
+            $(this).toggleClass('unmute');
+            $video.prop("muted", !$video.prop("muted"));
+        });
+    });
+</script>
+
+{% schema %}
+{
+    "name": "After Trial",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "After your trial Pack, You Get"
+        },
+        {
+            "type": "text",
+            "id": "video_url", 
+            "label": "Video URL",
+            "default": "https://cdn.shopify.com/s/files/1/1492/2278/files/C4OTG_0088_C4Energy_DarkPaidSocialAssets__Video_C4OriginalCarbonated_SQUARE_v03_1.mp4?v=1591116494"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "benefit",
+            "name": "Benefit",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title"
+                }, 
+                {
+                    "type": "textarea",
+                    "id": "body",
+                    "label": "Body"
+                }, 
+                {
+                    "type": "html",
+                    "id": "icon",
+                    "label": "Icon",
+                    "info": "Paste the SVG icon code here."
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

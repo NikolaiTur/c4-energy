@@ -1,0 +1,1069 @@
+<!-- /templates/product.liquid -->
+{%- assign first_3d_model = product.media | where: "media_type", "model" | first -%}
+
+<div itemscope itemtype="http://schema.org/Product" id="ProductSection--{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="product-template"
+  data-image-zoom-type="{{ section.settings.enable_image_zoom }}"
+  data-enable-history-state="true"
+  data-stacked-layout="{% if section.settings.media_layout == "stacked" %}true{% else %}false{% endif %}"
+  {% if first_3d_model %}data-has-model="true"{% endif %}>
+  <div class="container-fluid">
+    <div id="ProductSection-container">
+    <meta itemprop="url" content="{{ shop.url }}{{ product.url }}">
+    <meta itemprop="image" content="{{ product.featured_media | img_url: 'grande' }}">
+
+    {% assign current_variant = product.selected_or_first_available_variant %}
+    {% assign featured_media = current_variant.featured_media | default: product.featured_media %}
+
+    {% assign stacked = false %}
+    {% if section.settings.media_layout == "stacked" %}{% assign stacked = true %}{% endif %}
+    {%- assign first_media = true -%}
+
+    <!-- <div class="grid product-single"> -->
+      <!-- <div class="grid__item large--seven-twelfths medium--seven-twelfths text-center"> -->
+        
+
+    <div id="product-info" class="product-single">
+      <div id="product-info--left">
+        {% if product.metafields.c4energy.use_custom_media %}
+          <div id="ProductMediaGroup-{{ section.id }}" class="product-single__media-group-wrapper" data-product-single-media-group-wrapper>
+          <div class="product-single__media-group{% unless stacked %} product-single__media-group--single-xr{% endunless %}" data-product-single-media-group>
+            {% for variant in product.variants %}
+
+              {%- assign featured = false -%}
+              {%- if variant.featured_media == featured_media -%}
+                {%- assign featured = true -%}
+              {%- endif -%}
+
+              <div class="product-single__media-flex-wrapper" data-slick-media-label="{{ thumbnail_alt }}" data-product-single-media-flex-wrapper>
+              <div class="product-single__media-flex">
+                {% capture media_id %}{{ section.id }}-{{ variant.featured_media.id }}{% endcapture %}
+                {% capture img_id_class %}product-single__media-{{ media_id }}{% endcapture %}
+                {% capture wrapper_id %}ProductMediaWrapper-{{ media_id }}{% endcapture %}
+                {% capture image_size %}{{ height }}x{{ height }}{% endcapture %}
+
+                <div id="{{ wrapper_id }}" class="product-single__media-wrapper {% unless stacked or featured %} hide{% endunless %}"  data-product-single-media-wrapper data-media-id="{{ media_id }}" tabindex="-1">
+                  <div class="product-single__media custom">
+                  {% if variant.metafields.c4energy.bottle_image != blank %}
+                    <img src="{{ variant.metafields.c4energy.bottle_image }}">
+                  {% endif %}
+                  </div>
+                </div>
+              </div></div>
+            {% endfor %}
+          </div></div>
+        {% else %}
+        <div id="ProductMediaGroup-{{ section.id }}" class="product-single__media-group-wrapper" data-product-single-media-group-wrapper>
+          <div class="product-single__media-group{% unless stacked %} product-single__media-group--single-xr{% endunless %}" data-product-single-media-group>
+            {%- assign enable_image_zoom = section.settings.enable_image_zoom -%}
+            {% assign height = 850 %}
+            {% assign width = 575 %}
+            {%- assign first_3d_model = product.media | where: "media_type", "model" | first -%}
+            {% comment %}
+              Display product images
+            {% endcomment %}
+            {%- for media in product.media -%}
+              {%- assign featured = false -%}
+              {%- if media == featured_media -%}
+                {%- assign featured = true -%}
+              {%- endif -%}
+
+              {%- capture thumbnail_alt -%}
+                {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+                  {{ 'products.product.video_thumbnail_alt' | t: imageAlt: media.alt | escape }}
+                {%- elsif media.media_type == 'model' -%}
+                  {{ 'products.product.model_thumbnail_alt' | t: imageAlt: media.alt | escape }}
+                {%- else -%}
+                  {{ 'products.product.gallery_thumbnail_alt' | t: imageAlt: media.alt | escape }}
+                {%- endif -%}
+              {%- endcapture -%}
+
+              <div class="product-single__media-flex-wrapper" data-slick-media-label="{{ thumbnail_alt }}" data-product-single-media-flex-wrapper>
+                <div class="product-single__media-flex">
+                  {%- include 'media' with media, enable_image_zoom: enable_image_zoom, stacked: stacked, featured: featured, width: width, height: height -%}
+
+                  {% comment %}
+                    Display a "View in your space" button (multi) for the first visible media and each individual model.
+                    Stacked layout only.
+                  {% endcomment %}
+                  {% if stacked %}
+                    {%- assign xr_id = false -%}
+                    {%- if first_media and first_3d_model -%}
+                      {%- assign xr_id = first_3d_model.id -%}
+                    {%- elsif media.media_type == 'model' -%}
+                      {%- assign xr_id = media.id -%}
+                    {%- endif -%}
+
+                    {%- if xr_id -%}
+                      {%- include 'xr-button' with model_id: xr_id, multi: true -%}
+                    {%- endif -%}
+                    {%- assign first_media = false -%}
+                  {% endif %}
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+
+          {% comment %}
+            Display a "View in your space" button (single).
+            Stacked/Thumbnails layout (mobile)
+            Thumbnail layout only (desktop)
+          {% endcomment %}
+          {%- if first_3d_model -%}
+           {%- include 'xr-button' with model_id: first_3d_model.id, multi: false -%}
+          {%- endif -%}
+
+
+          {% comment %}
+
+          {% unless stacked %}
+            <ul class="product-single__thumbnails small--hide grid-uniform" data-product-thumbnails>
+              {% for media in product.media %}
+                {% if product.media.size > 1 %}
+                  <li class="grid__item medium--one-third large--one-quarter product-single__media-wrapper">
+                    {%- capture thumbnail_alt -%}
+                      {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+                        {{ 'products.product.video_thumbnail_alt' | t: imageAlt: media.alt | escape }}
+                      {%- elsif media.media_type == 'model' -%}
+                        {{ 'products.product.model_thumbnail_alt' | t: imageAlt: media.alt | escape }}
+                      {%- else -%}
+                        {{ 'products.product.gallery_thumbnail_alt' | t: imageAlt: media.alt | escape }}
+                      {%- endif -%}
+                    {%- endcapture -%}
+
+                    <a href="{{ media | img_url: 'grande' }}" class="product-single__thumbnail{% if media == featured_media %} active-thumb{% endif %}" data-media-id="{{ section.id }}-{{ media.id }}" data-product-thumbnail>
+                      <img class="product-single__thumb" src="{{ media | img_url: '150x' }}" alt="{{ thumbnail_alt }}">
+                      {%- if media.media_type == 'video' or media.media_type == 'external_video' or media.media_type == 'model' -%}
+                        <div class="product-single__thumbnail-badge">
+                          {% include 'svg-definitions' with media.media_type %}
+                        </div>
+                      {%- endif -%}
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% endunless %}
+
+          <div class="slick__controls slick-slider">
+            <button class="slick__arrow slick__arrow--previous" aria-label="{{ 'home_page.slideshow.previous_slide' | t }}" data-slick-previous>
+              <span class="icon icon-slide-prev" aria-hidden="true"></span>
+            </button>
+            <button class="slick__arrow slick__arrow--next" aria-label="{{ 'home_page.slideshow.next_slide' | t }}" data-slick-next>
+              <span class="icon icon-slide-next" aria-hidden="true"></span>
+            </button>
+            <div class="slick__dots-wrapper" data-slick-dots>
+            </div>
+          </div>
+
+          {% endcomment %}
+        </div>
+        {% endif %}
+
+
+      </div>
+
+      <!-- <div class="grid__item product-single__meta--wrapper medium--five-twelfths large--five-twelfths"> -->
+      <div id="product-info--right" class="product-single__meta--wrapper">
+        <div class="product-single__meta">
+          <div class="product-single__meta-left">
+            {% if section.settings.product_vendor_enable %}
+              <h2 class="product-single__vendor" itemprop="brand">{{ product.vendor }}</h2>
+            {% endif %}
+
+            {% if product.type != blank %}
+              <span class="product-single__type">{{ product.type }}</span>
+            {% endif %}
+            <h1 class="product-single__title" itemprop="name">{{ product.title }}</h1>
+
+          </div>
+
+          <div class="product-single__meta-right">
+            <div class="reviews-link--trigger">
+              <span class="stamped-product-reviews-badge stamped-main-badge" data-id="{{product.id}}" data-product-sku="{{product.selected_or_first_available_variant.sku}}" style="display: block;"></span>
+            </div>
+            <div class="product-single__meta-upc_msrp">
+              {% for variant in product.variants %}
+                {% if variant.barcode != blank %}
+                  <span class="product-upc" data-variant-id="{{ variant.id }}">UPC: {{ variant.barcode }}</span>
+                {% endif %}
+                {% if variant.metafields.c4energy.msrp != blank %}
+                  <span class="product-msrp" data-variant-id="{{ variant.id }}">MSRP: {{ variant.metafields.c4energy.msrp }}</span>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+          <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+            <meta itemprop="priceCurrency" content="{{ cart.currency.iso_code }}">
+            <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
+          </div>
+
+            {% capture "form_classes" %}
+              product-single__form{% if product.has_only_default_variant %} product-single__form--no-variants{% endif %}
+            {%- endcapture %}
+
+            {% capture "form_id" %}AddToCartForm--{{ section.id }}{%- endcapture %}
+
+            {% form 'product', product, data-productid: product.id, class:form_classes, id:form_id, data-product-form: '' %}
+
+              <div id="product-option--selection">
+                <div id="product-option--selection-left">
+                  <div id="product-option--selection-left--content">
+                    {% unless product.has_only_default_variant %}
+                      {% for option in product.options_with_values %}
+                        <div class="radio-wrapper js product-form__item {{ option.name | escape | downcase | handleize }}">
+                          <label class="single-option-radio__label" for="ProductSelect-option-{{ forloop.index0 }}">
+                            {{ option.name | escape }}
+                          </label>
+                        
+                          {% if option.name == 'Flavor' %}
+                            <div class="mobile-flavor--title">Select A Flavor<i class="fas fa-chevron-down"></i></div>
+                          {% endif %}
+
+                          {% if section.settings.product_selector == 'radio' %}
+                          <div class="single-option-radio" id="ProductSelect-option-{{ forloop.index0 }}">
+                            {% assign option_index = forloop.index %}
+                            {% for value in option.values %}
+
+                              {%- comment -%}
+                                if all variants for a given flavor are disabled, then we just disable the 
+                                flavor selection.
+                                The idea is to hide the flavor if all variants contain a hide metafield, or 
+                                if the flavor is hidden in the product metafield. 
+                              {%- endcomment -%}
+                              {% if option.name == 'Flavor' %}
+
+                                {%- comment -%}if the metafield contains the value, we just skip this flavor{%- endcomment -%}
+                                {% if product.metafields.flavors.hide contains value %}
+                                  {% continue %}
+                                {% endif %}
+
+                                {%- comment -%}otherwise we check variants to see if all the variants for a given flavor are hidden{%- endcomment -%}
+                                {% assign showFlavor = false %}
+                                {% assign option_name = 'option' | append: option_index %}
+
+                                {% for variant in product.variants %}
+                                    {% if variant[option_name] == value and variant.metafields.variant.hide == blank %}
+                                        {% assign showFlavor = true %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% unless showFlavor %}
+                                  {% continue %}
+                                {% endunless %}
+                              {% endif %}
+
+
+                              {% assign variant_label_state = true %}
+                              {% if product.options.size == 1 %}
+                                {% unless product.variants[forloop.index0].available  %}
+                                  {% assign variant_label_state = false %}
+                                {% endunless %}
+                              {% endif %}
+                            
+                            <input type="radio"
+                              {% if option.selected_value == value %} checked="checked"{% endif %}
+                              {% unless variant_label_state %} disabled="disabled"{% endunless %}
+                              value="{{ value | escape }}"
+                              data-index="option{{ option_index }}"
+                              name="option{{ option.position }}"
+                              class="single-option-selector__radio{% unless variant_label_state %} disabled{% endunless %} {{ option.name | downcase | handleize }}"
+                              id="ProductSelect-option-{{ option.name | handleize }}-{{ value | escape }}">
+                            <label for="ProductSelect-option-{{ option.name | handleize }}-{{ value | escape }}"{% unless variant_label_state %} class="disabled"{% endunless %}><span>{{ value | escape }}</span>
+
+                              {% assign variant = product.variants[forloop.index0] %}
+
+                              {% if option.name == 'Flavor' and variant.metafields.c4energy.tooltip != blank %}
+                                <div class="tooltip"><div class="tooltip-content"><p class="flavor-name">{{ value | escape }}</p><p class="flavor-content">{{ variant.metafields.c4energy.tooltip }}</p></div></div>
+                              {% endif %}
+
+                              {% if option.name == 'Flavor' %}
+                                <img src="{{ 'can-icon.svg' | asset_url }}" class="can-icon">
+                              {% endif %}
+
+
+                            </label>
+                            
+                            {% include 'custom-flavor-colors' %}
+
+                          {% endfor %}
+                        </div>
+
+
+
+                        {% if section.settings.quantity_enabled and option.name == 'Flavor' %}
+                          <div class="mobile-flavor--quantity">
+                            <div class="product-single__quantity">
+                              <div class="qtydiv">
+                                <div class="qtybox">
+                                  <span class="btnqty qtyminus icon icon-minus">-</span>
+                                  <input type="text" id="quantity" name="quantity" value="1" min="1" class="quantity-selector quantity-input" readonly="">
+                                  <span class="btnqty qtyplus icon icon-plus">+</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        {% endif %}
+
+                      {% else %}
+                        <select class="single-option-selector__radio single-option-selector-{{ section.id }} product-form__input" id="SingleOptionSelector-{{ forloop.index0 }}" data-index="option{{ forloop.index }}">
+                          {% for value in option.values %}
+                            <option value="{{ value | escape }}"{% if option.selected_value == value %} selected="selected"{% endif %}>{{ value | escape }}</option>
+                          {% endfor %}
+                        </select>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                {% endunless %}              
+              </div>
+            </div>
+            <div id="product-option--selection-right">
+
+              {% unless product.tags contains 'hide-recharge' %}
+                {%- comment -%}the default script checks if a product is available. Zach asked us to remove it.{%- endcomment -%}
+                {% include 'subscription-product' %} 
+              {% endunless %}
+
+              <select name="id" data-productid="{{product.id}}" id="ProductSelect--{{ section.id }}" class="product-single__variants no-js">
+                {% for variant in product.variants %}
+                  {% if variant.available %}
+                    <option {% if variant == product.selected_or_first_available_variant %}
+                      selected="selected" {% endif %}
+                      data-sku="{{ variant.sku }}"
+                      value="{{ variant.id }}">
+                      {{ variant.title }} - {{ variant.price | money_with_currency }}
+                    </option>
+                  {% else %}
+                    <option {% if variant == product.selected_or_first_available_variant %}
+                      selected="selected" {% endif %} disabled="disabled" value="{{ variant.id }}">
+                      {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+                    </option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+
+              <div id="price-with-quantity">
+
+              {% comment %}
+                Optionally show the 'compare at' or original price of the product.
+              {% endcomment %}
+              {% include 'product-price', variant: current_variant %}
+
+              {%- if shop.taxes_included or shop.shipping_policy.body != blank -%}
+                <div class="product-single__policies rte">
+                  {%- if shop.taxes_included -%}
+                    {{ 'products.general.include_taxes' | t }}
+                  {%- endif -%}
+                  {%- if shop.shipping_policy.body != blank -%}
+                    {{ 'products.general.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+
+              {% if section.settings.quantity_enabled %}
+              <div class="product-single__quantity hidden-xs">
+                <!-- <label for="Quantity" class="product-single__quantity-label js-quantity-selector">{{ 'products.product.quantity' | t }}</label>
+                <input type="number" hidden="hidden" id="Quantity" name="quantity" value="1" min="1" class="js-quantity-selector"> -->
+
+                <div class="qtydiv">
+                  <div class="qtybox">
+                    <span class="btnqty qtyminus icon icon-minus"></span>
+                    <input type="text" id="quantity" name="quantity" value="1" min="1" class="quantity-selector quantity-input" readonly="">
+                    <span class="btnqty qtyplus icon icon-plus"></span>
+                  </div>
+                </div>
+
+              </div>
+              {% endif %}
+
+            </div>
+
+              <div data-productid="{{ product.id }}" class="product-single__add-to-cart{% if section.settings.add_to_cart_button_size == 'large' %} product-single__add-to-cart--full-width{% endif %}">
+                  <button type="submit" name="add" id="AddToCart--{{ section.id }}" class="btn btn--add-to-cart c4-btn yellow medium{% if section.settings.enable_payment_button %} btn--secondary-accent{% endif %}"{% unless current_variant.available %} disabled="disabled"{% endunless %}>
+                    <span class="btn__text">
+                      {% if current_variant.available %}
+                        {{ 'products.product.add_to_cart' | t }}<i class="fas fa-shopping-cart"></i><div class="mobile-price">&nbsp;&nbsp;&mdash;&nbsp;&nbsp;{% include 'product-price' %}</div>
+                      {% else %}
+                        {{ 'products.product.sold_out' | t }}
+                      {% endif %}
+                    </span>
+                  </button>
+                <div id="BackInStock">
+                  {%- comment -%}this placeholder is used for the back in stock integration.{%- endcomment -%}
+                </div> 
+                <div class="product-single__shipping-note hidden-xs">
+                  <span>{% include 'return-icon' %} Easy & Free Returns</span>
+                  <span>{% include 'time-icon' %} Ships in 1-2 Business Days</span>
+                </div>
+                {% if section.settings.enable_payment_button %}
+                  {{ form | payment_button }}
+                {% endif %}
+              </div>
+
+              {% for variant in product.variants %}
+                {% assign message = variant.metafields.product.overselling_message %}
+                {% if message != blank %}
+                  <div data-variant-id="{{ variant.id }}" class="overselling_message_container">
+                    <p class="overselling_message">{{ message }}</p>
+                    <input type="hidden" name="properties[message]" value="{{ message }}" disabled>
+                  </div>
+                {% endif %}
+
+              {% endfor %}
+
+            {% endform %}
+          </div></div>
+          </div>        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mobile-flavor--selector">
+  <div class="mobile-flavor--selector-left">
+    <img src="{{ 'can-icon.svg' | asset_url }}" class="can-icon">
+    <div id="flavor-info">
+      <div class="flavor-name"></div>
+      <div class="flavor-tooltip"></div>
+    </div>
+  </div>
+  <div class="mobile-flavor--selector-right"><i class="fas fa-chevron-up"></i>Choose Flavor</div>
+</div>
+
+{% comment %} 
+{% if section.settings.social_sharing_products %}
+  {% include 'social-sharing', share_title: product.title, share_permalink: product.url, share_image: product.featured_media %}
+{% endif %} 
+{% endcomment %}
+
+
+{% unless product == empty %}
+  <script type="application/json" id="ProductJson-{{ section.id }}">
+    {{ product | json }}
+  </script>
+  <script type="application/json" id="ModelJson-{{ section.id }}">
+    {{ product.media | where: 'media_type', 'model' | json }}
+  </script>
+{% endunless %}
+
+
+<script>
+
+  // Custom Code to check for unavailable and sold out variants
+
+  var all_product_variants = [
+    {%- for variant in product.variants -%}
+        `{{ variant.title }}`,
+    {%- endfor -%}
+  ];
+
+  var sold_out_variants = [
+    {%- for variant in product.variants -%}
+      {%- unless variant.available -%}
+        `{{ variant.title }}`,
+      {%- endunless -%}
+    {%- endfor -%}
+  ]
+
+  $(document).ready(function(e){
+    check_unavailable_options();
+
+    // $('input[data-index=option1], input[data-index=option2]').on('change',function(){      
+    //   check_unavailable_options();  
+    // });
+
+    $('input.size, input.serving-size').on('change',function(){
+      check_unavailable_options();  
+    });
+
+    $('body').on('click','.rc_radio_frequency',function(e){
+      var $target_index = $(this).data('targetIndex');
+      $(".rc_select__frequency").prop("selectedIndex", $target_index);
+    });
+  });
+
+  function check_unavailable_options() {
+
+    var $current_option_prefix = '';
+
+    if($('input.size').length) {
+      $current_option_prefix = $('input.size:checked').val() + ' / ';
+    }
+
+    if($('input.serving-size').length) {
+      $current_option_prefix += $('input.serving-size:checked').val() + ' / ';
+    }
+
+    // var $current_option_prefix = $('input[data-index=option1]:checked').val() + ' / ' + $('input[data-index=option2]:checked').val() + ' / ' ;
+
+    // $('input[data-index=option3]').removeClass('unavailable sold-out');
+    // $('input[data-index=option3]').removeAttr('disabled');
+
+    $('input.flavor').removeClass('unavailable sold-out');
+    $('input.flavor').removeAttr('disabled');
+    
+    $('input.flavor').each(function(key, value){
+      var $current_option = $current_option_prefix + $(this).val();
+      
+      if($.inArray($current_option, all_product_variants) < 0) {
+        $(this).attr('disabled','disabled');
+        $(this).addClass('unavailable');
+      }
+
+      if($.inArray($current_option, sold_out_variants) >= 0) {
+        $(this).addClass('sold-out');
+      }
+    }).promise().done(function(){
+      if($('input.flavor:checked').hasClass('unavailable')){
+        $('input.flavor').prop("checked",false);
+
+        $('input.flavor').each(function(key, value){
+          if(!$(this).hasClass('unavailable') && !$(this).hasClass('sold-out')) {
+            $(this).prop("checked",true).change();
+            return false;
+          }
+        }).promise().done(function(){
+          // after_flavor_selected();
+        });
+      } else {
+        $('input.flavor').trigger('change');
+        // after_flavor_selected();
+      }
+    });
+  }
+</script>
+
+<!-- Klaviyo Viewed Product -->
+<script type="text/javascript">
+  var _learnq = _learnq || [];
+
+  var item = {
+    Name: {{ product.title|json }},
+    ProductID: {{ product.id|json }},
+    Categories: {{ product.collections|map:'title'|json }},
+    ImageURL: "https:{{ product.featured_image.src|img_url:'grande' }}",
+    URL: "{{ shop.secure_url }}{{ product.url }}",
+    Brand: {{ product.vendor|json }},
+    Price: {{ product.price|money|json }},
+    CompareAtPrice: {{ product.compare_at_price_max|money|json }}
+  };
+
+  _learnq.push(['track', 'Viewed Product', item]);
+  _learnq.push(['trackViewedItem', {
+    Title: item.Name,
+    ItemId: item.ProductID,
+    Categories: item.Categories,
+    ImageUrl: item.ImageURL,
+    Url: item.URL,
+    Metadata: {
+      Brand: item.Brand,
+      Price: item.Price,
+      CompareAtPrice: item.CompareAtPrice
+    }
+  }]);
+</script>
+<!-- End Klaviyo Viewed Product -->
+
+{% schema %}
+{
+  "name": {
+    "da": "Produktsider",
+    "de": "Produktseiten",
+    "en": "Product pages",
+    "es": "Páginas de productos",
+    "fi": "Tuotesivut",
+    "fr": "Pages de produits",
+    "hi": "उत्पाद पेज",
+    "it": "Pagine di prodotto",
+    "ja": "商品ページ",
+    "ko": "제품 페이지",
+    "nb": "Produktsider",
+    "nl": "Productpagina's",
+    "pt-BR": "Páginas de produtos",
+    "pt-PT": "Páginas de produtos",
+    "sv": "Produktsidor",
+    "th": "หน้าสินค้า",
+    "zh-CN": "产品页面",
+    "zh-TW": "產品頁面"
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "product_vendor_enable",
+      "label": {
+        "da": "Vis produktleverandør",
+        "de": "Produktanbieter anzeigen",
+        "en": "Show product vendor",
+        "es": "Mostrar proveedor del producto",
+        "fi": "Näytä tuotteen myyjä",
+        "fr": "Afficher le distributeur du produit",
+        "hi": "उत्पाद विक्रेता दिखाएं",
+        "it": "Indica fornitore prodotto",
+        "ja": "商品の販売元を表示する",
+        "ko": "제품 공급 업체 표시",
+        "nb": "Vis produktleverandør",
+        "nl": "Productleverancier weergeven",
+        "pt-BR": "Exiba o fornecedor do produto",
+        "pt-PT": "Mostrar o fornecedor do produto",
+        "sv": "Visa produktsäljare",
+        "th": "แสดงผู้ขายสินค้า",
+        "zh-CN": "显示产品厂商",
+        "zh-TW": "顯示產品廠商"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "social_sharing_products",
+      "label": {
+        "da": "Aktivér produktdeling",
+        "de": "Teilen von Produkten aktivieren",
+        "en": "Enable product sharing",
+        "es": "Habilitar compartir productos",
+        "fi": "Ota tuotejako käyttöön",
+        "fr": "Activer le partage de produits",
+        "hi": "उत्पाद साझाकरण सक्षम करें",
+        "it": "Permetti condivisione del prodotto",
+        "ja": "商品の共有を有効にする",
+        "ko": "제품 공유 활성화",
+        "nb": "Aktiver produktdeling",
+        "nl": "Schakel het delen van producten in",
+        "pt-BR": "Habilite o compartilhamento de produtos",
+        "pt-PT": "Ativar a partilha de produtos",
+        "sv": "Aktivera produktdelning",
+        "th": "เปิดใช้การแชร์สินค้า",
+        "zh-CN": "启用产品分享",
+        "zh-TW": "啟用產品分享"
+      },
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": {
+        "da": "Formular for produktmuligheder",
+        "de": "Produktoptionsformular",
+        "en": "Product options form",
+        "es": "Formulario de opciones de producto",
+        "fi": "Tuotevaihtoehtolomake",
+        "fr": "Formulaire d'options de produit",
+        "hi": "उत्पाद के विकल्प फ़ॉर्म",
+        "it": "Modulo delle opzioni di prodotto",
+        "ja": "商品オプションのフォーム",
+        "ko": "제품 옵션 양식",
+        "nb": "Skjema for produktalternativer",
+        "nl": "Formulier productopties",
+        "pt-BR": "Formulário de opções de produtos",
+        "pt-PT": "Formulário de opções de produtos",
+        "sv": "Produktalternativsformulär",
+        "th": "แบบฟอร์มตัวเลือกสินค้า",
+        "zh-CN": "产品选项表单",
+        "zh-TW": "產品選項表單"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "quantity_enabled",
+      "label": {
+        "da": "Vis antalsvælger",
+        "de": "Mengenauswahl anzeigen",
+        "en": "Show quantity picker",
+        "es": "Mostrar selector de cantidad",
+        "fi": "Näytä määrän valintatyökalu",
+        "fr": "Afficher le sélecteur de quantité",
+        "hi": "मात्रा पिकर दिखाएं",
+        "it": "Mostra selettore di quantità",
+        "ja": "数量ピッカーを表示する",
+        "ko": "수량 선택기 표시",
+        "nb": "Vis mengdevelger",
+        "nl": "Hoeveelheidskiezer weergeven",
+        "pt-BR": "Exibir seletor de quantidade",
+        "pt-PT": "Mostrar seletor de quantidade",
+        "sv": "Visa kvantitetsväljaren",
+        "th": "แสดงเครื่องมือเลือกจำนวน",
+        "zh-CN": "显示数量选择器",
+        "zh-TW": "顯示數量選擇器"
+      }
+    },
+    {
+      "type": "select",
+      "id": "product_selector",
+      "label": {
+        "da": "Vælgertype",
+        "de": "Auswahlart",
+        "en": "Picker type",
+        "es": "Tipo de selector",
+        "fi": "Valitsintyyppi",
+        "fr": "Type de sélecteur",
+        "hi": "पिकर के प्रकार",
+        "it": "Tipo di selettore",
+        "ja": "ピッカーの種類",
+        "ko": "선택기 유형",
+        "nb": "Velgertype",
+        "nl": "Soort kiezer",
+        "pt-BR": "Tipo de seletor",
+        "pt-PT": "Tipo de seletor",
+        "sv": "Väljartyp",
+        "th": "ประเภทของเครื่องมือเลือก",
+        "zh-CN": "选择器类型",
+        "zh-TW": "選擇器類型"
+      },
+      "options": [
+        {
+          "value": "radio",
+          "label": {
+            "da": "Knap",
+            "de": "Schaltfläche",
+            "en": "Button",
+            "es": "Botón",
+            "fi": "Painike",
+            "fr": "Bouton",
+            "hi": "बटन",
+            "it": "Pulsante",
+            "ja": "ボタン",
+            "ko": "버튼",
+            "nb": "Knapp",
+            "nl": "Knop",
+            "pt-BR": "Botão",
+            "pt-PT": "Botão",
+            "sv": "Knapp",
+            "th": "ปุ่ม",
+            "zh-CN": "按钮",
+            "zh-TW": "按鈕"
+          }
+        },
+        {
+          "value": "select",
+          "label": {
+            "da": "Rullemenu",
+            "de": "Dropdown",
+            "en": "Dropdown",
+            "es": "Desplegable",
+            "fi": "Pudotusvalikko",
+            "fr": "Menu déroulant",
+            "hi": "ड्रॉप डाउन",
+            "it": "Menu a tendina",
+            "ja": "ドロップダウン",
+            "ko": "드롭다운",
+            "nb": "Rullegardin",
+            "nl": "Vervolgkeuzemenu",
+            "pt-BR": "Menu suspenso",
+            "pt-PT": "Menu pendente",
+            "sv": "Rullgardinsmeny",
+            "th": "ดรอปดาวน์",
+            "zh-CN": "下拉菜单",
+            "zh-TW": "下拉式選單"
+          }
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": {
+        "da": "Knappen Læg i indkøbskurven",
+        "de": "Schaltfläche in den Warenkorb",
+        "en": "Add to cart button",
+        "es": "Añadir al carrito",
+        "fi": "Lisää ostoskoriin -painike",
+        "fr": "Bouton d'ajout au panier",
+        "hi": "कार्ट बटन में जोड़ें",
+        "it": "Pulsante \"Aggiungi al carrello\"",
+        "ja": "カートボタンに追加する",
+        "ko": "카트 버튼에 추가",
+        "nb": "Legg i handlekurv-knapp",
+        "nl": "Knop aan winkelwagen toevoegen",
+        "pt-BR": "Botão Adicionar ao carrinho",
+        "pt-PT": "Botão Adicionar ao carrinho",
+        "sv": "Lägg i varukorgen-knappen",
+        "th": "ปุ่มเพิ่มลงในตะกร้าสินค้า",
+        "zh-CN": "“添加到购物车”按钮",
+        "zh-TW": "加入購物車按鈕"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_payment_button",
+      "label": {
+        "da": "Vis dynamisk betalingsknap",
+        "de": "Dynamischen Checkout-Button anzeigen",
+        "en": "Show dynamic checkout button",
+        "es": "Mostrar botón de pago dinámico",
+        "fi": "Näytä dynaaminen kassapainike",
+        "fr": "Afficher le bouton de paiement dynamique",
+        "hi": "डायनेमिक चेकआउट बटन दिखाएं",
+        "it": "Mostra pulsante di check-out dinamico",
+        "ja": "動的チェックアウトボタンを表示する",
+        "ko": "동적 결제 버튼 표시",
+        "nb": "Vis dynamisk knapp for å gå til kassen",
+        "nl": "Dynamische betaalknop weergeven",
+        "pt-BR": "Exibir botão de checkout dinâmico",
+        "pt-PT": "Mostrar o botão dinâmico de finalização da compra",
+        "sv": "Visa dynamiska utcheckningsknappar",
+        "th": "แสดงปุ่มชำระเงินแบบไดนามิก",
+        "zh-CN": "显示动态结账按钮",
+        "zh-TW": "顯示動態結帳按鈕"
+      },
+      "info": {
+        "da": "Den enkelte kunde vil se sin foretrukne betalingsmetode blandt dem, der er tilgængelige i din butik, f.eks. PayPal eller Apple Pay. [Få mere at vide](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "de": "Jeder Kunde sieht seine bevorzugte Zahlungsmethode aus den in deinem Shop verfügbaren Zahlungsmethoden wie PayPal oder Apple Pay. [Mehr Informationen](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "en": "Each customer will see their preferred payment method from those available on your store, such as PayPal or Apple Pay. [Learn more](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "es": "Cada cliente verá su forma de pago preferida entre las disponibles en tu tienda, como PayPal o Apple Pay. [Más información](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "fi": "Kukin asiakas näkee ensisijaisen valintansa kauppasi tarjoamista maksutavoista, esim. PayPal tai Apple Pay. [Lisätietoja](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "fr": "Chaque client verra son moyen de paiement préféré parmi ceux qui sont proposés sur votre boutique, tels que PayPal ou Apple Pay. [En savoir plus](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "hi": "प्रत्येक ग्राहक आपके स्टोर पर उपलब्ध अपनी पसंदीदा भुगतान की विधि देखेंगे जैसे PayPal या Apple Pay. [अधिक जानें](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "it": "Ogni cliente vedrà il suo metodo di pagamento preferito tra quelli disponibili nel tuo negozio, come PayPal o Apple Pay. [Maggiori informazioni](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "ja": "PayPalやApple Payなど、ストアで利用可能な希望の決済方法がお客様に表示されます。[詳しくはこちら](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "ko": "각 고객은 PayPal 또는 Apple Pay와 같이 스토어에서 사용 가능한 지불 방법을 확인할 수 있습니다. [자세히 알아보기](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "nb": "Hver enkelt kunde vil se sin foretrukne betalingsmåte blant de som er tilgjengelig i butikken din, som PayPal eller Apple Pay. [Finn ut mer](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "nl": "Elke klant ziet zijn of haar beschikbare voorkeursmethode om af te rekenen, zoals PayPal of Apple Pay. [Meer informatie](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "pt-BR": "Cada cliente verá a forma de pagamento preferencial dele dentre as disponíveis na loja, como PayPal ou Apple Pay. [Saiba mais](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "pt-PT": "Cada cliente irá ver o seu método de pagamento preferido entre os disponíveis na loja, como o PayPal ou Apple Pay. [Saiba mais](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "sv": "Varje kund kommer att se den föredragna betalningsmetoden från de som finns tillgängliga i din butik, till exempel PayPal eller Apple Pay. [Läs mer](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "th": "ลูกค้าแต่ละรายจะเห็นวิธีการชำระเงินที่ต้องการจากวิธีที่ใช้ได้ในร้านค้าของคุณ เช่น PayPal หรือ Apple Pay [ดูข้อมูลเพิ่มเติม](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "zh-CN": "每位客户都可在您商店提供的付款方式中看到他们的首选付款方式，例如 PayPal 或 Apple Pay。[了解详细信息](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "zh-TW": "每位顧客都可以在您商店內開放使用的付款方式中看見他們偏好使用的方式，如 PayPal、Apple Pay 等。[深入瞭解](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)"
+      },
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "add_to_cart_button_size",
+      "label": {
+        "da": "Knapstørrelse",
+        "de": "Schaltflächengröße",
+        "en": "Button size",
+        "es": "Tamaño del botón",
+        "fi": "Painikkeen koko",
+        "fr": "Taille du bouton",
+        "hi": "बटन का आकार",
+        "it": "Dimensione pulsante",
+        "ja": "ボタンのサイズ",
+        "ko": "버튼 사이즈",
+        "nb": "Knappestørrelse",
+        "nl": "Afmeting knop",
+        "pt-BR": "Tamanho do botão",
+        "pt-PT": "Tamanho do botão",
+        "sv": "Knappstorlek",
+        "th": "ขนาดปุ่ม",
+        "zh-CN": "按钮大小",
+        "zh-TW": "按鈕尺寸"
+      },
+      "default": "small",
+      "options": [
+        {
+          "value": "small",
+          "label": {
+            "da": "Lille",
+            "de": "Klein",
+            "en": "Small",
+            "es": "Pequeña",
+            "fi": "Pieni",
+            "fr": "Petit",
+            "hi": "छोटा",
+            "it": "Piccolo",
+            "ja": "小",
+            "ko": "스몰",
+            "nb": "Liten",
+            "nl": "Klein",
+            "pt-BR": "Pequeno",
+            "pt-PT": "Pequeno",
+            "sv": "Liten",
+            "th": "เล็ก",
+            "zh-CN": "小",
+            "zh-TW": "小型"
+          }
+        },
+        {
+          "value": "large",
+          "label": {
+            "da": "Stor",
+            "de": "Groß",
+            "en": "Large",
+            "es": "grande",
+            "fi": "Suuri",
+            "fr": "Grand",
+            "hi": "बड़ा",
+            "it": "Grande",
+            "ja": "大",
+            "ko": "라지",
+            "nb": "Stor",
+            "nl": "Groot",
+            "pt-BR": "Grande",
+            "pt-PT": "Grande",
+            "sv": "Stor",
+            "th": "ใหญ่",
+            "zh-CN": "大",
+            "zh-TW": "大型"
+          }
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": {
+        "da": "Medie",
+        "de": "Medien",
+        "en": "Media",
+        "es": "Elementos multimedia",
+        "fi": "Media",
+        "fr": "Médias",
+        "hi": "मीडिया",
+        "it": "Media",
+        "ja": "メディア",
+        "ko": "미디어",
+        "nb": "Medier",
+        "nl": "Media",
+        "pt-BR": "Mídia",
+        "pt-PT": "Multimédia",
+        "sv": "Media",
+        "th": "สื่อ",
+        "zh-CN": "媒体",
+        "zh-TW": "媒體"
+      },
+      "info": {
+        "da": "Få mere at vide om [media types](https://help.shopify.com/manual/products/product-media)",
+        "de": "Mehr Informationen über [Medientypen ](https://help.shopify.com/manual/products/product-media)",
+        "en": "Learn more about [media types](https://help.shopify.com/manual/products/product-media)",
+        "es": "Más información sobre [tipos de archivos multimedia](https://help.shopify.com/manual/products/product-media)",
+        "fi": "Lue lisää [mediatyypeistä](https://help.shopify.com/manual/products/product-media)",
+        "fr": "En savoir plus sur les [types de supports multimédia](https://help.shopify.com/manual/products/product-media)",
+        "hi": "[मीडिया प्रकार](https://help.shopify.com/manual/products/product-media) के बारे में और जानें",
+        "it": "Scopri di più sulle [tipologie di file multimediali](https://help.shopify.com/manual/products/product-media)",
+        "ja": "[メディアのタイプ](https://help.shopify.com/manual/products/product-media) について詳しくはこちら",
+        "ko": "[미디어 유형](https://help.shopify.com/manual/products/product-media)에 대해 자세히 알아보기",
+        "nb": "Lær mer om [medietyper](https://help.shopify.com/manual/products/product-media)",
+        "nl": "Meer informatie over [mediatypen](https://help.shopify.com/manual/products/product-media)",
+        "pt-BR": "Saiba mais sobre [tipos de mídia](https://help.shopify.com/manual/products/product-media)",
+        "pt-PT": "Saiba mais sobre [media types](https://help.shopify.com/manual/products/product-media)",
+        "sv": "Läs mer om [mediatyper](https://help.shopify.com/manual/products/product-media)",
+        "th": "ดูข้อมูลเพิ่มเติมเกี่ยวกับ [ประเภทของสื่อ](https://help.shopify.com/manual/products/product-media)",
+        "zh-CN": "详细了解[媒体类型](https://help.shopify.com/manual/products/product-media)",
+        "zh-TW": "深入瞭解 [媒體類型](https://help.shopify.com/manual/products/product-media)"
+      }
+    },
+    {
+      "type": "select",
+      "id": "media_layout",
+      "label": {
+        "da": "Gallerilayout",
+        "de": "Galerie-Layout",
+        "en": "Gallery layout",
+        "es": "Diseño de la galería",
+        "fi": "Gallerian pohja",
+        "fr": "Mise en page de la galerie",
+        "hi": "गैलरी लेआउट",
+        "it": "Layout galleria",
+        "ja": "ギャラリーのレイアウト",
+        "ko": "갤러리 레이아웃",
+        "nb": "Gallerioppsett",
+        "nl": "Galerij-opmaak",
+        "pt-BR": "Layout da galeria",
+        "pt-PT": "Esquema da galeria",
+        "sv": "Galleri-layout",
+        "th": "เลย์เอาต์แกลเลอรี",
+        "zh-CN": "图库布局",
+        "zh-TW": "圖庫版面配置"
+      },
+      "default": "stacked",
+      "options": [
+        {
+          "value": "stacked",
+          "label": {
+            "da": "Stablet",
+            "de": "Gestapelt",
+            "en": "Stacked",
+            "es": "Stacked",
+            "fi": "Pinottu",
+            "fr": "Empiler",
+            "hi": "स्टैक्ड",
+            "it": "Elenco",
+            "ja": "スタックされました",
+            "ko": "누적",
+            "nb": "Stablet",
+            "nl": "Gestapeld",
+            "pt-BR": "Empilhado",
+            "pt-PT": "Empilhado",
+            "sv": "Staplade",
+            "th": "ซ้อน",
+            "zh-CN": "已堆叠",
+            "zh-TW": "已堆疊"
+          }
+        },
+        {
+          "value": "thumbnails",
+          "label": {
+            "da": "Miniaturer",
+            "de": "Vorschaubilder",
+            "en": "Thumbnails",
+            "es": "Miniaturas",
+            "fi": "Pikkukuvat",
+            "fr": "Vignettes",
+            "hi": "थंबनेल",
+            "it": "Miniature",
+            "ja": "サムネイル",
+            "ko": "썸네일",
+            "nb": "Miniatyrbilder",
+            "nl": "Miniatuurafbeeldingen",
+            "pt-BR": "Miniaturas",
+            "pt-PT": "Miniaturas",
+            "sv": "Förhandsbilder",
+            "th": "ขนาดย่อ",
+            "zh-CN": "缩略图",
+            "zh-TW": "縮圖"
+          }
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_zoom",
+      "label": {
+        "da": "Aktivér billedzoom",
+        "de": "Foto-Zoom zulassen",
+        "en": "Enable image zoom",
+        "es": "Habilitar zoom de imagen",
+        "fi": "Ota kuvan zoomaus käyttöön",
+        "fr": "Activer le zoom d'image",
+        "hi": "इमेज ज़ूम सक्षम करें",
+        "it": "Abilita lo zoom dell'immagine",
+        "ja": "画像ズームを有効にする",
+        "ko": "이미지 확대 사용",
+        "nb": "Aktiver bildezoom",
+        "nl": "Inzoomen op afbeelding inschakelen",
+        "pt-BR": "Habilitar o zoom da imagem",
+        "pt-PT": "Ativar o zoom da imagem",
+        "sv": "Aktivera bildzoom",
+        "th": "เปิดใช้การซูมภาพ",
+        "zh-CN": "启用图片缩放",
+        "zh-TW": "啟用圖片縮放"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_looping",
+      "label": {
+        "da": "Aktivér looping af videoer",
+        "de": "Videschleife aktivieren",
+        "en": "Enable video looping",
+        "es": "Habilitar la reproducción de video en bucle",
+        "fi": "Ota käyttöön videosilmukka",
+        "fr": "Activer le bouclage de la vidéo",
+        "hi": "वीडियो लूपिंग सक्षम करें",
+        "it": "Abilita la riproduzione in loop dei video",
+        "ja": "ビデオのループを有効にする",
+        "ko": "동영상 루프 활성화",
+        "nb": "Aktiver løkkeavspilling av video",
+        "nl": "Video-looping inschakelen",
+        "pt-BR": "Habilitar loop de vídeo",
+        "pt-PT": "Ativar ciclo de vídeo",
+        "sv": "Aktivera video-loopning",
+        "th": "เปิดใช้งานการวนซ้ำวิดีโอ",
+        "zh-CN": "启用视频循环",
+        "zh-TW": "啟用影片循環功能"
+      },
+      "default": false
+    }
+  ]
+}
+{% endschema %}

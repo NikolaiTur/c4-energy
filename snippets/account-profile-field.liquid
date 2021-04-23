@@ -1,0 +1,66 @@
+{%- assign initial_value = customer.metafields.profile[field] | default: '' -%}
+{% capture required_attr %}{% if required %}required="true"{% endif %}{% endcapture %}
+
+{% capture field_class %}class="js-profile-field form-control profile-field--{{type}}{% if class %} {{class}}{% endif %}"{% endcapture %}
+
+{% capture input_label %}
+<label class="profile__label" for="{{field}}">{{label}} {% if required %}<sup>*</sup>{% endif %}</label>
+{% endcapture %}
+
+{% capture input_prefix %}
+	{% if prefix %}
+		<span class="profile-field--prefix">{{prefix}}</span>
+	{% endif %}
+{% endcapture %}
+
+
+{% if type != 'hidden' %}
+	<div class="profile-field__container form-group">
+		{% if type == 'checkbox' or type == 'radio' %}
+			{% if type == 'checkbox' %}
+				<div class="profile-field--checkbox__container">
+					<input {{field_class}} type="checkbox" name="{{field}}" value="true" {{required_attr}}>
+					<span class="profile-field--checkbox__text"><i class="icon--checkmark"></i></span>
+				</div>
+			{% elsif type == 'radio' %}
+				<div class="profile-field--checkbox__container">
+					<input {{field_class}} type="radio" name="{{field}}" value="true" {{required_attr}}>
+					<span class="profile-field--checkbox__text"><i class="icon--checkmark"></i></span>
+				</div>
+				<div class="profile-field--checkbox__container">
+					<input {{field_class}} type="radio" name="{{field}}" value="false" {{required_attr}}>
+					<span class="profile-field--checkbox__text"><i class="icon--close"></i></span>
+				</div>
+			{% endif %}
+		
+		{%- else -%}
+			{% if type == 'text' or type == 'tel' %}
+				{{input_prefix}}
+				<input {{field_class}} type="{{type}}" placeholder="{{placeholder}}" name="{{field}}" value="{{initial_value}}" {{required_attr}}>
+				{{ input_label }}
+
+				{% if type == 'tel' %}
+					<span class="profile-error js-profile-phone-error is-hidden"></span>
+				{% endif %}
+			{% elsif type == 'select' %}
+				{{ input_label }}
+				<select {{field_class}} name="{{field}}">
+				  	<option selected disabled value=""></option>
+					{% for option in options %}
+						<option value="{{option}}" {% if value == initial_value %}selected{% endif %} {{required_attr}}>{{option}}</option>
+					{% endfor %}
+				</select>
+			{% elsif type == 'multi' %}
+				{{ input_label }}
+				{% for option in options %}
+					<div class="profile-field--checkbox__container">
+						<input {{field_class}} type="checkbox" name="{{field}}" value="{{option}}" {{required_attr}}>
+						<span class="profile-field--checkbox__text">{{option}}</span>
+					</div>
+				{% endfor %}
+			{% endif %}
+		{%- endif -%}
+	</div>
+{%- else -%}
+	<input {{field_class}} type="hidden" name="{{field}}" value="{{value}}"/>
+{%- endif -%}

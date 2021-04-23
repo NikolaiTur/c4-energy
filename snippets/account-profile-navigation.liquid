@@ -1,0 +1,19 @@
+<ul class="account__profile__navigation">
+    <li>
+        <a href="/account?view=profile" {% if template contains 'profile' %}class="active"{% endif %}>
+        Overview
+        <span class="bars"><i class="fas fa-bars"></i></span>
+        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+    </a></li>
+    {%- comment -%}
+        <li><a href="/account?view=password" {% if template contains 'password' %}class="active"{% endif %}>Profile & Password</a></li>
+    {%- endcomment -%}
+    <li><a href="/account/addresses" {% if request.path contains 'addresses' %}class="active"{% endif %}>Address Book
+        <span class="bars"><i class="fas fa-bars"></i></span>
+        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+    </a></li>
+    <li><a href="/account?view=fitness" {% if template contains 'fitness' %}class="active"{% endif %}>Fitness Profile
+        <span class="bars"><i class="fas fa-bars"></i></span>
+        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+    </a></li>
+  </ul>

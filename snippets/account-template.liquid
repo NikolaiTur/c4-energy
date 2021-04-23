@@ -1,0 +1,10 @@
+{% comment %}Segmenting this for Recharge Purposes{% endcomment %}
+{% include 'account-heading' %}
+{% include 'account-template-open' %}
+  {%- if page_content -%}
+    {%- assign page_content_array = page_content | remove: " " | split: "," -%}
+    {%- for page_include in page_content_array -%}
+      {% include page_include with orders_per_page -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- include 'account-template-close' -%}

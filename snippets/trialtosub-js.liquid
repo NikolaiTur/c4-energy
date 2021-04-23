@@ -1,0 +1,191 @@
+{%- assign recharge_id = all_products[section.settings.product_handle].selected_or_first_available_variant.metafields.subscriptions.discount_variant_id | append: all_products[section.settings.product_handle].selected_or_first_available_variant.metafields.subscriptions.discount_variant_id -%}
+
+{% if section.settings.future_item_image -%}
+  {%- assign future_image_path = section.settings.future_item_image | img_url: 'original' -%}
+{% else -%}
+{%- assign future_image_path = section.settings.future_item_image_path -%}
+{%- endif -%}
+
+<script type="text/javascript">
+
+var rechargeTrialInformation = {
+  id: {{recharge_id}},
+  disclaimer: "{{section.settings.future_message_content }}",
+  heading: "{{section.settings.future_message_heading}}",
+  image_path: "{{future_image_path}}",
+  item_heading: "{{section.settings.future_item_heading}}",
+  regular_price: "{{section.settings.future_item_regular_price}}",
+  discounted_price: "{{section.settings.future_item_discounted_price}}",
+  shipping_rate: "{{section.settings.future_item_shipping_rate}}",
+  total_price: "{{section.settings.future_item_total_price}}",
+  payment_disclaimer_prefix: "{{section.settings.future_disclaimer_prefix}}",
+  next_charge_days: "{{section.settings.future_next_charge_days}}"
+}; 
+
+var recharge_variant_id = {{ all_products[section.settings.product_handle].selected_or_first_available_variant.metafields.subscriptions.discount_variant_id }}; 
+var rechargeTrialKey = 'future_info';
+var rechargeTrialURLInformation = Object.keys(rechargeTrialInformation).map((k)=> {
+return encodeURIComponent(k) + "|" + encodeURIComponent(rechargeTrialInformation[k]);
+}).join('!');
+
+var rechargeTrialURLString = `${rechargeTrialKey}=${rechargeTrialURLInformation}`;
+var formEmail = ''; 
+
+
+(function($){
+
+	$(document).ready(function(){
+		$(".trialtosub__hero__form").on("submit", function (e) {
+      e.preventDefault();
+      var $form = $(this);
+      var url = $(this).data('ajax-submit'); 
+      var $button = $(this).find('button[type=submit]'); 
+      formEmail = $(this).find('[name=email]').val();
+      $form.next('p.error').remove();
+
+      if (!validateEmail( formEmail ) ) {
+        $form.after('<p class="error">Please enter a valid email address.</p>'); 
+        return false; 
+      }
+
+      $button.html('Processing...');
+      $.ajax({
+        url: url, 
+        dataType: 'json',
+        data: $form.serialize(),
+        method: 'POST',
+        success: function (response) {
+          if ( response.success ) {
+            if ( $form.data('available') ) {
+              ajaxClearItems();
+            } else {
+               $form.hide(); 
+               $('.trialtosub__hero__unavailable__success').show(); 
+            }
+          } else {
+            console.log ( response ); 
+            $button.html( $button.data('original-text') );
+          }
+        }, 
+        error: function (error) {
+          console.log ( error );
+          $button.html( $button.data('original-text') );
+        }
+      })
+    });
+	});
+
+})(jQuery);
+
+
+function validateEmail( email ) {
+  return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email); 
+}
+
+
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+function reChargeProcessCart() {
+  function get_cookie(name) {
+    return (document.cookie.match('(^|; )' + name + '=([^;]*)') || 0)[2]
+  }
+  do {
+    token = get_cookie('cart');
+  }
+  
+  while (token == undefined);
+  
+  var myshopify_domain = '{{ shop.permanent_domain }}';
+  // var myshopify_domain = 'c4energy.myshopify.com';
+  
+  try {
+    var ga_linker = ga.getAll()[0].get('linkerParam')
+  } catch (err) {
+    var ga_linker = ''
+  }
+  
+  var customerEmailEncoded = '';
+
+  {% if customer %}
+    customerEmailEncoded = encodeURIComponent(customer.email);
+    var customer_param = '&customer_email=' + customerEmailEncoded;
+  {% else %}
+    customerEmailEncoded = encodeURIComponent(formEmail);
+    var customer_param = '';
+  {% endif %}
+
+  var promoCode = "&populatecode=" + "{{section.settings.bundle_coupon_code}}";
+  var populateEmail = "&populateemail=" + customerEmailEncoded;
+
+  checkout_domain = 'https://checkout.c4energy.com'
+  // checkout_domain = 'https://checkout.rechargeapps.com';
+
+  checkout_url = checkout_domain + "/r/checkout?myshopify_domain=" + myshopify_domain + "&cart_token=" + token + "&" + ga_linker + customer_param + promoCode + populateEmail;
+
+  var rechargeTrialString = '&' + rechargeTrialURLString;
+
+  {% if section.settings.future_message_enabled %}
+    checkout_url += rechargeTrialString;
+  {% endif %}
+
+  window.location = checkout_url;
+}
+
+function shopifyProcessCart() {
+
+  function get_cookie(name) {
+    return (document.cookie.match('(^|; )' + name + '=([^;]*)') || 0)[2]
+  }
+    
+  do {
+    token = get_cookie('cart');
+  } while ( token == undefined );
+    
+  var myshopify_domain = '{{ shop.permanent_domain }}';
+    
+  try {
+    var ga_linker = ga.getAll()[0].get('linkerParam')
+  } catch (err) {
+    var ga_linker = ''
+  }
+    
+  {% if customer %}
+    var customer_param = '&customer_id={{customer.id}}&customer_email={{customer.email}}';
+  {% else %}
+    var customer_param = `&customer_email=${formEmail}`;
+  {% endif %}
+
+  var promoCode = "&populatecode=" + "{{section.settings.sub_coupon_code}}";
+  var populateEmail = getCookie('populateemail')!= undefined ? "&populateemail=" + getCookie('populateemail') : "";
+
+  checkout_url = '/checkout?cart_token=' + token + '&' + ga_linker + customer_param + promoCode + populateEmail;
+
+  window.location = checkout_url;
+}
+
+
+function ajaxClearItems() {
+  $.post('/cart/clear.js', function(cart) {
+    ajaxAddItem(0); 
+  }, 'json'); 
+}
+
+function ajaxAddItem( index ) {
+  $.post('/cart/add.js',{
+    id: recharge_variant_id,
+    quantity: 1,
+    properties: {
+      shipping_interval_frequency: 4, 
+      shipping_interval_unit_type: 'Weeks',
+      trial_to_sub: '{{ section.settings.trial_to_sub | default: 'null' }}'
+    }
+  }, function () {
+    reChargeProcessCart();
+  }, 'json'); 
+}
+
+</script>

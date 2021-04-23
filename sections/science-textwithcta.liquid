@@ -1,0 +1,49 @@
+<section id="science-textwithcta" role="contentinfo">  
+
+	<div id="science-textwithcta--wrapper">    
+    <div class="container-fluid">
+      {% if section.settings.science_textwithcta_content != blank %}
+        <h3 class="science-textwithcta--content text-upper">{{ section.settings.science_textwithcta_content }}</h3>
+      {% endif %}
+
+      {% if section.settings.science_textwithcta_cta_label != blank and section.settings.science_textwithcta_cta_url != blank %}
+        <a class="c4-btn yellow science-textwithcta--cta" href="{{ section.settings.science_textwithcta_cta_url }}">{{ section.settings.science_textwithcta_cta_label }}{% if section.settings.science_textwithcta_cta_sublabel != blank %}<span>{{ section.settings.science_textwithcta_cta_sublabel }}</span>{% endif %}{% if section.settings.science_textwithcta_cta_membership_text != blank %}<span class="small">{{ section.settings.science_textwithcta_cta_membership_text }}</span>{% endif %}</a>
+      {% endif %}
+    </div>
+	</div>
+</section>
+
+
+
+{% schema %}
+{
+  "name": "Science TextwithCTA",
+  "settings": [ 
+    {
+      "type": "textarea",
+      "id": "science_textwithcta_content",
+      "label": "Content"
+    },
+    {
+      "type": "text",
+      "id": "science_textwithcta_cta_label",
+      "label": "CTA Label"
+    },
+    {
+      "type": "text",
+      "id": "science_textwithcta_cta_sublabel",
+      "label": "CTA Sublabel"
+    },
+    {
+      "type": "text",
+      "id": "science_textwithcta_cta_membership_text",
+      "label": "CTA Membership Text"
+    },
+    {
+      "type": "url",
+      "id": "science_textwithcta_cta_url",
+      "label": "CTA Url"
+    }
+  ]
+}
+{% endschema %}

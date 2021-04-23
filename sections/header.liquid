@@ -1,0 +1,81 @@
+<header id="site-header" class="entry-header" role="banner">
+  <div id="site-header--container">
+    <div class="container-fluid">
+      <div id="site-header--wrapper" class="c4--wrapper">
+        <div id="header-bar">
+          <div id="header-bar--left">
+            <a class="header-logo" href="/">{% include 'c4-logo' %}</a>
+            <div class="mobile-triggers visible-xs">
+              <div class="menu-icon mobile-menu--trigger">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          </div>
+
+          <div id="header-bar--center">
+            <nav class="primary-menu-wrapper" aria-label="Desktop Main Navigation Left" role="navigation">
+              <div class="c4-nav--container hidden-xs">
+                <ul class="menu c4-nav">
+                  {% for link in linklists[section.settings.header_menu].links %}
+                    <li class="menu-item"><a href="{{ link.url }}" class="nav-item {% if link.active %}site-nav--active{% endif %}" title="">{{ link.title }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </nav>
+          </div>
+
+          <div id="header-bar--right">
+            <nav class="primary-menu-wrapper" aria-label="Desktop Main Navigation Right" role="navigation">
+              <div class="c4-nav--container">
+                <ul class="menu c4-nav c4-nav--right">
+                  {% if section.settings.cta_link != '' and section.settings.cta_text != blank %}
+                    <li class="menu-item menu-item-buy-bundle"><a class="c4-btn yellow medium hidden-xs" href="{{ section.settings.cta_link }}">{{ section.settings.cta_text }}</a></li>
+                  {% endif %}
+                  <li class="menu-item menu-item-icon account"><a href="/account" class="nav-item">{% include 'account-icon' %}</a></li>
+                  <li class="menu-item menu-item-icon cart"><a href="/cart" class="nav-item">{% include 'cart-icon' %}{% if cart.item_count > 0 %}<span class="cartCount">{{ cart.item_count }}</span>{% endif %}</a></li>
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include 'mobile-menu' %}
+</header>
+
+<script>
+  if($('.eyebrow-callout').length) {
+    $('#site-header').addClass('with-eyebrow');
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "header_menu",
+      "label": "Header Menu"
+    },
+    {
+      "type": "header",
+      "content": "Call To Action"
+    }, 
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA Link"
+    }, 
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Text"
+    }
+  ]
+}
+{% endschema %}

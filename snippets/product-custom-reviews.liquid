@@ -1,0 +1,20 @@
+{% if product.metafields.c4energy.review_text != blank %}
+  <section id="section-reviews" role="contentinfo">
+    <div class="container-fluid">
+      <h2 class="section-reviews--title text-center">What people have to say about {{ product.title }}</h2>
+      <div id="section-reviews--slider">
+        {% for review in product.metafields.c4energy.review_text %}
+          <div class="review-item">
+            <div class="review-item--content">
+                <div class="review-stars">{% include '5-stars' %}</div>
+                <h4 class="text-upper review-text">{{ review }}&rdquo;</h4>
+              {% if product.metafields.c4energy.reviewer_name != blank %}
+                <h5 class="text-upper reviewer-name">{{ product.metafields.c4energy.reviewer_name[forloop.index0] }}</h5>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endif %}

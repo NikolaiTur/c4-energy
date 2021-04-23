@@ -1,0 +1,18 @@
+{% if template == 'collection' %}
+  <script>
+    Shopify.queryParams = {};
+    if(location.search.length) {
+      for(var keyValue, i = 0, couplets = location.search.substr(1).split('&'); i < couplets.length; i++) {
+        keyValue = couplets[i].split('=');
+        if(keyValue.length > 1) {
+          Shopify.queryParams[decodeURIComponent(keyValue[0])] = decodeURIComponent(keyValue[1]);
+        }
+      }
+    }
+    $('#collection-sort').val('{{ collection.sort_by | default: collection.default_sort_by | escape }}')
+      .bind('change', function() {
+        Shopify.queryParams.sort_by = $(this).val();
+        location.search = $.param(Shopify.queryParams).replace(/\+/g, '%20');
+      });
+  </script>
+{% endif %}

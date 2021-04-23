@@ -1,0 +1,204 @@
+<section id="bundle-selection" role="contentinfo">
+	<div id="bundle-selection--wrapper">
+    <div class="container-fluid">
+
+      <button href="https://www.google.com" class="c4-btn yellow js-checkout--btn" disabled>{{ section.settings.bundle_cta_label }}</button>
+
+      {% assign bundle_brain_product = all_products[section.settings.bundle_brain_product] %}
+      {% assign bundle_body_product = all_products[section.settings.bundle_body_product] %}
+
+      <div id="bundle-brain" class="bundle-group">
+        <h3 class="text-upper text-center">{{ section.settings.bundle_brain_title }}</h3>
+        <div class="flavor-grid">
+          {% assign product_variants = bundle_brain_product.variants %}
+          {% include 'bundle-variants', bundle_group: 'brain', selected_product: bundle_brain_product %}
+        </div>
+      </div>
+
+      <div id="bundle-body" class="bundle-group">
+        <h3 class="text-upper text-center">{{ section.settings.bundle_body_title }}</h3>
+        <div class="flavor-grid">
+          {% assign product_variants = bundle_body_product.variants %}
+          {% include 'bundle-variants', bundle_group: 'body', selected_product: bundle_body_product %}
+        </div>
+      </div>
+
+      <button href="#" class="c4-btn yellow js-checkout--btn" disabled>{{ section.settings.bundle_cta_label }}</button>
+      {% if section.settings.membership_note_text != blank %}
+        <span class="membership-note">{{ section.settings.membership_note_text }}</span>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+{% include 'brain-body-bundle-js' %}
+
+{% if section.settings.klaviyo_public_key %}
+  <script src="https://a.klaviyo.com/media/js/onsite/onsite.js"></script>
+  <script>
+      var klaviyo = klaviyo || [];
+      klaviyo.init({
+        account: "{{ section.settings.klaviyo_public_key }}",
+        platform: "shopify"
+      });
+      klaviyo.enable("backinstock",{ 
+      trigger: {
+        product_page_text: "Notify Me When Available",
+        product_page_class: "btn",
+        product_page_text_align: "center",
+        product_page_margin: "0px",
+        replace_anchor: false
+      },
+      modal: {
+      headline: "{product_name}",
+      body_content: "Register to receive a notification when this item comes back in stock.",
+      email_field_label: "Email",
+      button_label: "Notify me when available",
+      subscription_success_label: "You're in! We'll let you know when it's back.",
+      footer_content: '',
+      additional_styles: "@import url('https://fonts.googleapis.com/css?family=Helvetica+Neue');",
+      drop_background_color: "#000",
+      background_color: "#fff",
+      text_color: "#222",
+      button_text_color: "#fff",
+      button_background_color: "#439fdb",
+      close_button_color: "#ccc",
+      error_background_color: "#fcd6d7",
+      error_text_color: "#C72E2F",
+      success_background_color: "#d3efcd",
+      success_text_color: "#1B9500"
+      }
+    });
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Bundle Selection Options",
+  "settings": [
+    {
+      "type": "text",
+      "id": "bundle_brain_title",
+      "label": "Brain Title"
+    },
+    {
+      "type": "product",
+      "id": "bundle_brain_product",
+      "label": "Brain Product"
+    },
+    {
+      "type": "text",
+      "id": "bundle_body_title",
+      "label": "Body Title"
+    },
+    {
+      "type": "product",
+      "id": "bundle_body_product",
+      "label": "Body Product"
+    },
+    {
+      "type": "text",
+      "id": "bundle_cta_label",
+      "label": "CTA Label"
+    },
+    {
+      "type": "text",
+      "id": "membership_note_text",
+      "label": "Membership Note Text"
+    },
+    {
+      "type": "text",
+      "id": "bundle_coupon_code",
+      "label": "Bundle Coupon Code"
+    },
+    {
+      "type": "header",
+      "content": "Future Messaging"
+    },
+    {
+      "type": "checkbox",
+      "id": "future_message_enabled",
+      "label": "Future Message Enable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "future_message_heading",
+      "label": "Future Message Heading",
+      "default": "First Restock"
+    },
+    {
+      "type": "richtext",
+      "id": "future_message_content",
+      "label": "Extra Message Content",
+      "default": "<p>A week after your variety 6 can sample pack is delivered, we'll contact you about your first monthly shipment for two 12-Pack cases which will default to Frozen Bombsicle (our top selling flavor.) To manage your flavor preferences, subscription selection, change your shipment, or cancel altogether, simply log into your user account on c4energy.com.</p>"
+    },
+    {
+      "type": "textarea",
+      "id": "future_item_image_path",
+      "label": "Future Item Image Path",
+      "default": "https://cdn.shopify.com/s/files/1/1492/2278/files/C4-Energy-2-Cases.png?v=15835279653"
+    },
+    {
+      "type": "image_picker",
+      "id": "future_item_image",
+      "label": "Future Item Image Select (overwrites above)"
+    },
+    {
+      "type": "textarea",
+      "id": "future_item_heading",
+      "label": "Future Item Heading",
+      "default": "Frozen Bombsicle 12-pack (2x)"
+    },
+    {
+      "type": "text",
+      "id": "future_item_regular_price",
+      "label": "Future Item Regular Price",
+      "default": "$59.98"
+    },
+    {
+      "type": "text",
+      "id": "future_item_discounted_price",
+      "label": "Future Item Discounted Price",
+      "default": "$44.99"
+    },
+    {
+      "type": "text",
+      "id": "future_item_shipping_rate",
+      "label": "Future Item Shipping Rate",
+      "default": "FREE"
+    },
+    {
+      "type": "text",
+      "id": "future_item_total_price",
+      "label": "Future Item Total Price (inc. shipping)",
+      "default": "$44.99"
+    },
+    {
+      "type": "textarea",
+      "id": "future_disclaimer_prefix",
+      "label": "Future Disclaimer Prefix",
+      "default": "A payment for your first restock will process on"
+    },
+    {
+      "type": "range",
+      "id": "future_next_charge_days",
+      "label": "Next Charge (Days)",
+      "min": 1,
+      "max": 30,
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Back in Stock" 
+    }, 
+    {
+      "type": "text",
+      "id": "klaviyo_public_key",
+      "label": "Klaviyo Public Key",
+      "info": "Find it [here](https://www.klaviyo.com/account#api-keys-tab)"
+    }
+  ]
+}
+{% endschema %}

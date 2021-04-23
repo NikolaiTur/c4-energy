@@ -1,0 +1,417 @@
+(function($){
+
+	$(document).ready(function(){
+		home_slider();
+		eyebrow_slider();
+		reviews_slider();
+		product_ingredients_slider();
+		flavor_image_slider();
+		flavor_info_slider();
+		external_links_new_window();
+		account_init_active_list();
+
+		$(window).on('load resize scroll',function() {
+			var y = $(this).scrollTop();
+			var element = $('#site-header');
+			var element_eyebrow = $('.eyebrow-callout');
+
+			if(y > 100 && element.length && ! element.hasClass('scroll')) {
+				element.addClass('scroll');
+			}
+
+			if(y <= 100 && element.length) {
+				element.removeClass('scroll');
+			}
+
+			if(element_eyebrow.length) {
+				if(y > element_eyebrow.outerHeight(true) && !element.hasClass('stuck')) {
+					element.addClass('stuck');
+				}
+
+				if(y < element_eyebrow.outerHeight(true)) {
+					element.removeClass('stuck');
+				}
+			}
+		});
+
+		$(window).on('load',function(e){
+			replace_reviews_rating();
+
+			if($('body').hasClass('template-product')) {
+				after_flavor_selected();
+			}
+		});
+
+		$('body').on('click','.mobile-menu--trigger',function(e){
+			$(this).toggleClass('open');
+
+			if($(this).hasClass('open')) {
+				$('#site-header').addClass('menu-open');
+				$('#mobile-menu').addClass('open');
+			} else {
+				$('#site-header').removeClass('menu-open');
+				$('#mobile-menu').removeClass('open');
+			}
+		});
+
+		$('.qtybox .btnqty').on('click', function(){
+      		var qty = parseInt($(this).parent('.qtybox').find('.quantity-input').val());
+      		
+      		if($(this).hasClass('qtyplus')) {
+            	qty++;
+          	} else {
+            	if(qty > 1) {
+              		qty--;
+            	}
+          	}
+          
+          	qty = (isNaN(qty))?1:qty;
+          	
+          	// Update all quantity boxes on page
+          	$('.qtybox').find('.quantity-input').val(qty);
+          	// $(this).parent('.qtybox').find('.quantity-input').val(qty);
+        });
+
+        $('body').on('click','.accordion-trigger',function(e){
+        	if($(this).parent('.accordion-group').hasClass('active')) {
+        		$(this).parent('.accordion-group').removeClass('active');
+        		$(this).parent('.accordion-group').find('.accordion-content').slideUp();
+        	} else {
+	        	$(this).parent('.accordion-group').addClass('active');
+	        	$(this).parent('.accordion-group').find('.accordion-content').slideDown();
+	        }
+        });
+
+        $('body').on('click','.slick-separator',function(e){
+        	e.preventDefault();
+        	return false;
+        });
+
+        $('#price-with-quantity #ProductPrice').on('DOMSubtreeModified',function(e){
+        	var $dyn_price = $(this).text();
+    		$('.product-single__add-to-cart').find('#ProductPrice').text($dyn_price);
+        });
+
+        $('body').on('click','.mobile-flavor--selector',function(e){
+        	$('.radio-wrapper.flavor').slideDown();
+        });
+
+        $('body').on('click','.mobile-flavor--title',function(e){
+        	$('.radio-wrapper.flavor').slideUp();
+        });
+
+        $('body').on('change','input.flavor',function(e){
+        	console.log('flavor change triggered');
+    		after_flavor_selected();
+        });
+
+        $('body').on('click','.reviews-link--trigger',function(e){
+        	if($('#product-reviews').length) {
+        		$('html,body').animate({ scrollTop: $('#product-reviews').offset().top }, 1000);
+        	}
+        });
+	});
+
+	function home_slider() {
+		
+		if($('.c4-home-slider').length) {
+
+			$slider_speed = $('#home-slider').data('speed') * 1000;
+
+			if(!$('.c4-home-slider').hasClass('slick-initialized')) {
+
+				$(".c4-home-slider").slick({
+			        slidesToShow: 1,
+			        slidesToScroll: 1,
+			        arrows: true,
+			        dots: false,
+			        infinite: true,
+			        autoplay: true,
+			        autoplaySpeed: $slider_speed,
+			        pauseOnHover: false,
+			        pauseOnFocus: false,
+					prevArrow: "<img class='slick-prev slick-arrow' src=\"{{ 'slick-prev.png' | asset_url }}\">",
+			        nextArrow: "<img class='slick-next slick-arrow' src=\"{{ 'slick-next.png' | asset_url }}\">",
+			    });  
+			}
+		}
+	}
+
+	function eyebrow_slider() {
+		if($('.eyebrow-slider').length) {
+			if(!$('.eyebrow-slider').hasClass('slick-initialized')) {
+
+				$(".eyebrow-slider").slick({
+			        slidesToShow: 1,
+			        slidesToScroll: 1,
+			        arrows: true,
+			        dots: false,
+			        infinite: true,
+			        autoplay: true,
+			        autoplaySpeed: 9000,
+			        speed: 800
+			    });  
+			}
+		}
+	}
+
+	function reviews_slider() {
+		if($('#section-reviews--slider').length) {
+
+			if(!$('#section-reviews--slider').hasClass('slick-initialized')) {
+
+				$("#section-reviews--slider").slick({
+			        slidesToShow: 3,
+			        slidesToScroll: 1,
+			        arrows: false,
+			        dots: false,
+			        infinite: true,
+			        autoplay: true,
+
+			        responsive: [
+			          {
+			            breakpoint: 992,
+			            settings: {
+			            	slidesToShow: 2,
+		        			slidesToScroll: 1
+			            }	
+			          },
+			          {
+			            breakpoint: 768,
+			            settings: {
+			            	slidesToShow: 1,
+		        			slidesToScroll: 1
+			            }	
+			          }
+			        ]
+			    });  
+			}
+		}
+	}
+
+	function product_ingredients_slider() {
+		if($('#product-ingredients--wrapper').length) {
+
+			if(!$('#product-ingredients--wrapper').hasClass('slick-initialized')) {
+
+				$("#product-ingredients--wrapper").slick({
+			        slidesToShow: 3,
+			        slidesToScroll: 1,
+			        arrows: false,
+			        dots: true,
+			        infinite: false,
+			        autoplay: false,
+
+			        responsive: [
+			          {
+			            breakpoint: 992,
+			            settings: {
+			            	slidesToShow: 2,
+		        			slidesToScroll: 1
+			            }	
+			          },
+			          {
+			            breakpoint: 768,
+			            settings: {
+			            	slidesToShow: 1,
+		        			slidesToScroll: 1
+			            }	
+			          }
+			        ]
+			    });  
+			}
+		}
+		
+	}
+
+	function flavor_info_slider() {
+		
+		if($('#flavor-info--slider').length) {
+
+			if(!$('#flavor-info--slider').hasClass('slick-initialized')) {
+
+				$("#flavor-info--slider").slick({
+			        slidesToShow: 1,
+			        slidesToScroll: 1,
+			        arrows: true,
+			        dots: false,
+			        infinite: false,
+			        autoplay: false,
+			        fade: true,
+			        asNavFor: '#flavor-image--slider',
+			        appendArrows: '#flavor-info--navigation',
+					prevArrow: "<div class='slick-prev slick-arrow'><i class='fas fa-arrow-left'></i></div><div class='slick-separator'>/</div>",
+			        nextArrow: "<div class='slick-next slick-arrow'><i class='fas fa-arrow-right'></i></div>",
+			    });  
+			}
+		}
+	}
+
+	function flavor_image_slider() {
+		
+		if($('#flavor-image--slider').length) {
+
+			if(!$('#flavor-image--slider').hasClass('slick-initialized')) {
+
+				$("#flavor-image--slider").slick({
+			        arrows: false,
+			        dots: false,
+			        infinite: false,
+			        autoplay: false,
+			        variableWidth: true,
+			        swipe: false
+			    });  
+			}
+		}
+	}
+
+	function replace_reviews_rating() {
+		setTimeout(function(){
+	      	$('.spr-badge').each(function(){
+	        	var rating = $(this).data('rating');
+	        	$(this).find('.spr-badge-caption').html(parseFloat(rating).toFixed(1));
+	      	}).promise().done(function(){
+	      		$('.spr-badge').css('opacity', 1);
+	      	});  
+	    }, 1000);
+	}
+
+	function external_links_new_window() {
+		var links = document.links;
+		
+		for (let i = 0, linksLength = links.length ; i < linksLength ; i++) {
+		  if (links[i].hostname !== window.location.hostname) {
+		    links[i].target = '_blank';
+		    links[i].rel = 'noreferrer noopener';
+		  }
+		}
+	}
+
+	function account_init_active_list() {
+    var listElem = ".js-current-list";
+
+    if ( $(listElem).length ) {
+      $(listElem).find("a").each(function () {
+		var href = $(this).attr('href');
+		var text = $(this).text().trim(); 
+		var fullRelativePath = window.location.pathname + window.location.search;
+		
+		var relative = false; 
+		var contained = ['addresses', 'profile', 'fitness'].filter( function(title) {
+			return window.location.href.indexOf(title) > -1; 
+		}); 
+
+        if ( fullRelativePath == href || text == 'Profile' && contained.length > 0 ) {
+          $(this).addClass("is-current");
+        }
+      })
+    }
+  }
+
+})(jQuery);
+
+function after_flavor_selected() {
+	var $target_element = $('.mobile-flavor--selector');
+	if (!$target_element.length) return;
+	var $background_element = $('#ProductSection--product-template');
+
+	var $current_flavor_name = $('input.flavor:checked').val();
+	var $current_flavor_tooltip = $('input.flavor:checked').next('label').find('.flavor-content').text();
+
+	
+	// Getting by Variant ID instead
+	// var $current_variant_name = '';
+
+	// var $current_variant_id = $('#ProductSelect--product-template').val();
+	
+	// To get disabled variant value as well
+
+	var $current_variant_id = $('#ProductSelect--product-template option:selected').map(function(i,v) {
+    		return this.value;
+		}).get();
+
+	// if($('input.size').length) {
+ //      $current_variant_name = $('input.size:checked').val() + ' / ';
+ //    }
+
+ //    if($('input.serving-size').length) {
+ //      $current_variant_name += $('input.serving-size:checked').val() + ' / ';
+ //    }
+
+ //    if($('input.flavor').length) {
+ //      $current_variant_name += $('input.flavor:checked').val();
+ //    }
+	
+	$target_element.find('#flavor-info').removeClass().addClass($current_flavor_name.toLowerCase().replace(/ /g,'-'));
+	$target_element.find('.flavor-name').text($current_flavor_name);
+	$target_element.find('.flavor-tooltip').text($current_flavor_tooltip);
+
+	$background_element.attr('data-flavor', $current_flavor_name);
+
+	if($(window).width() < 768) {
+		$('.radio-wrapper.flavor').slideUp();
+	}
+
+	// Make Current Nutrition Label Active
+	$('.nutrition-label-image').removeClass('active');
+	$('.nutrition-label-image[data-variant-id="' + $current_variant_id + '"]').addClass('active');
+
+	// Make Current UPC & MSRP Active
+	$('.product-upc').removeClass('active');
+	$('.product-upc[data-variant-id="' + $current_variant_id + '"]').addClass('active');
+
+	$('.product-msrp').removeClass('active');
+	$('.product-msrp[data-variant-id="' + $current_variant_id + '"]').addClass('active');
+
+	// Here we show or hide the variant message depending on the variant. 
+	$('.overselling_message_container').each( function() {
+		$(this).hide(); 
+		$(this).find('input').prop('disabled', true); 
+	})
+	var $overselling = $('.overselling_message_container[data-variant-id=' + $current_variant_id + ']'); 
+	$overselling.show(); 
+	$overselling.find('input').prop('disabled', false); 
+}
+
+
+(function($) {
+	$(document).ready( function () {
+		$(window).on('load resize', function ( event ) {
+			if ( !$('.trialtosub__features__list').hasClass('slick-initialized') && $(window).width() < 768 ) {
+				$(".trialtosub__features__list").slick({
+					slidesToShow: 1,
+					slidesToScroll: 1,
+					arrows: true,
+					dots: true,
+					infinite: true,
+					autoplay: true,
+					mobileFirst: true, 
+					responsive: [
+					  {
+						breakpoint: 768,
+						settings: 'unslick'
+					  }
+					]
+				});  
+			}
+		}); 
+
+		/**
+		 * The idea is that the form is always viible. so we just 
+		 * scroll top until the form is visible at the bottom of the 
+		 * viewport. 
+		 */
+		$('.trialtosub__stickyfooter').on('click', function (event) {
+			event.preventDefault(); 
+			var top = 0; 
+			var $form = $('.trialtosub__hero__form'); 
+			var $sticky = $(this); 
+			var offset = 50;
+			// if ( $(window).width() < 768 ) {
+				top = $form.offset().top + $form.outerHeight() + $sticky.outerHeight() + offset - $(window).height(); 
+			// }
+
+			$("html, body").stop().animate({scrollTop: top }, 300, 'swing');
+		}); 
+	})
+}(jQuery));

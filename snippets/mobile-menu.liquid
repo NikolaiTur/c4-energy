@@ -1,0 +1,15 @@
+<div id="mobile-menu">
+	<div class="mobile-menu--wrapper">
+		<nav class="primary-menu-wrapper" aria-label="Mobile Shop Navigation" role="navigation">
+      <ul class="menu vertical mobile-nav">
+        {% for link in linklists['main-menu'].links %}
+          <li class="menu-item"><a href="{{ link.url }}" class="nav-item {% if link.active %}site-nav--active{% endif %}" title="">{{ link.title }}</a></li>
+        {% endfor %}
+        {% if section.settings.cta_link != '' and section.settings.cta_text != blank %}
+          <li class="menu-item menu-item-buy-bundle"><a class="c4-btn yellow medium" href="{{ section.settings.cta_link }}">{{ section.settings.cta_text }}</a></li>
+        {% endif %}
+        
+      </ul>
+    </nav>
+	</div>
+</div>

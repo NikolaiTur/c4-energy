@@ -1,0 +1,71 @@
+{% if section.blocks.size > 0 %}
+<section id="bundle-info" role="contentinfo">
+	<div id="bundle-info--wrapper">
+    {% for block in section.blocks %}
+      <div class="bundle-info--column">
+        {% if block.settings.item_image != blank %}
+          <img src="{{ block.settings.item_image | img_url: 'master' }}" class="objfit">
+        {% endif %}
+
+        <div class="bundle-info--column-overlay"></div>
+
+        <div class="bundle-info--content">
+          {% if block.settings.item_category_title != blank %}
+            <h2 class="item-category-title"><span>{{ block.settings.item_category_title }}</span></h2>
+          {% endif %}
+
+          {% if block.settings.item_title != blank %}
+            <h3 class="item-title">{{ block.settings.item_title }}</h3>
+          {% endif %}
+
+          {% if block.settings.item_description != blank %}
+            <p class="item-description">{{ block.settings.item_description }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+    <div class="plus-icon">{% include 'plus-icon' %}</div>
+  </div>
+  
+</section>
+{% endif %}
+
+
+
+{% schema %}
+{
+  "name": "Bundle Info",
+  "max_blocks": 2,
+  "settings": [
+    
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "item_image",
+          "label": "Item Image"
+        },
+        {
+          "type": "text",
+          "id": "item_category_title",
+          "label": "Item Category Title"
+        },
+        {
+          "type": "text",
+          "id": "item_title",
+          "label": "Item Title"
+        },
+        {
+          "type": "text",
+          "id": "item_description",
+          "label": "Item Description"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

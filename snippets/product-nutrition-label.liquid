@@ -1,0 +1,5 @@
+{% for variant in product.variants %}
+	{% if variant.metafields.c4energy.nutrition_label != blank %}
+		<img src="{{ variant.metafields.c4energy.nutrition_label }}" class="nutrition-label-image img-responsive" data-variant-id="{{ variant.id }}">
+	{% endif %}
+{% endfor %}

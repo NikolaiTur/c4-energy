@@ -1,0 +1,76 @@
+<h2 class="account__subheading">{{ 'customer.orders.title' | t }}</h2>
+
+{% paginate customer.orders by 10 %}
+
+  {% if customer.orders.size != 0 %}
+
+  <ul class="account-orders__list" id="order-history">
+    {% for order in customer.orders %}
+
+      {%- comment -%}Build Reorder Link{%- endcomment -%}
+      {%- assign cart_url_with_items = '' -%}
+      {%- for item in order.line_items -%}
+        {%- assign line_item_formatted = item.variant_id | append: ':' | append: item.quantity -%}
+        {% unless forloop.last %}
+          {%- assign line_item_formatted = line_item_formatted | append: ',' -%}
+        {%- endunless -%}
+        {%- assign cart_url_with_items = cart_url_with_items | append: line_item_formatted -%}
+      {%- endfor -%}
+      
+      {%- assign subscription_order = false -%}
+      {%- for item in order.line_items -%}
+        {%- comment -%}Check for subscription{%- endcomment -%}
+        {%- for prop in item.properties -%}
+          {%- if prop contains product_subscription_key -%}
+            {%- assign subscription_order = true -%}
+            {% break %}
+          {%- endif %}
+        {%- endfor %}
+      {%- endfor %}
+
+      <li>
+        {%- assign order_title = order.line_items.first.product.title -%} 
+        <div class="account-card">
+          <div class="row">
+            <div class="order-image">
+              <img src="{{order.line_items.first.image.src | img_url: '200x' }}" alt="{{ order_title }}" />
+            </div>
+            <div class="order-content">
+              <div class="order-title col">
+                <h5>{{ order_title }}</h5>
+                {%- if order.line_items.size > 1 -%}
+                  {%- assign order_items_length = order.line_items.size | times: 1 -%}
+                  {%- assign order_items_remainder = order_items_length | minus: 1 -%}
+                  <span>+ {{order_items_remainder}} more item(s)</span>
+                {%- endif -%}
+                
+              </div>
+              <div class="order-infos row">
+                <div class="col"><strong>Order #</strong><span>
+                  <a href="{{ order.order_status_url }}" target="_blank">{{ order.name | remove: "#" }}</a>
+                  <!-- <a href="{{ order.customer_url }}" target="_blank">{{ order.name | remove: "#" }}</a> -->
+                </span></div>
+                <div class="col"><strong>Order Placed</strong><span>{{ order.created_at | date: "%B %d, %Y" }}</span></div>
+                <div class="col"><strong>Total</strong><span>{{ order.total_net_amount | money }}</span></div>
+                <div class="col"><strong>Status</strong><span>{{ order.financial_status_label }}/{{ order.fulfillment_status_label }}</span></div>
+              </div>
+            </div>
+            <div class="order-actions col">
+              <a href="/cart/{{ cart_url_with_items }}?ref=Reorder" class="btn-reorder">Reorder</a>
+              <a href="{{ order.order_status_url }}" target="_blank" class="order-status-link">View Status</a>
+            </div>
+          </div>
+        </div>
+      </li>
+
+    {%- endfor %}
+  </ul>
+  {% else %}
+    <p>{{ 'customer.orders.none' | t }}</p>
+  {% endif %}
+  
+  <div class="row">
+    {% include 'pagination' %}
+  </div>
+  
+{% endpaginate %}

@@ -1,0 +1,232 @@
+<section id="bundle-flavor-selection" role="contentinfo" data-brain-variant="" data-body-variant="">
+	<div id="bundle-selection--wrapper">
+    <div class="container-fluid">
+
+      {% assign bundle_brain_product = all_products[section.settings.bundle_brain_product] %}
+      {% assign bundle_body_product = all_products[section.settings.bundle_body_product] %}
+
+      <div id="bundle-selection--section">
+        
+        <div id="bundle-selection--section-left">
+          <!-- Brain Media -->
+          <div class="bundle-media brain">
+            {% include 'bundle-media', bundle_group: 'brain', selected_product: bundle_brain_product %}
+          </div>
+
+          <div class="plus-icon">{% include 'plus-icon' %}</div>
+        </div>
+
+        <div id="bundle-selection--section-center">
+          {% if section.settings.section_subtitle != blank %}
+            <p class="section-subtitle text-center">{{ section.settings.section_subtitle }}</p>
+          {% endif %}
+          
+          {% if section.settings.section_title != blank %}
+            <h1 class="h2 text-center section-title">{{ section.settings.section_title }}</h1>
+          {% endif %}          
+
+          {% if section.settings.trial_offer_note != blank %}
+            <p class="trial-offer-note text-center">{{ section.settings.trial_offer_note }}</p>
+          {% endif %}
+
+          {% if section.settings.price_text != blank %}
+            <h2 class="price-text text-center">{{ section.settings.price_text }}</h2>
+          {% endif %}          
+
+          {% if section.blocks.size > 0 %}
+            <ul id="bundle-features">
+              {% for block in section.blocks %}
+                <li>{{ block.settings.feature_icon }} {{ block.settings.feature_text }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+        </div>
+
+        <div id="bundle-selection--section-right">
+          <!-- Body Media -->
+          <div class="bundle-media body">
+            {% include 'bundle-media', bundle_group: 'body', selected_product: bundle_body_product %}
+          </div>
+        </div>
+
+
+        <div class="bundle-flavor--selection-section--wrapper">
+          <div class="bundle-flavor--selection-section">
+            <!-- Brain Flavor Selector -->
+            {% include 'bundle-flavor-selector', bundle_group: 'brain', bundle_type: 'Brain Fuel', selected_product: bundle_brain_product %}
+
+            <!-- Body Flavor Selector -->
+            {% include 'bundle-flavor-selector', bundle_group: 'body', bundle_type: 'Body Fuel', selected_product: bundle_body_product %}
+
+            <button href="#" class="c4-btn yellow js-checkout--btn" disabled><span class="disabled-label">{{ section.settings.bundle_cta_disabled_label }}</span><span class="enabled-label"><i class="fas fa-shopping-cart" aria-hidden="true"></i>&nbsp;&nbsp;{{ section.settings.bundle_cta_label }}</span></button><div id="anchor-div"></div>
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% include 'brain-body-bundle-flavor-js' %}
+
+{% schema %}
+{
+  "name": "Bundle Flavor Selection",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title"
+    },
+    {
+      "type": "text",
+      "id": "section_subtitle",
+      "label": "Section Subtitle"
+    },
+    {
+      "type": "text",
+      "id": "trial_offer_note",
+      "label": "Trial Offer Note"
+    },
+    {
+      "type": "text",
+      "id": "price_text",
+      "label": "Price Text"
+    },
+    {
+      "type": "product",
+      "id": "bundle_brain_product",
+      "label": "Brain Product"
+    },
+    {
+      "type": "image_picker",
+      "id": "bundle_brain_default_image",
+      "label": "Brain Product Default Image"
+    },
+    {
+      "type": "product",
+      "id": "bundle_body_product",
+      "label": "Body Product"
+    },
+    {
+      "type": "image_picker",
+      "id": "bundle_body_default_image",
+      "label": "Body Product Default Image"
+    },
+    {
+      "type": "text",
+      "id": "bundle_cta_disabled_label",
+      "label": "CTA Disabled Label",
+      "default": "Select Your Flavors"
+    },
+    {
+      "type": "text",
+      "id": "bundle_cta_label",
+      "label": "CTA Label",
+      "default": "Subscribe &mdash; $24 <span class='original-price'>$47.98</span>"
+    },
+    {
+      "type": "text",
+      "id": "bundle_coupon_code",
+      "label": "Bundle Coupon Code",
+      "default": "BBBUNDLE50"
+    },
+    {
+      "type": "header",
+      "content": "Future Messaging"
+    },
+    {
+      "type": "checkbox",
+      "id": "future_message_enabled",
+      "label": "Future Message Enable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "future_message_heading",
+      "label": "Future Message Heading",
+      "default": "First Restock"
+    },
+    {
+      "type": "richtext",
+      "id": "future_message_content",
+      "label": "Extra Message Content",
+      "default": "<p>Once your 24 cans arrive, you will automatically get a new shipment every month at the price of $47.98. To manage your flavor preferences, subscription selection, change your shipment, or cancel altogether, simply log into your user account on c4energy.com.</p>"
+    },
+    {
+      "type": "textarea",
+      "id": "future_item_image_path",
+      "label": "Future Item Image Path"
+    },
+    {
+      "type": "image_picker",
+      "id": "future_item_image",
+      "label": "Future Item Image Select (overwrites above)"
+    },
+    {
+      "type": "textarea",
+      "id": "future_item_heading",
+      "label": "Future Item Heading",
+      "default": "C4 Energy Carbonated 12-pack<br>C4 Smart Energy Carbonated 12-pack"
+    },
+    {
+      "type": "text",
+      "id": "future_item_regular_price",
+      "label": "Future Item Regular Price",
+      "default": "$47.98"
+    },
+    {
+      "type": "text",
+      "id": "future_item_discounted_price",
+      "label": "Future Item Discounted Price"
+    },
+    {
+      "type": "text",
+      "id": "future_item_shipping_rate",
+      "label": "Future Item Shipping Rate",
+      "default": "FREE"
+    },
+    {
+      "type": "text",
+      "id": "future_item_total_price",
+      "label": "Future Item Total Price (inc. shipping)",
+      "default": "$47.98"
+    },
+    {
+      "type": "textarea",
+      "id": "future_disclaimer_prefix",
+      "label": "Future Disclaimer Prefix",
+      "default": "A payment for your first restock will process on"
+    },
+    {
+      "type": "range",
+      "id": "future_next_charge_days",
+      "label": "Next Charge (Days)",
+      "min": 1,
+      "max": 30,
+      "default": 30
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "feature_icon",
+          "label": "Feature Icon (SVG Only)"
+        },
+        {
+          "type": "text",
+          "id": "feature_text",
+          "label": "Feature Text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

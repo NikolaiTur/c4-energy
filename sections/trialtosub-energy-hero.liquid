@@ -1,0 +1,413 @@
+{% assign available = false %}
+{% if all_products[section.settings.product_handle].available or all_products[section.settings.product_handle].inventory_policy == "continue" %}
+{% assign available = true %}
+{% endif %}
+
+{% include 'trialtosub-hero-styles' %}
+
+
+<div class="trialtosub__hero" id="hero">
+    <div class="trialtosub__hero__top">
+        {% if section.settings.banner_text != blank %}
+            <div class="trialtosub__hero__banner">{{ section.settings.banner_text }}</div>
+        {% endif %}
+        <div class="container-fluid">
+            <div class="trialtosub__hero__logo">
+                {% include 'c4-logo' %}
+            </div>
+        </div>
+    </div>
+    
+    {% if section.settings.desktop_image %}
+        <div class="trialtosub__hero__image__desktop">
+            <img src="{{ section.settings.desktop_image | img_url: '2000x' }}" alt="{{ section.settings.desktop_image.alt }}">
+            <div class="overlay"></div>
+        </div>
+        <img class="trialtosub__hero__image__mobile" src="{{ section.settings.mobile_image | img_url: '1000x' }}" alt="{{ section.settings.mobile_image.alt }}">
+        
+    {% endif %}
+    <div class="container-fluid trialtosub__hero__inner">
+        <div class="trialtosub__hero__image__mobile"></div>
+        <div class="trialtosub__hero__content">
+
+            {% if available %}
+                <h1>{{ section.settings.title }}</h1>
+                <p>{{ section.settings.body }}</p>    
+            {% else %}
+                <h1>{{ section.settings.unavailable_title }}</h1>
+                <p>{{ section.settings.unavailable_body }}</p>    
+            {% endif %}
+            
+            
+
+            <form
+                action="//manage.kmail-lists.com/subscriptions/subscribe"
+                data-ajax-submit="https://manage.kmail-lists.com/ajax/subscriptions/subscribe"
+                method="get"
+                novalidate="novalidate"
+                class="trialtosub__hero__form"
+                data-available="{{ available }}"
+                >
+                <input type="hidden" name="g" value="{% if available %}{{ section.settings.klaviyo_list_id }}{% else %}{{ section.settings.unavailable_klaviyo_list_id }}{% endif %}">
+                <div class="form-group">
+                    <span class="icon">
+                        <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="envelope" class="svg-inline--fa fa-envelope fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M464 64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm0 48v40.805c-22.422 18.259-58.168 46.651-134.587 106.49-16.841 13.247-50.201 45.072-73.413 44.701-23.208.375-56.579-31.459-73.413-44.701C106.18 199.465 70.425 171.067 48 152.805V112h416zM48 400V214.398c22.914 18.251 55.409 43.862 104.938 82.646 21.857 17.205 60.134 55.186 103.062 54.955 42.717.231 80.509-37.199 103.053-54.947 49.528-38.783 82.032-64.401 104.947-82.653V400H48z"></path></svg>
+                    </span>
+                    <input type="email" name="email" placeholder="{{ section.settings.input_placeholder }}" {% if customer %}value="{{ customer.email }}"{% endif %}>
+                </div>
+                <button type="submit" class="c4-btn yellow small" data-original-text="{% if available %}{{ section.settings.button_text }}{% else %}{{ section.settings.unavailable_button_text }}{% endif %}">
+                    {% if available %}
+                        {{ section.settings.button_text }}    
+                    {% else %}
+                        {{ section.settings.unavailable_button_text }}    
+                    {% endif %}
+                </button>
+            </form>
+
+            {% unless available %}
+                <p class="trialtosub__hero__unavailable__success">{{ section.settings.unavailable_submit_success }}</p>
+            {% endunless %}
+        
+            <ul class="trialtosub__hero__benefits">
+                <li>
+                    <span>
+                        <svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" width="16.741" height="13" viewBox="0 0 16.741 13">
+                            <g id="Layer_1" data-name="Layer 1" transform="translate(0 0)">
+                            <path id="Path_130" data-name="Path 130" d="M9.9,5.1V.346a.2.2,0,0,0-.2-.2H.346a.2.2,0,0,0-.2.2V12.817a.2.2,0,0,0,.2.2h16.21a.2.2,0,0,0,.2-.2V5.28C16.752,5.006,17.026,5.1,9.9,5.1Zm3.648.4V7.573l-.492-.652a.2.2,0,0,0-.315,0l-.711.912-1.008-.912a.205.205,0,0,0-.292,0l-.5.625V5.476ZM6.693.538V2.626L6.2,2.006a.2.2,0,0,0-.315,0l-.711.912L4.154,2.006a.2.2,0,0,0-.292,0l-.5.625V.538ZM.538.538H2.954V3.2a.2.2,0,0,0,.356.123l.72-.912,1.021.912A.2.2,0,0,0,5.344,3.3l.689-.866.693.866a.2.2,0,0,0,.356-.123V.538H9.493V5.1c-2.38,0-2.485-.068-2.485.2v7.318H.538ZM16.356,12.6H7.414V5.48H9.821V8.13a.2.2,0,0,0,.356.123l.725-.912,1.035.948a.2.2,0,0,0,.287-.023l.679-.889.689.866a.2.2,0,0,0,.356-.123V5.476h2.408V12.6Z" transform="translate(-0.082 -0.082)" fill="#98989f"/>
+                            <path id="Path_131" data-name="Path 131" d="M7.136,13H.264A.264.264,0,0,1,0,12.736V.264A.264.264,0,0,1,.264,0H9.621a.264.264,0,0,1,.264.264V4.929h3.506c2.832,0,3.192,0,3.31.109a.178.178,0,0,1,.036.137v7.546a.269.269,0,0,1-.265.269H7.2ZM.264.132A.132.132,0,0,0,.132.264V12.736a.132.132,0,0,0,.132.132h16.21a.132.132,0,0,0,.132-.132V5.125a18.569,18.569,0,0,0-3.192-.068H9.776V.264A.132.132,0,0,0,9.621.132ZM7,12.6H.4V.4H2.946V3.137a.129.129,0,0,0,.246.055l.761-.948,1.062.948a.123.123,0,0,0,.1.036.15.15,0,0,0,.1-.036L5.96,2.28l.748.912a.128.128,0,0,0,.132.046.132.132,0,0,0,.091-.123V.378H9.475V5.061H8.244A4.256,4.256,0,0,0,7,5.121C6.94,5.18,7,5.153,7,5.2ZM.533,12.467H6.867V5.2a.237.237,0,0,1,.055-.178c.1-.1.342-.1,1.336-.1h1.1V.533H7.077V3.114a.269.269,0,0,1-.178.251.264.264,0,0,1-.3-.087l-.643-.8-.638.8a.274.274,0,0,1-.187.1.26.26,0,0,1-.2-.068l-.971-.875-.679.844a.264.264,0,0,1-.456-.164V.533H.552Zm15.8.123H7.268V5.33H9.8V8.066a.132.132,0,0,0,.091.123.123.123,0,0,0,.146-.041l.771-.953,1.072.971a.132.132,0,0,0,.1.032.15.15,0,0,0,.1-.05l.743-.935.743.935a.123.123,0,0,0,.146.041.128.128,0,0,0,.091-.123V5.33h2.535ZM7.4,12.457h8.8V5.472h-2.28V8.053a.265.265,0,0,1-.474.164l-.638-.8-.629.793a.255.255,0,0,1-.187.1.269.269,0,0,1-.2-.068l-.971-.875-.679.844a.269.269,0,0,1-.456-.169V5.472H7.41Zm4.56-4.605-1.072-.971a.132.132,0,0,0-.1-.032.119.119,0,0,0-.091.046l-.62.771V5.33h3.461V7.665l-.611-.771a.128.128,0,0,0-.1-.05h0a.123.123,0,0,0-.1.05ZM10.8,6.712a.287.287,0,0,1,.178.068l.967.875.67-.844a.255.255,0,0,1,.205-.1h0a.264.264,0,0,1,.21.1l.374.456v-1.8H10.214V7.3l.383-.479a.292.292,0,0,1,.187-.1ZM5.1,2.918,4.026,1.952a.137.137,0,0,0-.1-.036.141.141,0,0,0-.091.05l-.62.771V.4H6.676V2.736l-.611-.771a.128.128,0,0,0-.1-.05h0a.123.123,0,0,0-.1.05ZM3.935,1.783a.269.269,0,0,1,.182.068l.967.885.67-.844a.255.255,0,0,1,.205-.1h0a.264.264,0,0,1,.21.1l.374.456V.524H3.351V2.348l.383-.456a.255.255,0,0,1,.187-.1Z" transform="translate(0 0)" fill="#98989f"/>
+                            <path id="Path_132" data-name="Path 132" d="M6.893,20.243H3.387V16.737a.2.2,0,0,0-.4,0v3.707a.2.2,0,0,0,.2.2H6.893a.2.2,0,0,0,.2-.2.2.2,0,0,0-.2-.2Z" transform="translate(-1.627 -9.012)" fill="#98989f"/>
+                            <path id="Path_133" data-name="Path 133" d="M6.812,20.632H3.1a.264.264,0,0,1-.264-.264V16.661a.269.269,0,0,1,.533,0V20.1H6.812a.269.269,0,0,1,0,.533ZM3.1,16.528a.132.132,0,0,0-.132.132v3.707A.132.132,0,0,0,3.1,20.5H6.812a.132.132,0,0,0,0-.264H3.241V16.661a.132.132,0,0,0-.137-.132Z" transform="translate(-1.545 -8.936)" fill="#98989f"/>
+                            <path id="Path_134" data-name="Path 134" d="M30.19,21.905H27.281a.2.2,0,1,0,0,.4h3.11a.2.2,0,0,0,.2-.2V19a.2.2,0,0,0-.2-.2.2.2,0,0,0-.2.2Z" transform="translate(-14.732 -10.228)" fill="#98989f"/>
+                            <path id="Path_135" data-name="Path 135" d="M30.314,22.289H27.2a.264.264,0,1,1,0-.529h2.841V18.919a.269.269,0,0,1,.269-.269.264.264,0,0,1,.264.269v3.105a.264.264,0,0,1-.264.264Zm-3.11-.4a.132.132,0,1,0,0,.264h3.11a.132.132,0,0,0,.132-.132V18.919a.132.132,0,1,0-.264,0v2.973Z" transform="translate(-14.656 -10.146)" fill="#98989f"/>
+                            </g>
+                        </svg>
+                    </span>
+                    Just Pay Shipping
+                </li>
+                <li>
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="11.675" height="13.943" viewBox="0 0 11.675 13.943">
+                            <g id="Layer_2" data-name="Layer 2" transform="translate(0.003 0.004)">
+                            <g id="Layer_1" data-name="Layer 1" transform="translate(-0.003 -0.004)">
+                                <path id="Path_128" data-name="Path 128" d="M5.793,0a.326.326,0,0,0-.137.047A14.484,14.484,0,0,1,.7,2.112a.317.317,0,0,0-.236.223,10.238,10.238,0,0,0,.21,6.7A8.475,8.475,0,0,0,5.724,13.92a.33.33,0,0,0,.223,0A8.458,8.458,0,0,0,11,9.039a10.238,10.238,0,0,0,.214-6.7.326.326,0,0,0-.24-.223A14.552,14.552,0,0,1,6,.049.326.326,0,0,0,5.793,0Zm.043.7a15.148,15.148,0,0,0,4.791,2,9.586,9.586,0,0,1-.232,6.1,7.767,7.767,0,0,1-4.559,4.465A7.754,7.754,0,0,1,1.285,8.8a9.616,9.616,0,0,1-.244-6.1A15.166,15.166,0,0,0,5.835.7Z" transform="translate(0.003 0.004)" fill="#98989f"/>
+                                <path id="Path_129" data-name="Path 129" d="M11.323,14.354v.669H10.8v-.665a2.432,2.432,0,0,1-1.716-.781L9.509,13a2.054,2.054,0,0,0,1.287.678V12.06c-.759-.193-1.557-.467-1.557-1.407A1.5,1.5,0,0,1,10.8,9.246V8.56h.528v.691a2.342,2.342,0,0,1,1.484.678l-.429.553a1.844,1.844,0,0,0-1.042-.545v1.454c.776.206,1.6.489,1.6,1.48A1.515,1.515,0,0,1,11.323,14.354ZM10.8,11.249V9.907c-.476.039-.789.3-.789.695S10.332,11.12,10.8,11.249Zm1.364,1.69c0-.429-.365-.6-.858-.738v1.48C11.936,13.617,12.159,13.252,12.159,12.939Z" transform="translate(-5.184 -4.887)" fill="#98989f"/>
+                            </g>
+                            </g>
+                        </svg>
+                    </span>
+                    Satisfaction Guaranteed
+                </li>
+                <li>
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="11.891" height="12.509" viewBox="0 0 11.891 12.509">
+                          <g id="Layer_2" data-name="Layer 2" transform="translate(0 0)">
+                            <g id="Layer_1" data-name="Layer 1" transform="translate(0 0)">
+                              <path id="Path_136" data-name="Path 136" d="M13.6,1.752A5.907,5.907,0,0,0,9.39,0a5.825,5.825,0,0,0-3.2.94.449.449,0,0,0-.143.617.458.458,0,0,0,.621.143A5.078,5.078,0,1,1,9.39,11.058a5.466,5.466,0,0,1-.94-.09l.249-.494a.335.335,0,0,0-.335-.494l-2.177.069a.343.343,0,0,0-.266.547L7.2,12.369a.343.343,0,0,0,.584-.053l.266-.531a5.719,5.719,0,0,0,1.344.159A5.968,5.968,0,0,0,13.6,1.752Z" transform="translate(-3.463 0)" fill="#98989f"/>
+                              <path id="Path_137" data-name="Path 137" d="M13.871,3.51a.433.433,0,0,0-.441.441V8.036h0V8.2h.02v.02h.02v.02h0l2.337,1.748a.515.515,0,0,0,.266.09.409.409,0,0,0,.351-.176.449.449,0,0,0-.086-.621L14.177,7.644V3.951a.433.433,0,0,0-.306-.441Z" transform="translate(-7.944 -2.076)" fill="#98989f"/>
+                              <circle id="Ellipse_7" data-name="Ellipse 7" cx="0.425" cy="0.425" r="0.425" transform="translate(0.748 2.79)" fill="#98989f"/>
+                              <circle id="Ellipse_8" data-name="Ellipse 8" cx="0.425" cy="0.425" r="0.425" transform="translate(0 5.539)" fill="#98989f"/>
+                              <circle id="Ellipse_9" data-name="Ellipse 9" cx="0.425" cy="0.425" r="0.425" transform="translate(0.739 8.28)" fill="#98989f"/>
+                            </g>
+                          </g>
+                        </svg>
+                        </span>
+                    Cancel Any Time
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+</div>
+
+{% include 'trialtosub-js' %}
+
+{% schema %}
+{
+    "name": "Hero",
+    "settings": [
+        {
+            "type": "header",
+            "content": "ReCharge Settings"
+        },
+        {
+            "type": "product",
+            "id": "product_handle",
+            "label": "Product"
+        },
+        {
+            "type": "text",
+            "id": "bundle_coupon_code",
+            "label": "Bundle Coupon Code"
+        },
+        {
+            "type": "text",
+            "id": "trial_to_sub",
+            "label": "Trial to Subscription Value",
+            "info": "Used by the backend to identify the trial",
+            "default": "brain_body"
+        },
+        {
+            "type": "header",
+            "content": "Future Messaging"
+        },
+        {
+            "type": "checkbox",
+            "id": "future_message_enabled",
+            "label": "Future Message Enable",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "future_message_heading",
+            "label": "Future Message Heading",
+            "default": "First Restock"
+        },
+        {
+            "type": "richtext",
+            "id": "future_message_content",
+            "label": "Extra Message Content",
+            "default": "<p>A week after your variety 6 can sample pack is delivered, we'll contact you about your first monthly shipment for two 12-Pack cases which will default to Frozen Bombsicle (our top selling flavor.) To manage your flavor preferences, subscription selection, change your shipment, or cancel altogether, simply log into your user account on c4energy.com.</p>"
+        },
+        {
+            "type": "textarea",
+            "id": "future_item_image_path",
+            "label": "Future Item Image Path",
+            "default": "https://cdn.shopify.com/s/files/1/1492/2278/files/C4-Energy-2-Cases.png?v=15835279653"
+          },
+          {
+            "type": "image_picker",
+            "id": "future_item_image",
+            "label": "Future Item Image Select (overwrites above)"
+          },
+        {
+            "type": "textarea",
+            "id": "future_item_heading",
+            "label": "Future Item Heading",
+            "default": "Frozen Bombsicle 12-pack (2x)"
+        },
+        {
+            "type": "text",
+            "id": "future_item_regular_price",
+            "label": "Future Item Regular Price",
+            "default": "$59.98"
+        },
+        {
+            "type": "text",
+            "id": "future_item_discounted_price",
+            "label": "Future Item Discounted Price",
+            "default": "$44.99"
+        },
+        {
+            "type": "text",
+            "id": "future_item_shipping_rate",
+            "label": "Future Item Shipping Rate",
+            "default": "FREE"
+        },
+        {
+            "type": "text",
+            "id": "future_item_total_price",
+            "label": "Future Item Total Price (inc. shipping)",
+            "default": "$44.99"
+        },
+        {
+            "type": "textarea",
+            "id": "future_disclaimer_prefix",
+            "label": "Future Disclaimer Prefix",
+            "default": "A payment for your first restock will process on"
+        },
+        {
+            "type": "range",
+            "id": "future_next_charge_days",
+            "label": "Next Charge (Days)",
+            "min": 1,
+            "max": 30,
+            "default": 14
+        },
+        {
+            "type": "header",
+            "content": "Template"
+        },
+        {
+            "type": "text", 
+            "id": "title",
+            "label": "Title",
+            "default": "Try Brain + Body Energy With a Free 6-Pack*"
+        },
+        {
+            "type": "textarea",
+            "id": "body",
+            "label": "Body",
+            "default": "Sign up for a subscription today and receive a FREE variety pack of C4 Energy and Smart Energy to \"try before you buy\"."
+        },
+        {
+            "type": "textarea", 
+            "id": "footer_text",
+            "label": "Footer text",
+            "default": "Get Your Free 6-Pack* Today"
+        },
+        {
+            "type": "header",
+            "content": "Form Settings"
+        },
+        {
+            "type": "text",
+            "id": "input_placeholder",
+            "label": "Input Placeholder",
+            "default": "Enter Email to Unblock"
+        },
+        {
+            "type": "text",
+            "id": "button_text",
+            "label": "Button Text",
+            "default": "Unlock Offer"
+        },
+        {
+            "type": "text",
+            "id": "klaviyo_list_id",
+            "label": "Klaviyo List ID",
+            "default": "Us2ufa"
+        },
+        {
+            "type": "header",
+            "content": "Images"
+        }, 
+        {
+            "type": "image_picker",
+            "id": "desktop_image",
+            "label": "Desktop Image"
+        }, 
+        {
+            "type": "image_picker",
+            "id": "mobile_image",
+            "label": "Mobile Image"
+        },
+        {
+            "type": "header",
+            "content": "Banner"
+        },
+        {
+            "type": "text",
+            "id": "banner_text",
+            "label": "Banner Text",
+            "default": "Try the Brain + Body 6-Pack for Free"
+        },
+        {
+            "type": "header",
+            "content": "Back In Stock"
+        },
+        {
+            "type": "text", 
+            "id": "unavailable_title",
+            "label": "Title",
+            "default": "Uh Oh, we ran out!"
+        },
+        {
+            "type": "textarea",
+            "id": "unavailable_body",
+            "label": "Body",
+            "default": "We are busy in the warehouse making new 6-Packs as we speak! Register to receive a notification when they are back in stock."
+        },
+        {
+            "type": "text",
+            "id": "unavailable_klaviyo_list_id",
+            "label": "Klaviyo List ID",
+            "default": "xxxyyy"
+        },
+        {
+            "type": "text",
+            "id": "unavailable_button_text",
+            "label": "Button Text",
+            "default": "Notify Me"
+        },
+        {
+            "type": "textarea",
+            "id": "unavailable_submit_success",
+            "label": "Form submit success message",
+            "default": "We got it! We'll let you know as soon as we have stock."
+        },
+        {
+            "type": "header",
+            "content": "colors"
+        },
+        {
+            "type": "color",
+            "id": "announcement_text_color",
+            "label": "Announcement Text Color",
+            "default": "#9F9FA5"
+        },
+        {
+            "type": "color",
+            "id": "announcement_bg_color",
+            "label": "Announcement Background Color",
+            "default": "#efefef"
+        },
+        {
+            "type": "color",
+            "id": "logo_bg_color",
+            "label": "Logo Background Color",
+            "default": "#ffe500"
+        },
+        {
+            "type": "color",
+            "id": "logo_text_color",
+            "label": "Logo Text Color",
+            "default": "#000000"
+        },
+        {
+            "type": "color",
+            "id": "body_text_color",
+            "label": "Body Text Color",
+            "default": "#000000"
+        },
+        {
+            "type": "color",
+            "id": "button_text_color",
+            "label": "Button Text Color",
+            "default": "#000000"
+        },
+        {
+            "type": "color",
+            "id": "button_bg_color",
+            "label": "Button Background Color",
+            "default": "#ffe500"
+        },
+        {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color",
+            "default": "#ffffff"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_fading_gradient",
+            "label": "Show Background Gradient",
+            "default": true
+        },
+        {
+            "type": "color",
+            "id": "email_input_color",
+            "label": "Email Input Text Color",
+            "info": "The color of the text while the customer inputs the email address. This is not the placeholder color. ",
+            "default": "#000000"
+        },
+        {
+            "type": "color",
+            "id": "email_input_placeholder_color",
+            "label": "Email Input Placeholder Color",
+            "default": "#98989F"
+        },
+        {
+            "type": "color",
+            "id": "email_input_bg_color",
+            "label": "Email Input Background Color",
+            "default": "#FFFFFF"
+        },
+        {
+            "type": "color",
+            "id": "email_input_border_color",
+            "label": "Email Input Border Color",
+            "default": "#E8E8E8"
+        }
+    ]
+}
+{% endschema %}

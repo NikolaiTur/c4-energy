@@ -1,0 +1,76 @@
+<div class="account-target" id="{{ address_target }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-parent="#address-targets" aria-hidden="true">
+  <div class="container account-card mt-4">
+    <h5 class="mb-3"><strong>{{address_title}}</strong></h5>
+
+    {% form 'customer_address', form_param %}
+      <div class="form-group-row">
+        <div class="form-group">
+          <label for="address_first_name_{{form.id}}">{{ 'customer.addresses.first_name' | t }}</label>
+          <input type="text" class="form-control" id="address_first_name_{{form.id}}" name="address[first_name]" value="{{ form.first_name }}">
+        </div>
+
+        <div class="form-group">
+          <label for="address_last_name_{{form.id}}">{{ 'customer.addresses.last_name' | t }}</label>
+          <input type="text" class="form-control" id="address_last_name_{{form.id}}" name="address[last_name]" value="{{ form.last_name }}">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="address_company_{{form.id}}">{{ 'customer.addresses.company' | t }}</label>
+        <input type="text" class="form-control" id="address_company_{{form.id}}" name="address[company]" value="{{ form.company }}">
+      </div>
+
+      <div class="form-group">
+        <label for="address_address1_{{form.id}}">{{ 'customer.addresses.address1' | t }}</label>
+        <input type="text" class="form-control" id="address_address1_{{form.id}}" name="address[address1]" value="{{ form.address1 }}">
+      </div>
+
+      <div class="form-group">
+        <label for="address_address2_{{form.id}}">{{ 'customer.addresses.address2' | t }}</label>
+        <input type="text" class="form-control" id="address_address2_{{form.id}}" name="address[address2]" value="{{ form.address2 }}">
+      </div>
+
+      <div class="form-group">
+        <label for="address_city_{{form.id}}">{{ 'customer.addresses.city' | t }}</label>
+        <input type="text" class="form-control" id="address_city_{{form.id}}" name="address[city]" value="{{ form.city }}">
+      </div>
+
+      <div class="form-group">
+        <label for="address_country_{{address_id}}">{{ 'customer.addresses.country' | t }}</label>
+
+        <div class="styled-select">
+          <select id="address_country_{{address_id}}" name="address[country]" data-default="{{form.country}}">{{ country_option_tags }}</select>
+        </div>
+      </div>
+
+      <div id="address-province-container-{{address_id}}" class="form-group address-province-container" style="display: none">
+        <label for="address_province_new">{{ 'customer.addresses.province' | t }}</label>
+
+        <div class="styled-select">
+          <select id="address_province_{{address_id}}" class="address_form" name="address[province]" data-default="{{form.province}}"></select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="address_zip_{{form.id}}">{{ 'customer.addresses.zip' | t }}</label>
+        <input type="text" class="form-control" id="address_zip_{{form.id}}" name="address[zip]" value="{{ form.zip }}">
+      </div>
+
+      <div class="form-group">
+        <label for="address_phone_{{form.id}}">{{ 'customer.addresses.phone' | t }}</label>
+        <input type="text" class="form-control" id="address_phone_{{form.id}}" name="address[phone]" value="{{ form.phone }}">
+      </div>
+
+      <div class="form-group">
+        <label class="form__label">
+          {{ form.set_as_default_checkbox }} {{ 'customer.addresses.set_default' | t }}
+        </label>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-primary" data-remodal-action="close">{{ 'customer.addresses.cancel' | t }}</button>
+        <input class="btn btn-primary" type="submit" value="{{btn_value}}" />
+      </div>
+    {% endform %}
+  </div>
+</div>
