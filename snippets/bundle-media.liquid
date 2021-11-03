@@ -9,11 +9,12 @@
 
 
 {% assign product_variants = selected_product.variants %}
-
-{% for variant in product_variants %}
-	{%- if variant.title contains '12 Pack / 16oz' -%}
-		{% if variant.metafields.c4energy.bottle_image != blank %}
-	        <img src="{{ variant.metafields.c4energy.bottle_image }}" class="flavor-can-image hide" data-variant-id="{{ variant.id }}">
-      	{% endif %}
-	{%- endif -%}
+{% for singular_product in selected_product %}
+	{% for variant in all_products[singular_product].variants %}
+		{%- if variant.title contains '12 Pack / 16oz' -%}
+			{% if variant.metafields.c4energy.bottle_image != blank %}
+				<img src="{{ variant.metafields.c4energy.bottle_image }}" class="flavor-can-image hide" data-variant-id="{{ variant.id }}">
+			{% endif %}
+		{%- endif -%}
+	{% endfor %}
 {% endfor %}

@@ -2,8 +2,8 @@
 	<div id="bundle-selection--wrapper">
     <div class="container-fluid">
 
-      {% assign bundle_brain_product = all_products[section.settings.bundle_brain_product] %}
-      {% assign bundle_body_product = all_products[section.settings.bundle_body_product] %}
+      {% assign bundle_brain_product = section.settings.bundle_brain_product | newline_to_br | strip_newlines | split: "<br />" %}
+      {% assign bundle_body_product = section.settings.bundle_body_product | newline_to_br | strip_newlines | split: "<br />" %}
 
       <div id="bundle-selection--section">
         
@@ -97,9 +97,10 @@
       "label": "Price Text"
     },
     {
-      "type": "product",
+      "type": "textarea",
       "id": "bundle_brain_product",
-      "label": "Brain Product"
+      "label": "First Products List",
+      "info": "Please input product handles, one per line"
     },
     {
       "type": "image_picker",
@@ -107,9 +108,10 @@
       "label": "Brain Product Default Image"
     },
     {
-      "type": "product",
+      "type": "textarea",
       "id": "bundle_body_product",
-      "label": "Body Product"
+      "label": "Second Products List",
+      "info": "Please input product handles, one per line"
     },
     {
       "type": "image_picker",

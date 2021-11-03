@@ -102,11 +102,7 @@
             <img class="account-image" src="{{customer_gravatar_img}}&d={{default_image_encoded}}">
           </a>
         </div>
-        {%- if customer.metafields.loyaltylion.loyalty_tier -%}
-        <div class="account-tag {{ customer.metafields.loyaltylion.loyalty_tier | handleize }}" data-tier="{{customer.metafields.loyaltylion.loyalty_tier}}"><a href="/account?view=loyalty"><i class="fas fa-medal"></i> {{customer.metafields.loyaltylion.loyalty_tier}}</a></div>
-        {%- else -%}
         <div class="account-tag"><a href="/account?view=loyalty"><i class="fas fa-medal"></i> <span></span></a></div>
-        {%- endif -%}
         <div class="account-points">
           <span id="stamped-rewards-points-placeholder" data-type="points-only" class="account-points__value"></span>
           <span class="account-points__suffix">{{settings.loyalty_points}}</span>

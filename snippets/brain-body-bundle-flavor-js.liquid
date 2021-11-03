@@ -1,4 +1,6 @@
-{%- assign recharge_id = all_products[section.settings.bundle_brain_product].selected_or_first_available_variant.metafields.subscriptions.discount_variant_id | append: all_products[section.settings.bundle_body_product].selected_or_first_available_variant.metafields.subscriptions.discount_variant_id -%}
+{%- assign bundle_brain_product = section.settings.bundle_brain_product | newline_to_br | strip_newlines | split: "<br />" -%}
+{%- assign bundle_body_product = section.settings.bundle_body_product | newline_to_br | strip_newlines | split: "<br />" -%}
+{%- assign recharge_id = all_products[bundle_brain_product[0]].selected_or_first_available_variant.metafields.subscriptions.discount_variant_id | append: all_products[bundle_body_product[0]].selected_or_first_available_variant.metafields.subscriptions.discount_variant_id -%}
 
 {% if section.settings.future_item_image -%}
   {%- assign future_image_path = section.settings.future_item_image | img_url: 'original' -%}

@@ -43,7 +43,7 @@
                 {% capture wrapper_id %}ProductMediaWrapper-{{ media_id }}{% endcapture %}
                 {% capture image_size %}{{ height }}x{{ height }}{% endcapture %}
 
-                <div id="{{ wrapper_id }}" class="product-single__media-wrapper {% unless stacked or featured %} hide{% endunless %}"  data-product-single-media-wrapper data-media-id="{{ media_id }}" tabindex="-1">
+                <div id="{{ wrapper_id }}" class="product-single__media-wrapper {% unless stacked or featured %}hide{% endunless %} {% unless stacked %}hide-not-stacked{% endunless %}"  data-product-single-media-wrapper data-media-id="{{ media_id }}" tabindex="-1">
                   <div class="product-single__media custom">
                   {% if variant.metafields.c4energy.bottle_image != blank %}
                     <img src="{{ variant.metafields.c4energy.bottle_image }}">
@@ -149,7 +149,7 @@
             {% if product.type != blank %}
               <span class="product-single__type">{{ product.type }}</span>
             {% endif %}
-            <h1 class="product-single__title" itemprop="name">{{ product.title }}</h1>
+            <h1 class="product-single__title" itemprop="name">{{ product.title | replace: '™', '<sup>™</sup>'}}</h1>
 
           </div>
 
@@ -246,9 +246,8 @@
                               name="option{{ option.position }}"
                               class="single-option-selector__radio{% unless variant_label_state %} disabled{% endunless %} {{ option.name | downcase | handleize }}"
                               id="ProductSelect-option-{{ option.name | handleize }}-{{ value | escape }}">
-                            <label for="ProductSelect-option-{{ option.name | handleize }}-{{ value | escape }}"{% unless variant_label_state %} class="disabled"{% endunless %}><span>{{ value | escape }}</span>
-
                               {% assign variant = product.variants[forloop.index0] %}
+                            <label {% if variant.metafields.c4energy.presale %}data-presale="{{variant.metafields.c4energy.presale | escape}}"{% endif %} for="ProductSelect-option-{{ option.name | handleize }}-{{ value | escape }}"{% unless variant_label_state %} class="disabled"{% endunless %}><span>{{ value | escape }}</span>
 
                               {% if option.name == 'Flavor' and variant.metafields.c4energy.tooltip != blank %}
                                 <div class="tooltip"><div class="tooltip-content"><p class="flavor-name">{{ value | escape }}</p><p class="flavor-content">{{ variant.metafields.c4energy.tooltip }}</p></div></div>
@@ -277,6 +276,30 @@
               </div>
             </div>
             <div id="product-option--selection-right">
+              {%- for i in (1..5) -%}
+                {%- assign promo_tag = "promo-text" | append: i -%}
+                {%- assign promo_text = promo_tag | replace: "-","_" -%}
+                {%- if product.tags contains promo_tag and settings[promo_text] -%}          
+                  {%- assign promo_text_text = promo_text | append: "_text" -%}
+                  {%- assign promo_text_subtext = promo_text | append: "_subtext" -%}
+                  {%- assign promo_text_svg = promo_text | append: "_svg" -%}
+                  {%- assign promo_text_url = promo_text | append: "_url" -%}
+                  {%- assign promo_text_url_label = promo_text | append: "_url_label" -%}
+                    <div class="promo-text">
+                      <div class="promo-text-text">
+                        {%- if settings[promo_text_svg] != blank -%}{{settings[promo_text_svg]}} {% endif -%}
+                        {{settings[promo_text_text]}}
+                        {%- if settings[promo_text_url_label] != blank %} <a href="{{settings[promo_text_url]}}">{{settings[promo_text_url_label]}}</a>{% endif -%}
+                      </div>
+                      {% if settings[promo_text_subtext] != blank -%}
+                      <div class="promo-text-subtext {%- if settings[promo_text_svg] != blank -%}has-svg{% endif -%}">
+                        {{settings[promo_text_subtext]}}
+                      </div>
+                      {%- endif %}
+                    </div>
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
 
               {% unless product.tags contains 'hide-recharge' %}
                 {% if product.available %}{% include 'subscription-product' %}{% endif %}   
@@ -335,7 +358,9 @@
               {% endif %}
 
             </div>
-
+              {% if product.selected_or_first_available_variant.metafields.c4energy.presale != "" %}
+                <div class="presale-text">{{product.selected_or_first_available_variant.metafields.c4energy.presale}}</div>
+              {% endif %}
               <div data-productid="{{ product.id }}" class="product-single__add-to-cart{% if section.settings.add_to_cart_button_size == 'large' %} product-single__add-to-cart--full-width{% endif %}">
                 <button type="submit" name="add" id="AddToCart--{{ section.id }}" class="btn btn--add-to-cart c4-btn yellow medium{% if section.settings.enable_payment_button %} btn--secondary-accent{% endif %}"{% unless current_variant.available %} disabled="disabled"{% endunless %}>
                   <span class="btn__text">
@@ -353,8 +378,8 @@
                 {% if section.settings.enable_payment_button %}
                   {{ form | payment_button }}
                 {% endif %}
-              </div>
-
+              </div>              
+            
             {% endform %}
           </div></div>
           </div>        

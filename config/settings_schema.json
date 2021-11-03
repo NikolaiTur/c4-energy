@@ -8,6 +8,279 @@
     "theme_support_url": "https:\/\/support.shopify.com\/"
   },
   {
+    "name": "Promo Call Outs",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Promo Text 1",
+        "info": "Activated by adding the tag 'promo-text1'"
+      },
+      {
+        "type": "checkbox",
+        "id": "promo_text1",
+        "label": "Enable"
+      },
+      {
+        "type": "text",
+        "id": "promo_text1_text",
+        "label": "Text"
+      },
+      {
+        "type": "text",
+        "id": "promo_text1_subtext",
+        "label": "Subtext"
+      },
+      {
+        "type": "textarea",
+        "id": "promo_text1_svg",
+        "label": "SVG Icon Code",
+        "info": "Added in front of the text"
+      },
+      {
+        "type": "url",
+        "id": "promo_text1_url",
+        "label": "Link"
+      },
+      {
+        "type": "text",
+        "id": "promo_text1_url_label",
+        "label": "Link label"
+      },
+      {
+        "type": "header",
+        "content": "Promo Text 2",
+        "info": "Activated by adding the tag 'promo-text2'"
+      },
+      {
+        "type": "checkbox",
+        "id": "promo_text2",
+        "label": "Enable"
+      },
+      {
+        "type": "text",
+        "id": "promo_text2_text",
+        "label": "Text"
+      },
+      {
+        "type": "text",
+        "id": "promo_text2_subtext",
+        "label": "Subtext"
+      },
+      {
+        "type": "textarea",
+        "id": "promo_text2_svg",
+        "label": "SVG Icon Code",
+        "info": "Added in front of the text"
+      },
+      {
+        "type": "url",
+        "id": "promo_text2_url",
+        "label": "Link"
+      },
+      {
+        "type": "text",
+        "id": "promo_text2_url_label",
+        "label": "Link label"
+      },
+      {
+        "type": "header",
+        "content": "Promo Text 3",
+        "info": "Activated by adding the tag 'promo-text3'"
+      },
+      {
+        "type": "checkbox",
+        "id": "promo_text3",
+        "label": "Enable"
+      },
+      {
+        "type": "text",
+        "id": "promo_text3_text",
+        "label": "Text"
+      },
+      {
+        "type": "text",
+        "id": "promo_text3_subtext",
+        "label": "Subtext"
+      },
+      {
+        "type": "textarea",
+        "id": "promo_text3_svg",
+        "label": "SVG Icon Code",
+        "info": "Added in front of the text"
+      },
+      {
+        "type": "url",
+        "id": "promo_text3_url",
+        "label": "Link"
+      },
+      {
+        "type": "text",
+        "id": "promo_text3_url_label",
+        "label": "Link label"
+      },
+      {
+        "type": "header",
+        "content": "Promo Text 4",
+        "info": "Activated by adding the tag 'promo-text4'"
+      },
+      {
+        "type": "checkbox",
+        "id": "promo_text4",
+        "label": "Enable"
+      },
+      {
+        "type": "text",
+        "id": "promo_text4_text",
+        "label": "Text"
+      },
+      {
+        "type": "text",
+        "id": "promo_text4_subtext",
+        "label": "Subtext"
+      },
+      {
+        "type": "textarea",
+        "id": "promo_text4_svg",
+        "label": "SVG Icon Code",
+        "info": "Added in front of the text"
+      },
+      {
+        "type": "url",
+        "id": "promo_text4_url",
+        "label": "Link"
+      },
+      {
+        "type": "text",
+        "id": "promo_text4_url_label",
+        "label": "Link label"
+      },
+      {
+        "type": "header",
+        "content": "Promo Text 5",
+        "info": "Activated by adding the tag 'promo-text5'"
+      },
+      {
+        "type": "checkbox",
+        "id": "promo_text5",
+        "label": "Enable"
+      },
+      {
+        "type": "text",
+        "id": "promo_text5_text",
+        "label": "Text"
+      },
+      {
+        "type": "text",
+        "id": "promo_text5_subtext",
+        "label": "Subtext"
+      },
+      {
+        "type": "textarea",
+        "id": "promo_text5_svg",
+        "label": "SVG Icon Code",
+        "info": "Added in front of the text"
+      },
+      {
+        "type": "url",
+        "id": "promo_text5_url",
+        "label": "Link"
+      },
+      {
+        "type": "text",
+        "id": "promo_text5_url_label",
+        "label": "Link label"
+      }
+    ]
+  },
+  {
+    "name": "Gift with purchase",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "activate_gwp",
+        "label": "Activate GWP",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "gwp_trigger_on_all_products",
+        "label": "Trigger on all products",
+        "default": false,
+        "info": "If this is enabled the \"Triggering product list\" below will be ignored."
+      },
+      {
+        "type": "number",
+        "id": "gwp_threshold",
+        "label": "Threshold",
+        "default": 1
+      },
+      {
+        "type": "text",
+        "id": "gwp_trigger_product",
+        "label": "Triggering product list",
+        "info": "Trigger product ids\/variant ids, comma separated"
+      },
+      {
+        "type": "product",
+        "id": "gwp_trigger_product2",
+        "label": "Triggering product 2",
+        "info": "Having this product + triggering product 1 in cart will activate a free gift."
+      },
+      {
+        "type": "number",
+        "id": "gwp_trigger_quantity",
+        "label": "Minimum quantity required",
+        "default": 1,
+        "info": "If product 2 is set, it will require minimum quantity of each. If not, minimum quantity of any from product 1"
+      },
+      {
+        "type": "text",
+        "id": "gwp_trigger_product_ss",
+        "label": "Triggering product Subscription ID",
+        "info": "Having the subscription product in cart will also add the free gift to cart. You can get the subscription product ID by looking at its URL: https:\/\/prnt.sc\/11wuv04"
+      },
+      {
+        "type": "text",
+        "id": "gwp_trigger_product2_ss",
+        "label": "Triggering product2 Subscription ID",
+        "info": "Having the subscription product 2 in cart will also add the free gift to cart. You can get the subscription product ID by looking at its URL: https:\/\/prnt.sc\/11wuv04"
+      },
+      {
+        "type": "text",
+        "id": "gwp_recharge_coupon",
+        "label": "Recharge GWP Coupon",
+        "info": "GWP won't work without a coupon in ReCharge. This will be automatically applied",
+        "default": "GWPSOCKS"
+      },
+      {
+        "type": "product",
+        "id": "gwp_gift_product",
+        "label": "Free gift product",
+        "info": "This will be added to cart automatically if it's still in stock and if the product selected above is in cart."
+      },
+      {
+        "type": "text",
+        "id": "gwp_charge_code",
+        "label": "Charge Code",
+        "info": "Must match Shopify Scripts charge code"
+      },
+      {
+        "type": "header",
+        "content": "GWP Popup"
+      },
+      {
+        "type": "color",
+        "id": "gwp_popup_image_background",
+        "label": "Image background color"
+      },
+      {
+        "type": "text",
+        "id": "gwp_popup_not_available_text",
+        "label": "\"Variant not available\" text"
+      }
+    ]
+  },
+  {
     "name": "Loyalty",
     "settings": [
       {

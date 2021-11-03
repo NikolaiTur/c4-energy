@@ -18,6 +18,30 @@
 	    </div>
     	<div class="placeholder-background placeholder-background--animation" data-image-placeholder></div>
   	</div>
+	{%- for i in (1..5) -%}
+	{%- assign promo_tag = "promo-text" | append: i -%}
+	{%- assign promo_text = promo_tag | replace: "-","_" -%}
+	{%- if product.tags contains promo_tag and settings[promo_text] -%}          
+		{%- assign promo_text_text = promo_text | append: "_text" -%}
+		{%- assign promo_text_subtext = promo_text | append: "_subtext" -%}
+		{%- assign promo_text_svg = promo_text | append: "_svg" -%}
+		{%- assign promo_text_url = promo_text | append: "_url" -%}
+		{%- assign promo_text_url_label = promo_text | append: "_url_label" -%}
+		<div class="promo-text">
+			<div class="promo-text-text">
+			{%- if settings[promo_text_svg] != blank -%}{{settings[promo_text_svg]}} {% endif -%}
+			{{settings[promo_text_text]}}
+			{%- if settings[promo_text_url_label] != blank %} <span class="promo-text-url" onclick="event.stopPropagation(); window.location.href='{{settings[promo_text_url]}}'; return false;">{{settings[promo_text_url_label]}}</span>{% endif -%}
+			</div>
+			{% if settings[promo_text_subtext] != blank -%}
+			<div class="promo-text-subtext">
+			{{settings[promo_text_subtext]}}
+			</div>
+			{%- endif %}
+		</div>
+		{%- break -%}
+	{%- endif -%}
+	{%- endfor -%}
 	<div class="item-product--meta">
 		<p class="item-product--type text-upper">{{ product.type }}</p>
 		<p class="item-product--title">{{ product.title }}</p>

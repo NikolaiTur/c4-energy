@@ -1,0 +1,55 @@
+{% comment %} Lazyload + responsive images {% endcomment %}
+{% assign image_load =  image | img_url: '1x1' %}
+{% if type == blank %}
+  {% if image_load contains 'no-image-' %}
+    {% assign type = 'external' %}
+  {% endif %}
+{% endif %}
+
+{% if default_size == blank %}
+    {% assign default_size = '150x' %}
+{% endif %}
+
+{% case type %}
+  {% when blank or 'img' %}
+    {% assign lo_res_url =  image | img_url: default_size %}
+    {% assign responsive_url = image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+	{% assign fallback_url = image | img_url: '1000x' %}
+  {% when 'asset' %
+    {% assign lo_res_url =  image | asset_img_url: default_size %}
+    {% assign responsive_url = image | asset_img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+    {% assign fallback_url = image | asset_img_url: '1000x' %}
+  {% when 'file' %}
+    {% assign lo_res_url =  image | file_img_url: default_size %}
+    {% assign responsive_url = image | file_img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+    {% assign fallback_url = image | file_img_url: '1000x' %}
+  {% when 'external' %}
+    {% assign lo_res_url =  image | replace: '.png', '_150x.png' %}
+    {% assign lo_res_url =  image | replace: '.jpg', '_150x.jpg' %}
+    {% assign responsive_url = image | replace: '.png', '_{width}x.png' %}
+    {% assign responsive_url = image | replace: '.jpg', '_{width}x.jpg' %}
+    {% assign fallback_url = image | replace: '.png', '1000x.png' %}
+    {% assign fallback_url = image | replace: '.jpg', '1000x.jpg' %}
+{% endcase %}
+<noscript>
+  <img
+      class="{{ classes }}"
+      src="{{ fallback_url }}"
+      data-sizes="auto"
+      alt="{{ image.alt | escape }}" 
+      loading="lazy"
+      {{ props }}
+  />
+</noscript>
+<img
+  class="{{ classes }} lazyload fade-in {% unless first == true %} lazypreload{% endunless %}"
+  src="{{ lo_res_url }}"
+  data-src="{{ responsive_url }}"
+  data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
+  data-aspectratio="{{ image.aspect_ratio }}"
+  data-sizes="auto"
+  data-parent-fit="cover"
+  loading="lazy"
+  alt="{{ image.alt | escape }}" 
+  {{ props }}
+/>

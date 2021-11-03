@@ -56,7 +56,11 @@
                             More image size options at:
                               - http://docs.shopify.com/themes/filters/product-img-url
                           {% endcomment %}
-                          <img src="{{ item | img_url: 'medium' }}" alt="{{ item.title | escape }}">
+                          {% for property in item.properties %}
+                            {% if property.first == '_image' %}
+                              <img src="{{ property.last }}" alt="{{ item.title | escape }}" width="136" height="136">
+                            {% endif %}
+                          {% endfor %}
                         </a>
                       </div>
 
@@ -99,7 +103,7 @@
                         {% endif %}
 
                         <p class="cart__product-meta">
-                          <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&amp;quantity=0">
+                          <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&amp;quantity=0" {% if settings.gwp_trigger_product and item.product.id == all_products[settings.gwp_gift_product].id and item.properties['_ax_charge_code'] == settings.gwp_charge_code %}class="remove-gwp-free-product" data-handle="{{ item.product.handle }}"{%endif%}>
                             {{ 'cart.general.remove' | t }}
                           </a>
                         </p>
@@ -112,9 +116,15 @@
                     <div class="grid--full cart__row--table{% if item.line_level_discount_allocations != blank %} cart__row--table-with-discount{% endif %}">
 
                       <div class="grid__item one-third text-center">
-
+                        {% if settings.gwp_trigger_product and item.product.id == all_products[settings.gwp_gift_product].id and item.properties['_ax_charge_code'] == settings.gwp_charge_code %}
+                        <label for="updates_{{ item.key }}" class="visually-hidden">{{ 'cart.label.quantity' | t }}</label>
+                        <input type="number" name="updates[]" id="updates_{{ item.key }}" class="cart__product-qty visually-hidden" value="{{ item.quantity }}" min="0" data-id="{{ item.key }}">
+                        {% else %}
                         <label for="updates_{{ item.key }}" class="visually-hidden">{{ 'cart.label.quantity' | t }}</label>
                         <input type="number" name="updates[]" id="updates_{{ item.key }}" class="cart__product-qty" value="{{ item.quantity }}" min="0" data-id="{{ item.key }}">
+                        {% endif %}
+
+                        
 
                       </div>
 
@@ -267,3 +277,4 @@
     $(this).text('Frequency: ' + frequencyShipping + ' ' + unitTypeShipping);
   });
 </script>
+<script src="https://cdn.pagefly.io/static/assets/pf-custom-shopify-cart.min.js" defer></script>

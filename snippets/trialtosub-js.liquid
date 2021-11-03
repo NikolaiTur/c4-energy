@@ -120,6 +120,12 @@ function reChargeProcessCart() {
 
   var promoCode = "&populatecode=" + "{{section.settings.bundle_coupon_code}}";
   var populateEmail = "&populateemail=" + customerEmailEncoded;
+  
+  {% if settings.activate_gwp %}
+    if(sessionStorage.getItem('gwp-added-to-cart') == "true") {
+      promoCode = "&populatecode=" + "{{settings.gwp_recharge_coupon}}&gwp=true";
+    } 
+  {% endif %}
 
   checkout_domain = 'https://checkout.c4energy.com'
   // checkout_domain = 'https://checkout.rechargeapps.com';
@@ -160,7 +166,13 @@ function shopifyProcessCart() {
   {% endif %}
 
   var promoCode = "&populatecode=" + "{{section.settings.sub_coupon_code}}";
-  var populateEmail = getCookie('populateemail')!= undefined ? "&populateemail=" + getCookie('populateemail') : "";
+  var populateEmail = getCookie('populateemail')!= undefined ? "&populateemail=" + getCookie('populateemail') : "";  
+  
+  {% if settings.activate_gwp %}
+    if(sessionStorage.getItem('gwp-added-to-cart') == "true") {
+      promoCode = "&populatecode=" + "{{settings.gwp_recharge_coupon}}&gwp=true";
+    } 
+  {% endif %}
 
   checkout_url = '/checkout?cart_token=' + token + '&' + ga_linker + customer_param + promoCode + populateEmail;
 

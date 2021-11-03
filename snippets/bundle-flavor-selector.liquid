@@ -18,70 +18,65 @@
     </div>
   </div>
 
-  {% assign product_variants = selected_product.variants %}
-
-  {% for option in selected_product.options %}
-      {% if option == 'Flavor' %}
-        {% assign flavor_option_name = 'option' | append: forloop.index %}
-      {% endif %}
-  {% endfor %}
+  {% assign flavor_option_name = 'option1' %}
 
   <ul id="{{ bundle_type | downcase | handleize }}--items" class="flavor-items"> 
-    {% for variant in product_variants %}
+    {% for singular_product in selected_product %}
+      {% for variant in all_products[singular_product].variants %}          
+        {% if flavor_option_name and selected_product.metafields.flavors.hide contains variant[flavor_option_name] %}
+          {% continue %}
+        {% endif %}
 
-      {% if flavor_option_name and selected_product.metafields.flavors.hide contains variant[flavor_option_name] %}
-        {% continue %}
-      {% endif %}
-
-      {% if variant.metafields.variant.hide %}
-        {% continue %}
-      {% endif %}
-
-      {%- if variant.title contains '12 Pack / 16oz' -%}
-        {%- if variant.inventory_policy != deny and variant.available -%}
-          {% assign variant_class = '' %}
-        {%- else -%}
-          {% assign variant_class = 'sold-out' -%}
+        {% if variant.metafields.variant.hide %}
+          {% continue %}
         {% endif %}
         
-        {%- assign item_id = 'item-' | append: variant.id -%}
+        {%- if variant.title contains '12 Pack / 16oz'  -%}
+          {%- if variant.inventory_policy != deny and variant.available -%}
+            {% assign variant_class = '' %}
+          {%- else -%}
+            {% assign variant_class = 'sold-out' -%}
+          {% endif %}
 
-        <li id="{{ item_id }}" data-original-variantid="{{ variant.id }}" data-id="{{selected_product.metafields.subscriptions.subscription_id}}" data-variant="{{variant.metafields.subscriptions.discount_variant_id}}" data-bundle-group="{{ bundle_group }}" class="{{ variant_class }}"><span>{{variant.title | split: "/" | last }}</span><img src="{{ 'can-icon.svg' | asset_url }}" class="can-icon"></li>
+          {%- assign item_id = 'item-' | append: variant.id -%}
 
-        {% assign gradient_first_color = variant.metafields.c4energy.gradient_first_color %}
-        {% assign gradient_second_color = variant.metafields.c4energy.gradient_second_color %}
+          <li id="{{ item_id }}" data-original-variantid="{{ variant.id }}" data-id="{{selected_product.metafields.subscriptions.subscription_id}}" data-variant="{{variant.metafields.subscriptions.discount_variant_id}}" data-bundle-group="{{ bundle_group }}" class="{{ variant_class }}"><span>{% if variant.metafields.c4energy.overwrite_title %}{{variant.metafields.c4energy.overwrite_title}}{% else %}{{variant.title | split: "/" | last }}{%endif%}</span><img src="{{ 'can-icon.svg' | asset_url }}" class="can-icon"></li>
 
-        {% if gradient_first_color == blank %}
-          {% assign gradient_first_color = '#000000' %}
-        {% endif %}
+          {% assign gradient_first_color = variant.metafields.c4energy.gradient_first_color %}
+          {% assign gradient_second_color = variant.metafields.c4energy.gradient_second_color %}
 
-        {% if gradient_second_color == blank %}
-          {% assign gradient_second_color = '#000000' %}
-        {% endif %}
+          {% if gradient_first_color == blank %}
+            {% assign gradient_first_color = '#000000' %}
+          {% endif %}
 
-        <style type="text/css">
-          .bundle-flavor--selection-section .flavor-items li#{{ item_id }}:before {
-            background-image: linear-gradient(to bottom, {{ gradient_first_color }}, {{ gradient_second_color }});
-          }
-        </style>
+          {% if gradient_second_color == blank %}
+            {% assign gradient_second_color = '#000000' %}
+          {% endif %}
 
-        {% if bundle_group == 'brain' %}
           <style type="text/css">
-            #bundle-flavor-selection[data-brain-variant="{{ variant.id }}"]:before {
+            .bundle-flavor--selection-section .flavor-items li#{{ item_id }}:before {
               background-image: linear-gradient(to bottom, {{ gradient_first_color }}, {{ gradient_second_color }});
             }
           </style>
-        {% endif %}
 
-        {% if bundle_group == 'body' %}
-          <style type="text/css">
-            #bundle-flavor-selection[data-body-variant="{{ variant.id }}"]:after {
-              background-image: linear-gradient(to bottom, {{ gradient_first_color }}, {{ gradient_second_color }});
-            }
-          </style>
-        {% endif %}
+          {% if bundle_group == 'brain' %}
+            <style type="text/css">
+              #bundle-flavor-selection[data-brain-variant="{{ variant.id }}"]:before {
+                background-image: linear-gradient(to bottom, {{ gradient_first_color }}, {{ gradient_second_color }});
+              }
+            </style>
+          {% endif %}
 
-      {% endif %}
+          {% if bundle_group == 'body' %}
+            <style type="text/css">
+              #bundle-flavor-selection[data-body-variant="{{ variant.id }}"]:after {
+                background-image: linear-gradient(to bottom, {{ gradient_first_color }}, {{ gradient_second_color }});
+              }
+            </style>
+          {% endif %}
+
+        {% endif %}
+      {% endfor %}
     {% endfor %}
   </ul>
-</div>
+</div> 

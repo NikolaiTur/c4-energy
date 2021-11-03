@@ -4,6 +4,22 @@
 {% if comment and comment.created_at %}
   {% assign number_of_comments = article.comments_count | plus: 1 %}
 {% endif %}
+{% assign image_position = null%}
+{% assign image_x_position = article.metafields.global.image_x_position %}
+{% assign image_y_position = article.metafields.global.image_y_position %}
+
+{%- if image_x_position != null and image_y_position != null -%}
+  {% assign image_position = 'object-position: ' | append: image_x_position | append: ' ' | append: image_y_position | append: ';' %}
+{% elsif image_x_position != null and image_y_position == null %}
+  {% assign image_position = 'object-position: ' | append: image_x_position | append: ' auto;' %}
+{% elsif image_y_position != null and image_x_position == null %}
+  {% assign image_position = 'object-position: auto ' | append: image_y_position | append: ';' %}
+{% endif %}
+
+{% assign show_category = article.metafields.global.show_category %}
+{% assign show_date = article.metafields.global.show_date %}
+{% assign show_author = article.metafields.global.show_author %}
+{% assign show_comments = article.metafields.global.show_comments %}
 
 <article class="article" itemscope itemtype="http://schema.org/Article">
   <div class="container-fluid">
@@ -23,7 +39,8 @@
           data-widths="[360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
           data-aspectratio="{{ article.image.aspect_ratio }}"
           data-sizes="auto"
-          alt="{{ article.title | escape | strip_html }}" />
+          alt="{{ article.title | escape | strip_html }}"
+          style="{{ image_position }}" />
       </div>
       {% endunless %}
       <h1>{{ article.title }}</h1>
@@ -68,6 +85,14 @@
       </div>
     </div>
   </section>
+
+  {% if section.settings.article_klaviyo_enabled %}
+    <section class="container-fluid klaviyo-signup">
+      <h2 class="title">{{ section.settings.article_klaviyo_title }}</h2>
+      <h4 class="subtitle">{{ section.settings.article_klaviyo_subtitle }}</h4>
+      {{ section.settings.article_klaviyo_form }}
+    </section>
+  {% endif %}
 
   {% assign related_posts = "" %}
   {% assign related_posts_count = 0 %}
@@ -242,6 +267,30 @@
         "zh-TW": "顯示社群分享按鈕"
       },
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "checkbox",
+      "id": "article_klaviyo_enabled",
+      "label": "Show Klaviyo newsletter"
+    },
+    {
+      "type": "textarea",
+      "id": "article_klaviyo_form",
+      "label": "Klaviyo form HTML"
+    },
+    {
+      "type": "text",
+      "id": "article_klaviyo_title",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "article_klaviyo_subtitle",
+      "label": "Subtitle"
     }
   ]
 }

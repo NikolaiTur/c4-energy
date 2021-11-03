@@ -1,5 +1,9 @@
 {
   "general": {
+    "404": {
+      "title": "找不到页面 404",
+      "subtext_html": "您查找的页面不存在。<a href=\"{{ link }}\" class=\"text-link\">单击此处<\/a>继续购物。"
+    },
     "accessibility": {
       "refresh_page": "选择某一选项会使整个页面刷新。",
       "unit_price_separator": "单价",
@@ -8,10 +12,6 @@
     "meta": {
       "tags": "标记为“{{ tags }}”",
       "page": "第 {{ page }} 页"
-    },
-    "404": {
-      "title": "找不到页面 404",
-      "subtext_html": "您查找的页面不存在。<a href=\"{{ link }}\" class=\"text-link\">单击此处<\/a>继续购物。"
     },
     "pagination": {
       "previous": "Previous",
@@ -319,6 +319,51 @@
       "shop_link": "开始购物",
       "print": "打印",
       "add_to_apple_wallet": "添加到 Apple Wallet"
+    }
+  },
+  "pagefly": {
+    "products": {
+      "product": {
+        "regular_price": "Regular price",
+        "sold_out": "Sold out",
+        "unavailable": "Unavailable",
+        "on_sale": "Sale",
+        "quantity": "Quantity",
+        "add_to_cart": "Add to cart",
+        "back_to_collection": "Back to {{ title }}",
+        "view_details": "View details"
+      }
+    },
+    "article": {
+      "tags": "Tags:",
+      "all_topics": "All topics",
+      "by_author": "by {{ author }}",
+      "posted_in": "Posted in",
+      "read_more": "Read more",
+      "back_to_blog": "Back to {{ title }}"
+    },
+    "comments": {
+      "title": "Leave a comment",
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "post": "Post comment",
+      "moderated": "Please note, comments must be approved before they are published",
+      "success_moderated": "Your comment was posted successfully. We will publish it in a little while, as our blog is moderated.",
+      "success": "Your comment was posted successfully! Thank you!",
+      "comments_with_count": {
+        "one": "{{ count }} comment",
+        "other": "{{ count }} comments"
+      }
+    },
+    "password_page": {
+      "login_form_message": "Enter store using password:",
+      "login_form_password_label": "Password",
+      "login_form_password_placeholder": "Your password",
+      "login_form_submit": "Enter",
+      "signup_form_email_label": "Email",
+      "signup_form_success": "We will send you an email right before we open!",
+      "password_link": "Enter using password"
     }
   }
 }

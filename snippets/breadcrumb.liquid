@@ -16,13 +16,8 @@
       {{ collection.title | link_to: collection.url }}
     {% endif %}
     {% endcomment %}
-    
-    {% assign current_collection = product.collections[1] %}
-    {% comment %} We are using product.collections[1] because the 'first' collection is 'ALL' {% endcomment %}
-    {% if current_collection.url %}
-      <span aria-hidden="true">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
-      <span>{{ current_collection.title | link_to: current_collection.url }}</span>
-    {% endif %}
+    <span aria-hidden="true">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+    <span><a href="/collections/our-drinks">Our Drinks</a></span>
     <span aria-hidden="true">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
     <span class="current-page">{{ product.title }}</span>
   {% elsif template contains 'collection' and collection.handle %}

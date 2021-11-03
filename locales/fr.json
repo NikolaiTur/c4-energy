@@ -1,5 +1,9 @@
 {
   "general": {
+    "404": {
+      "title": "404 - Page non trouvée",
+      "subtext_html": "Cette page n'est pas disponible. <a href=\"{{ link }}\" class=\"text-link\">Retourner vers la boutique<\/a>"
+    },
     "accessibility": {
       "refresh_page": "Le choix d'une sélection entraîne l'actualisation d'une page entière.",
       "unit_price_separator": "par",
@@ -8,10 +12,6 @@
     "meta": {
       "tags": "Mots clés \"{{ tags }}\"",
       "page": "Page {{ page }}"
-    },
-    "404": {
-      "title": "404 - Page non trouvée",
-      "subtext_html": "Cette page n'est pas disponible. <a href=\"{{ link }}\" class=\"text-link\">Retourner vers la boutique<\/a>"
     },
     "pagination": {
       "previous": "Précédent",
@@ -319,6 +319,51 @@
       "shop_link": "Boutique",
       "print": "Imprimer",
       "add_to_apple_wallet": "Ajouter à Apple Wallet"
+    }
+  },
+  "pagefly": {
+    "products": {
+      "product": {
+        "regular_price": "Regular price",
+        "sold_out": "Sold out",
+        "unavailable": "Unavailable",
+        "on_sale": "Sale",
+        "quantity": "Quantity",
+        "add_to_cart": "Add to cart",
+        "back_to_collection": "Back to {{ title }}",
+        "view_details": "View details"
+      }
+    },
+    "article": {
+      "tags": "Tags:",
+      "all_topics": "All topics",
+      "by_author": "by {{ author }}",
+      "posted_in": "Posted in",
+      "read_more": "Read more",
+      "back_to_blog": "Back to {{ title }}"
+    },
+    "comments": {
+      "title": "Leave a comment",
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "post": "Post comment",
+      "moderated": "Please note, comments must be approved before they are published",
+      "success_moderated": "Your comment was posted successfully. We will publish it in a little while, as our blog is moderated.",
+      "success": "Your comment was posted successfully! Thank you!",
+      "comments_with_count": {
+        "one": "{{ count }} comment",
+        "other": "{{ count }} comments"
+      }
+    },
+    "password_page": {
+      "login_form_message": "Enter store using password:",
+      "login_form_password_label": "Password",
+      "login_form_password_placeholder": "Your password",
+      "login_form_submit": "Enter",
+      "signup_form_email_label": "Email",
+      "signup_form_success": "We will send you an email right before we open!",
+      "password_link": "Enter using password"
     }
   }
 }

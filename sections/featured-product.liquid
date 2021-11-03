@@ -77,7 +77,7 @@
           <h2 class="product-single__vendor" itemprop="brand">{{ vendor }}</h2>
         {% endif %}
 
-        <h1 class="product-single__title" itemprop="name">{{ title }}</h1>
+        <h1 class="product-single__title" itemprop="name">{{ title | replace: '™', '<sup>™</sup>'}}</h1>
 
         <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
           {% comment %}

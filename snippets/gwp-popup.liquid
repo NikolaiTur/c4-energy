@@ -1,0 +1,79 @@
+{%- assign gift_product = all_products[settings.gwp_gift_product] -%}
+
+<div class="gwp-popup__overlay">
+  <div class="gwp-popup__container">
+    <div class="close">
+      &times;
+    </div>
+    <div class="image" style="{%- if settings.gwp_popup_image_background -%}background-color: {{ settings.gwp_popup_image_background }};{%- endif -%}">
+      <img src="{{ gift_product.featured_image | img_url: '1024x' }}" alt="{{ gift_product.title }}" />
+    </div>
+    <div class="details">
+      <div class="surtitle">
+        {{ 'products.gwp.free_gift_with_purchase' | t }}
+      </div>
+      <div class="title">
+        {{ gift_product.title }}
+      </div>
+      <div class="variants">
+        {% form 'product', gift_product, data-productid: gift_product.id, class:form_classes, id:'gwp-form', data-product-form: '' %}
+
+          {% for option in gift_product.options_with_values %}
+            <div class="radio-wrapper js product-form__item {{ option.name | escape | downcase | handleize }} {%- if option.values.size > 3 -%}select{% endif %}">
+              <label class="single-option-radio__label" for="ProductSelect-option-{{ forloop.index0 }}">
+                {{ option.name | escape }}
+              </label>
+
+              {%- if option.values.size < 4 -%}
+                <div class="single-option-radio">
+                  {%- assign option_index = forloop.index -%}
+                  {%- for value in option.values -%}
+
+                    {%- assign variant_label_state = true -%}
+                    {%- if gift_product.options.size == 1 -%}
+                      {%- unless gift_product.variants[forloop.index0].available  -%}
+                        {%- assign variant_label_state = false -%}
+                      {%- endunless %}
+                    {%- endif -%}
+                    <label for="ProductSelect-option-{{ option.name | handleize }}-{{ value | escape }}"{% unless variant_label_state %} class="disabled"{% endunless %}><span>{{ value | escape }}</span>
+                      {%- assign variant = gift_product.variants[forloop.index0] -%}
+                      <input type="radio"
+                        {% if option.selected_value == value %} checked="checked"{% endif %}
+                        {% unless variant_label_state %} disabled="disabled"{% endunless %}
+                             value="{{ value | escape }}"
+                             data-index="option{{ option_index }}"
+                             name="option{{ option.position }}"
+                             class="single-option-selector__radio{% unless variant_label_state %} disabled{% endunless %} {{ option.name | downcase | handleize }}">
+                    </label>
+                  {%- endfor -%}
+                </div>
+
+              {%- else -%}
+                <select class="" id="SingleOptionSelector-{{ forloop.index0 }}" name="option{{ forloop.index }}" data-index="option{{ forloop.index }}">
+                  <option value="" selected="selected">Select a {{ option.name | escape | downcase | handleize }}</option>
+                  {% for value in option.values %}
+                    <option value="{{ value | escape }}">{{ value | escape }}</option>
+                  {% endfor %}
+                </select>
+                <i class="select-icon fas fa-chevron-down"></i>
+              {%- endif -%}
+            </div>
+          {% endfor %}
+
+          <div class="gwp-atc">
+            <div class="gwp-atc__button">{{ 'products.product.add_to_cart' | t }}</div>
+            <div class="gwp-atc__cancel"><span>{{ 'products.gwp.no_thanks' | t }}</span></div>
+          </div>
+
+          {%- if settings.gwp_popup_not_available_text -%}
+          <div class="gwp-message">
+            {{ settings.gwp_popup_not_available_text }}
+          </div>
+          {%- endif -%}
+
+        {% endform %}
+
+      </div>
+    </div>
+  </div>
+</div>

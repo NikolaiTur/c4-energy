@@ -1,5 +1,9 @@
 {
   "general": {
+    "404": {
+      "title": "404 페이지를 찾을 없음",
+      "subtext_html": "검색 중인 페이지가 존재하지 않습니다. <a href=\"{{ link }}\" class=\"text-link\">여기를 클릭<\/a> 하여 쇼핑 계속하십시오."
+    },
     "accessibility": {
       "refresh_page": "선택을 누르면 전체 페이지가 새로 고쳐집니다.",
       "unit_price_separator": "당",
@@ -8,10 +12,6 @@
     "meta": {
       "tags": "태그 \"{{ tags }}\"",
       "page": "{{ page }}페이지"
-    },
-    "404": {
-      "title": "404 페이지를 찾을 없음",
-      "subtext_html": "검색 중인 페이지가 존재하지 않습니다. <a href=\"{{ link }}\" class=\"text-link\">여기를 클릭<\/a> 하여 쇼핑 계속하십시오."
     },
     "pagination": {
       "previous": "이전",
@@ -319,6 +319,51 @@
       "shop_link": "쇼핑 시작",
       "print": "인쇄",
       "add_to_apple_wallet": "Apple Wallet에 추가"
+    }
+  },
+  "pagefly": {
+    "products": {
+      "product": {
+        "regular_price": "Regular price",
+        "sold_out": "Sold out",
+        "unavailable": "Unavailable",
+        "on_sale": "Sale",
+        "quantity": "Quantity",
+        "add_to_cart": "Add to cart",
+        "back_to_collection": "Back to {{ title }}",
+        "view_details": "View details"
+      }
+    },
+    "article": {
+      "tags": "Tags:",
+      "all_topics": "All topics",
+      "by_author": "by {{ author }}",
+      "posted_in": "Posted in",
+      "read_more": "Read more",
+      "back_to_blog": "Back to {{ title }}"
+    },
+    "comments": {
+      "title": "Leave a comment",
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "post": "Post comment",
+      "moderated": "Please note, comments must be approved before they are published",
+      "success_moderated": "Your comment was posted successfully. We will publish it in a little while, as our blog is moderated.",
+      "success": "Your comment was posted successfully! Thank you!",
+      "comments_with_count": {
+        "one": "{{ count }} comment",
+        "other": "{{ count }} comments"
+      }
+    },
+    "password_page": {
+      "login_form_message": "Enter store using password:",
+      "login_form_password_label": "Password",
+      "login_form_password_placeholder": "Your password",
+      "login_form_submit": "Enter",
+      "signup_form_email_label": "Email",
+      "signup_form_success": "We will send you an email right before we open!",
+      "password_link": "Enter using password"
     }
   }
 }

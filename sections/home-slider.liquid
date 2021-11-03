@@ -41,10 +41,32 @@
               <div class="container-fluid">
                 <div class="c4-home-slider--item-content--wrapper">
                   {% if block.settings.slide_title != blank %}
-                    <h2 class="slide-title text-upper">{{ block.settings.slide_title }}</h2>
+                    {% case block.settings.slide_title_font_size %}
+                      {% when 'sm' %}
+                        {% assign f_size = 36 %}
+                        {% assign l_height = 40 %}
+                      {% when 'md' %}
+                        {% assign f_size = 48 %}
+                        {% assign l_height = 54 %}
+                      {% when 'lg' %}
+                        {% assign f_size = 60 %}
+                        {% assign l_height = 66 %}
+                    {% endcase %}
+                    <h2 class="slide-title text-upper" style="color: {{ block.settings.slide_title_color }};font-size: {{ f_size }}px;line-height: {{ l_height }}px;">{{ block.settings.slide_title }}</h2>
                   {% endif %}
                   {% if block.settings.slide_text != blank %}
-                    <h3 class="slide-text text-upper">{{ block.settings.slide_text }}</h3>
+                    {% case block.settings.slide_text_font_size %}
+                      {% when 'sm' %}
+                        {% assign f_size = 28 %}
+                        {% assign l_height = 40 %}
+                      {% when 'md' %}
+                        {% assign f_size = 32 %}
+                        {% assign l_height = 54 %}
+                      {% when 'lg' %}
+                        {% assign f_size = 38 %}
+                        {% assign l_height = 66 %}
+                    {% endcase %}
+                    <h3 class="slide-text text-upper" style="color: {{ block.settings.slide_text_color }};font-size: {{ f_size }}px;line-height: {{ l_height }}px;">{{ block.settings.slide_text }}</h3>
                   {% endif %}
 
                   {% if block.settings.slide_cta_label != blank and block.settings.slide_cta_url != blank %}
@@ -95,9 +117,59 @@
           "label": "Slide Title"
         },
         {
+          "type": "radio",
+          "id": "slide_title_font_size",
+          "label": "Slide Title Font Size",
+          "options": [
+            {
+              "value": "lg",
+              "label": "Large"
+            },
+            {
+              "value": "md",
+              "label": "Medium"
+            },
+            {
+              "value": "sm",
+              "label": "Small"
+            }
+          ],
+          "default": "md"
+        },
+        {
+          "type": "color",
+          "id": "slide_title_color",
+          "label": "Slide Title Color"
+        },
+        {
           "type": "textarea",
           "id": "slide_text",
           "label": "Slide Text"
+        },
+        {
+          "type": "radio",
+          "id": "slide_text_font_size",
+          "label": "Slide Text Font Size",
+          "options": [
+            {
+              "value": "lg",
+              "label": "Large"
+            },
+            {
+              "value": "md",
+              "label": "Medium"
+            },
+            {
+              "value": "sm",
+              "label": "Small"
+            }
+          ],
+          "default": "md"
+        },
+        {
+          "type": "color",
+          "id": "slide_text_color",
+          "label": "Slide Text Color"
         },
         {
           "type": "image_picker",

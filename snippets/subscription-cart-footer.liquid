@@ -105,6 +105,12 @@
 			url_params = url_params
 				.concat(get_cart_token())
 				.concat(get_ga_linker());
+				{% if settings.activate_gwp %}
+					if(sessionStorage.getItem('gwp-added-to-cart') == "true") {
+						url_params.push("populatecode={{settings.gwp_recharge_coupon}}");
+						url_params.push("gwp=true");
+					} 
+				{% endif %}
 			return checkout_url + url_params.join('&');
 		}
 		function filterVisible(elems) {

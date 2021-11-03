@@ -68,11 +68,16 @@
   </div>
 </footer>
 
+{% include 'gwp-popup' %}
+
 {% comment %}{% include 'footer-search' %} {% endcomment %}
 
 <script type="text/javascript" src="//www.klaviyo.com/media/js/public/klaviyo_subscribe.js"></script>
 
 <script type="text/javascript">
+
+  $('.gwp-popup__overlay').appendTo('body');
+
   KlaviyoSubscribe.attachToForms('#klaviyo-footer-form', {
     hide_form_on_success: true,
     success_message: "Thanks!",

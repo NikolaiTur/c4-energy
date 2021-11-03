@@ -1,0 +1,47 @@
+
+<meta name="referrer" content="no-referrer-when-downgrade"/>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-176237742-1" data-ot-ignore></script>
+
+
+
+<script name="littledata-tracking-tag" data-ot-ignore>
+(function(){
+	/* Data layer for Google Analytics by Littledata app */
+	/* Version v9.0.1 */
+
+	LittledataLayer = {
+    "version":"v9.0.1",
+    "transactionWatcherURL":"https://transactions.littledata.io",
+    "referralExclusion":"/(paypal|visa|MasterCard|clicksafe|arcot\\.com|geschuetzteinkaufen|checkout\\.shopify\\.com|checkout\\.rechargeapps\\.com|portal\\.afterpay\\.com|payfort)/",
+    "googleSignals":true,
+    "anonymizeIp":true,
+    "productClicks":true,
+    "persistentUserId":true,
+    "hideBranding":false,
+    "ecommerce":{"currencyCode":"{{shop.currency}}",
+    "impressions":[]},
+    "pageType":"{{request.page_type}}",
+    "uniqueIdentifierForOrders":"orderName",
+    "uniqueIdentifierForOrdersUpdatedAt":"2021-09-13T17:41:50.678Z",
+    "webPropertyId":"UA-176237742-1"
+}
+
+	{%if customer %}
+		LittledataLayer.customer = {
+			id: '{{customer.id | json}}',
+			email: {{customer.email | json}},
+			firstName: {{customer.first_name | json}},
+			lastName: {{customer.last_name | json}},
+			phone: {{customer.phone | json}},
+			createdAt: {{customer.created_at | json}},
+			address: {{customer.default_address | json}},
+			customerLifetimeValue: parseFloat({{customer.total_spent | json}} || 0),
+			purchaseCount: parseInt({{customer.orders_count | json}} || 0),
+			tags: {{customer.tags | json}},
+			generatedClientID: {{customer.metafields.littledata.clientID | json}}
+		};
+	{% endif %}
+	})();
+</script>
+<script async type="text/javascript" src="https://master-shopify-tracker.s3.amazonaws.com/gaTracker.js"></script>
+

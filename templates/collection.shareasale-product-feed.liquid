@@ -1,2 +1,119 @@
-{% layout none %}{% assign MerchantID = 74529 %}{% assign Commission = 0.1 %}{% assign Category = 1 %}{% assign Subcategory = 3 %}{% for product in collection.products %}{% if product.variants.size > 0 %}{% for variant in product.variants %}{% for option in product.options %}{% if option == 'Material' %}{% capture Material %}{{ variant.options[forloop.index0] }}{% endcapture %}{% elsif option == 'Size' %}{% capture Size %}{{ variant.options[forloop.index0] }}{% endcapture %}{% endif %}{% endfor %}{{ variant.sku }},{% comment %} SKU {% endcomment %}"{{ product.title | strip_html | strip_newlines | replace: '&', '&amp;' | replace: '"', '""' }} - {{ Material | replace: '&', '&amp;' | replace: '"', '""' }} - {{ Size | replace '&', '&amp;' | replace: '"', '""' }}",{% comment %} Name {% endcomment %}{{ shop.url }}{{ variant.url }},{% comment %} URL {% endcomment %}{{ variant.price | money_without_currency }},{% comment %} Price {% endcomment %}{{ variant.price | money_without_currency }},{% comment %} RetailPrice {% endcomment %}http:{% if variant.image.src %}{{ variant.image.src | product_img_url: 'grande' }}{% else %}{{ product.featured_image.src | product_img_url: 'grande' }}{% endif %},{% comment %} FullImage {% endcomment %}http:{% if variant.image.src %}{{ variant.image.src | product_img_url: 'medium' }}{% else %}{{ product.featured_image.src | product_img_url: 'grande' }}{% endif %},{% comment %} ThumbnailImage {% endcomment %}{{ variant.price | times:Commission | money_without_currency }},{% comment %} Commission {% endcomment %}"{{ Category }}",{% comment %} Category {% endcomment %}"{{ Subcategory }}",{% comment %} Subcategory {% endcomment %}"{{ product.description | replace: '</', ' </' | replace '"', '""' | strip_html | strip_newlines }}",{% comment %} Description {% endcomment %}"{{ product.tags | join: ', ' }}",{% comment %} SearchTerms {% endcomment %}{% if variant.available %}"in stock"{% else %}"backorder"{% endif %},{% comment %} Status {% endcomment %}{{ MerchantID }},{% comment %} MerchantID {% endcomment %}"{{ Material | replace: '&', '&amp;' | replace: '"', '""' }}",{% comment %} Custom1 {% endcomment %}"{{ Size | replace '&', '&amp;' | replace: '"', '""' }}",{% comment %} Custom2 {% endcomment %},{% comment %} Custom3 {% endcomment %},{% comment %} Custom4 {% endcomment %},{% comment %} Custom5 {% endcomment %}{{ product.vendor }},{% comment %} Manufacturer {% endcomment %},{% comment %} PartNumber {% endcomment %},{% comment %} MerchantCategory {% endcomment %},{% comment %} MerchantSubcategory {% endcomment %},{% comment %} ShortDescription {% endcomment %},{% comment %} ISBN {% endcomment %},{% comment %} UPC {% endcomment %},{% comment %} CrossSell {% endcomment %},{% comment %} MerchantGroup {% endcomment %},{% comment %} MerchantSubgroup {% endcomment %},{% comment %} CompatibleWith {% endcomment %},{% comment %} CompareTo {% endcomment %},{% comment %} QuantityDiscount {% endcomment %},{% comment %} Bestseller {% endcomment %},{% comment %} AddToCartURL {% endcomment %},{% comment %} ReviewsRSSURL {% endcomment %},{% comment %} Option1 {% endcomment %},{% comment %} Option2 {% endcomment %},{% comment %} Option3 {% endcomment %},{% comment %} Option4 {% endcomment %},{% comment %} Option5 {% endcomment %},{% comment %} customCommissions {% endcomment %},{% comment %} customCommissionIsFlatRate {% endcomment %},{% comment %} customCommissionNewCustomerMultiplier {% endcomment %},{% comment %} mobileURL {% endcomment %},{% comment %} mobileImage {% endcomment %},{% comment %} mobileThumbnail {% endcomment %},{% comment %} ReservedForFutureUse {% endcomment %},{% comment %} ReservedForFutureUse {% endcomment %},{% comment %} ReservedForFutureUse {% endcomment %},{% comment %} ReservedForFutureUse {% endcomment %}
-{% endfor %}{% endif %}{% endfor %}
+{% layout none -%}
+
+{%- assign MerchantID = 98554 -%}
+{%- assign StoreID = 1 -%}
+{%- assign Commission = 0.15 -%}
+{%- assign Category = 13 -%}
+{%- assign Subcategory = 113 -%}
+
+{%- for product in collection.products -%}
+{%- if product.variants.size > 0 -%}
+{%- for variant in product.variants -%}
+
+{%- capture options_list -%}
+{%- for option in product.options -%}
+{{ option }}|{{ variant.options[forloop.index0] }}
+{%- if forloop.last == false -%}::{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+{%- assign options_array = options_list | split: '::' -%}
+
+{%- comment -%} SKU {%- endcomment -%}
+{{ variant.sku }},
+
+{%- comment -%} NAME {%- endcomment -%}
+"{{ product.title | strip_html | strip_newlines | replace: '&', '&amp;' | replace: '"', '""' }}{%- for current_option in options_array -%}{%- assign option_vals = current_option | split: '|' %} - {{ option_vals[1] | replace: '&', '&amp;' | replace: '"', '""'  | strip_newlines }}{%- endfor -%}",
+
+{%- comment -%} URL {%- endcomment -%}
+{{ shop.url }}{{ variant.url }},
+
+{%- comment -%} PRICE {%- endcomment -%}
+{{ variant.price | money_without_currency }},
+
+{%- comment -%} RETAIL PRICE {%- endcomment -%}
+{{ variant.price | money_without_currency }},
+
+{%- comment -%} FULL IMAGE {%- endcomment -%}
+https:{%- if variant.image.src -%}{{ variant.image.src | product_img_url: 'grande' }}{%- else -%}{{ product.featured_image.src | product_img_url: 'grande' }}{%- endif -%},
+
+{%- comment -%} THUMBNAIL IMAGE {%- endcomment -%}
+https:{%- if variant.image.src -%}{{ variant.image.src | product_img_url: 'medium' }}{%- else -%}{{ product.featured_image.src | product_img_url: 'grande' }}{%- endif -%},
+
+{%- comment -%} COMMISSION {%- endcomment -%}
+{{ variant.price | times:Commission | money_without_currency }},
+
+{%- comment -%} CATEGORY {%- endcomment -%}
+"{{ Category }}",
+
+{%- comment -%} SUBCATEGORY {%- endcomment -%}
+"{{ Subcategory }}",
+
+{%- comment -%} DESCRIPTION {%- endcomment -%}
+"{{ product.description | replace: '</', ' </' | replace '"', '""' | strip_html | strip_newlines }}",
+
+{%- comment -%} SEARCH TERMS {%- endcomment -%}
+"{{ product.tags | join: ', ' }}",
+
+{%- comment -%} STATUS {%- endcomment -%}
+{% if variant.available %}"in stock"{% else %}"backorder"{% endif %},
+
+{%- comment -%} MERCHANT ID {%- endcomment -%}
+{{ MerchantID }},
+
+{%- comment -%} CUSTOM1 {%- endcomment -%}
+{%- if options_array[0] -%}{%- assign custom_vals = options_array[0] | split: '|' -%}"{{ custom_vals[1] | replace: '&', '&amp;' | replace: '"', '""' | strip_newlines }}"{%- endif -%},
+
+{%- comment -%} CUSTOM2 {%- endcomment -%}
+{%- if options_array[1] -%}{%- assign custom_vals = options_array[1] | split: '|' -%}"{{ custom_vals[1] | replace: '&', '&amp;' | replace: '"', '""' | strip_newlines }}"{%- endif -%},
+
+{%- comment -%} CUSTOM3 {%- endcomment -%}
+{%- if options_array[2] -%}{%- assign custom_vals = options_array[2] | split: '|' -%}"{{ custom_vals[1] | replace: '&', '&amp;' | replace: '"', '""' | strip_newlines }}"{%- endif -%},
+
+{%- comment -%} CUSTOM4 {%- endcomment -%}
+{%- if options_array[3] -%}{%- assign custom_vals = options_array[3] | split: '|' -%}"{{ custom_vals[1] | replace: '&', '&amp;' | replace: '"', '""' | strip_newlines }}"{%- endif -%},
+
+{%- comment -%} CUSTOM5 {%- endcomment -%}
+{%- if options_array[4] -%}{%- assign custom_vals = options_array[4] | split: '|' -%}"{{ custom_vals[1] | replace: '&', '&amp;' | replace: '"', '""' | strip_newlines }}"{%- endif -%},
+
+{%- comment -%} STORE ID {%- endcomment -%}
+{%- if StoreID -%}{{ StoreID }}{%- endif -%},
+
+{%- comment -%} MANUFACTURER {%- endcomment -%}
+{{ product.vendor }},
+
+{%- comment -%} PART NUMBER {%- endcomment -%},
+{%- comment -%} MERCHANT CATEGORY {%- endcomment -%},
+{%- comment -%} MERCHANT SUBCATEGORY {%- endcomment -%},
+{%- comment -%} SHORT DESCRIPTION {%- endcomment -%},
+{%- comment -%} ISBN {%- endcomment -%},
+{%- comment -%} UPC {%- endcomment -%},
+{%- comment -%} CROSS SELL {%- endcomment -%},
+{%- comment -%} MERCHANT GROUP {%- endcomment -%},
+{%- comment -%} MERCHANT SUBGROUP {%- endcomment -%},
+{%- comment -%} COMPATIBLE WITH {%- endcomment -%},
+{%- comment -%} COMPARE TO {%- endcomment -%},
+{%- comment -%} QUANTITY DISCOUNT {%- endcomment -%},
+{%- comment -%} BESTSELLER {%- endcomment -%},
+{%- comment -%} ADD TO CART URL {%- endcomment -%},
+{%- comment -%} REVIEWS RSS URL {%- endcomment -%},
+{%- comment -%} OPTION1 {%- endcomment -%},
+{%- comment -%} OPTION2 {%- endcomment -%},
+{%- comment -%} OPTION3 {%- endcomment -%},
+{%- comment -%} OPTION4 {%- endcomment -%},
+{%- comment -%} OPTION5 {%- endcomment -%},
+
+{%- comment -%} CUSTOM COMMISSIONS {%- endcomment -%}
+{{ Commission | times:100 }},
+
+{%- comment -%} CUSTOM COMMISSION IS FLAT RATE {%- endcomment -%},
+{%- comment -%} CUSTOM COMMISSION NEW CUSTOMER MULTIPLIER {%- endcomment -%},
+{%- comment -%} MOBILE URL {%- endcomment -%},
+{%- comment -%} MOBILE IMAGE {%- endcomment -%},
+{%- comment -%} MOBILE THUMBNAIL {%- endcomment -%},
+{%- comment -%} RESERVED FOR FUTURE USE {%- endcomment -%},
+{%- comment -%} RESERVED FOR FUTURE USE {%- endcomment -%},
+{%- comment -%} RESERVED FOR FUTURE USE {%- endcomment -%},
+{%- comment -%} RESERVED FOR FUTURE USE {%- endcomment -%},
+{% endfor -%}
+{%- endif -%}
+{%- endfor %}

@@ -56,7 +56,7 @@
 
 		$('.qtybox .btnqty').on('click', function(){
       		var qty = parseInt($(this).parent('.qtybox').find('.quantity-input').val());
-      		
+
       		if($(this).hasClass('qtyplus')) {
             	qty++;
           	} else {
@@ -64,9 +64,9 @@
               		qty--;
             	}
           	}
-          
+
           	qty = (isNaN(qty))?1:qty;
-          	
+
           	// Update all quantity boxes on page
           	$('.qtybox').find('.quantity-input').val(qty);
           	// $(this).parent('.qtybox').find('.quantity-input').val(qty);
@@ -113,7 +113,7 @@
 	});
 
 	function home_slider() {
-		
+
 		if($('.c4-home-slider').length) {
 
 			$slider_speed = $('#home-slider').data('speed') * 1000;
@@ -132,7 +132,7 @@
 			        pauseOnFocus: false,
 					prevArrow: "<img class='slick-prev slick-arrow' src=\"{{ 'slick-prev.png' | asset_url }}\">",
 			        nextArrow: "<img class='slick-next slick-arrow' src=\"{{ 'slick-next.png' | asset_url }}\">",
-			    });  
+			    });
 			}
 		}
 	}
@@ -150,7 +150,7 @@
 			        autoplay: true,
 			        autoplaySpeed: 9000,
 			        speed: 800
-			    });  
+			    });
 			}
 		}
 	}
@@ -174,17 +174,17 @@
 			            settings: {
 			            	slidesToShow: 2,
 		        			slidesToScroll: 1
-			            }	
+			            }
 			          },
 			          {
 			            breakpoint: 768,
 			            settings: {
 			            	slidesToShow: 1,
 		        			slidesToScroll: 1
-			            }	
+			            }
 			          }
 			        ]
-			    });  
+			    });
 			}
 		}
 	}
@@ -208,24 +208,24 @@
 			            settings: {
 			            	slidesToShow: 2,
 		        			slidesToScroll: 1
-			            }	
+			            }
 			          },
 			          {
 			            breakpoint: 768,
 			            settings: {
 			            	slidesToShow: 1,
 		        			slidesToScroll: 1
-			            }	
+			            }
 			          }
 			        ]
-			    });  
+			    });
 			}
 		}
-		
+
 	}
 
 	function flavor_info_slider() {
-		
+
 		if($('#flavor-info--slider').length) {
 
 			if(!$('#flavor-info--slider').hasClass('slick-initialized')) {
@@ -242,13 +242,13 @@
 			        appendArrows: '#flavor-info--navigation',
 					prevArrow: "<div class='slick-prev slick-arrow'><i class='fas fa-arrow-left'></i></div><div class='slick-separator'>/</div>",
 			        nextArrow: "<div class='slick-next slick-arrow'><i class='fas fa-arrow-right'></i></div>",
-			    });  
+			    });
 			}
 		}
 	}
 
 	function flavor_image_slider() {
-		
+
 		if($('#flavor-image--slider').length) {
 
 			if(!$('#flavor-image--slider').hasClass('slick-initialized')) {
@@ -260,7 +260,7 @@
 			        autoplay: false,
 			        variableWidth: true,
 			        swipe: false
-			    });  
+			    });
 			}
 		}
 	}
@@ -272,13 +272,13 @@
 	        	$(this).find('.spr-badge-caption').html(parseFloat(rating).toFixed(1));
 	      	}).promise().done(function(){
 	      		$('.spr-badge').css('opacity', 1);
-	      	});  
+	      	});
 	    }, 1000);
 	}
 
 	function external_links_new_window() {
 		var links = document.links;
-		
+
 		for (let i = 0, linksLength = links.length ; i < linksLength ; i++) {
 		  if (links[i].hostname !== window.location.hostname) {
 		    links[i].target = '_blank';
@@ -293,13 +293,13 @@
     if ( $(listElem).length ) {
       $(listElem).find("a").each(function () {
 		var href = $(this).attr('href');
-		var text = $(this).text().trim(); 
+		var text = $(this).text().trim();
 		var fullRelativePath = window.location.pathname + window.location.search;
-		
-		var relative = false; 
+
+		var relative = false;
 		var contained = ['addresses', 'profile', 'fitness'].filter( function(title) {
-			return window.location.href.indexOf(title) > -1; 
-		}); 
+			return window.location.href.indexOf(title) > -1;
+		});
 
         if ( fullRelativePath == href || text == 'Profile' && contained.length > 0 ) {
           $(this).addClass("is-current");
@@ -318,12 +318,29 @@ function after_flavor_selected() {
 	var $current_flavor_name = $('input.flavor:checked').val();
 	var $current_flavor_tooltip = $('input.flavor:checked').next('label').find('.flavor-content').text();
 
-	
+	if(
+		typeof $current_flavor_name == "undefined" ||
+		typeof $current_flavor_tooltip == "undefined" ||
+		typeof $target_element.find('#flavor-info') == "undefined" ||
+		typeof $target_element.find('.flavor-name') == "undefined" ||
+		typeof $target_element.find('.flavor-tooltip') == "undefined"
+	) return;
+
+	var $current_flavor_presale = $('input.flavor:checked').next('label').data('presale');
+
+	if($current_flavor_presale != null) {
+		if($('.presale-text').length) $('.presale-text').text($current_flavor_presale);
+		else $('.product-single__add-to-cart').before('<div class="presale-text">'+$current_flavor_presale+'</div>')
+	} else {
+		if($('.presale-text').length) $('.presale-text').remove();
+	}
+
+
 	// Getting by Variant ID instead
 	// var $current_variant_name = '';
 
 	// var $current_variant_id = $('#ProductSelect--product-template').val();
-	
+
 	// To get disabled variant value as well
 
 	var $current_variant_id = $('#ProductSelect--product-template option:selected').map(function(i,v) {
@@ -341,7 +358,7 @@ function after_flavor_selected() {
  //    if($('input.flavor').length) {
  //      $current_variant_name += $('input.flavor:checked').val();
  //    }
-	
+
 	$target_element.find('#flavor-info').removeClass().addClass($current_flavor_name.toLowerCase().replace(/ /g,'-'));
 	$target_element.find('.flavor-name').text($current_flavor_name);
 	$target_element.find('.flavor-tooltip').text($current_flavor_tooltip);
@@ -365,12 +382,12 @@ function after_flavor_selected() {
 
 	// Here we show or hide the variant message depending on the variant. 
 	$('.overselling_message_container').each( function() {
-		$(this).hide(); 
-		$(this).find('input').prop('disabled', true); 
+		$(this).hide();
+		$(this).find('input').prop('disabled', true);
 	})
-	var $overselling = $('.overselling_message_container[data-variant-id=' + $current_variant_id + ']'); 
-	$overselling.show(); 
-	$overselling.find('input').prop('disabled', false); 
+	var $overselling = $('.overselling_message_container[data-variant-id=' + $current_variant_id + ']');
+	$overselling.show();
+	$overselling.find('input').prop('disabled', false);
 }
 
 
@@ -385,33 +402,290 @@ function after_flavor_selected() {
 					dots: true,
 					infinite: true,
 					autoplay: true,
-					mobileFirst: true, 
+					mobileFirst: true,
 					responsive: [
 					  {
 						breakpoint: 768,
 						settings: 'unslick'
 					  }
 					]
-				});  
+				});
 			}
-		}); 
+		});
 
 		/**
-		 * The idea is that the form is always viible. so we just 
-		 * scroll top until the form is visible at the bottom of the 
-		 * viewport. 
+		 * The idea is that the form is always viible. so we just
+		 * scroll top until the form is visible at the bottom of the
+		 * viewport.
 		 */
 		$('.trialtosub__stickyfooter').on('click', function (event) {
-			event.preventDefault(); 
-			var top = 0; 
-			var $form = $('.trialtosub__hero__form'); 
-			var $sticky = $(this); 
+			event.preventDefault();
+			var top = 0;
+			var $form = $('.trialtosub__hero__form');
+			var $sticky = $(this);
 			var offset = 50;
 			// if ( $(window).width() < 768 ) {
-				top = $form.offset().top + $form.outerHeight() + $sticky.outerHeight() + offset - $(window).height(); 
+				top = $form.offset().top + $form.outerHeight() + $sticky.outerHeight() + offset - $(window).height();
 			// }
 
 			$("html, body").stop().animate({scrollTop: top }, 300, 'swing');
-		}); 
+		});
 	})
 }(jQuery));
+
+{% if settings.activate_gwp %}
+(function ($) {
+  let GWPPopupOpen = false;
+  //sessionStorage.setItem('gwp-added-to-cart', 'false');
+
+  $(document).ready(function () {
+    initGWP();
+  });
+
+	$( document ).on('ajaxComplete', function( event, xhr, settings ) {
+		if(
+			(typeof event.target != "undefined" &&
+				typeof event.target.activeElement != "undefined" &&
+				typeof event.target.activeElement.id != "undefined" &&
+				event.target.activeElement.id == 'AddToCart' &&
+				!GWPPopupOpen &&
+				sessionStorage.getItem('gwp-added-to-cart') == 'false') ||
+			(typeof settings != "undefined" &&
+				typeof settings.url != "undefined" &&
+				settings.url.indexOf('cart/add.js') > -1) ||
+			(typeof settings != "undefined" &&
+				typeof settings.url != "undefined" &&
+				settings.url.indexOf('cart/change.js') > -1)
+		) {
+			initGWP();
+		}
+	});
+
+  $('.remove-gwp-free-product').on('click', function (e) {
+    e.preventDefault();
+
+    sessionStorage.setItem('remove-gwp-free-product', $(this).data('handle'));
+    sessionStorage.setItem('gwp-added-to-cart', 'false');
+    location.href = $(this).attr('href');
+  });
+
+  function openGPWOverlay() {
+
+  	let gwp_gift_product = "{{ settings.gwp_gift_product }}";
+
+    if (sessionStorage.getItem('gwp-overlay-closed') != null && sessionStorage.getItem('gwp-overlay-closed') === gwp_gift_product) return;
+
+    let overlay = $('.gwp-popup__overlay');
+    overlay.attr('data-handle',gwp_gift_product);
+
+    overlay.find('input[checked="checked"]').each(function () {
+      $(this).closest('label').addClass('active');
+    });
+
+    overlay.addClass('active');
+
+    if ($(window).width() > 767) {
+      overlay.find('.image').height(overlay.find('.gwp-popup__container').height());
+    }
+
+    $('body').addClass('noscroll');
+
+    GWPPopupOpen = true;
+  }
+
+  function closeGPWOverlay() {
+    let overlay = $('.gwp-popup__overlay');
+    let handle = overlay.attr('data-handle');
+    overlay.removeClass('active');
+    $('body').removeClass('noscroll');
+
+    sessionStorage.setItem('gwp-overlay-closed', handle);
+    GWPPopupOpen = false;
+  }
+
+  function initGWP() {
+    $('.update-cart').on('click', function (e) {
+      e.preventDefault();
+
+      $(this).closest('form[action="/cart"]').submit();
+    });
+    var gwp_trigger_on_all_products = "{{ settings.gwp_trigger_on_all_products }}";
+    var gwp_threshold = {{ settings.gwp_threshold }} * 100;
+    var gwp_trigger_product = "{{ settings.gwp_trigger_product }}";
+    var gwp_trigger_product2 = "{{ settings.gwp_trigger_product2 }}";
+    var gwp_trigger_product_ss = "{{ settings.gwp_trigger_product_ss }}";
+    var gwp_trigger_product2_ss = "{{ settings.gwp_trigger_product2_ss }}";
+    var gwp_gift_product = "{{ settings.gwp_gift_product }}";
+    var gwp_gift_product_data = null;
+    var gwp_charge_code = "{{ settings.gwp_charge_code }}";
+    var gwp_trigger_quantity = Number({{ settings.gwp_trigger_quantity }});
+    var gwp_trigger_quantity2 = Number({{ settings.gwp_trigger_quantity }});
+    var gwp_product_match = false;
+    var gwp_product2_match = false;
+
+    gwp_trigger_product = gwp_trigger_product.replace(/ /g, '').split(',');
+    for (var i = 0; i < gwp_trigger_product.length; i++) gwp_trigger_product[i] = parseInt(gwp_trigger_product[i]);
+
+    //don't do anything if GWP was removed from cart in this session
+    //if(sessionStorage.getItem('remove-gwp-free-product') == null || sessionStorage.getItem('remove-gwp-free-product') != gwp_gift_product) {
+    $.getJSON('/cart.js', function (cart) {
+      var hasTriggerProduct = false;
+      var hasGiftProduct = false;
+      if (cart.items.length > 0) {
+        for (var i = 0; i < cart.items.length; i++) {
+          //console.log('cart.items[i].properties', cart.items[i].properties);
+          if (gwp_trigger_on_all_products && gwp_gift_product != cart.items[i].handle || gwp_trigger_product.includes(cart.items[i].id) || gwp_trigger_product.includes(cart.items[i].product_id) || cart.items[i].product_id == gwp_trigger_product_ss) {
+            //console.log('includes', cart.items[i].id, cart.items[i].product_id)
+            gwp_trigger_quantity -= cart.items[i].quantity;
+          }
+
+          if (gwp_trigger_on_all_products && gwp_gift_product != cart.items[i].handle || gwp_trigger_product2 != "" || gwp_trigger_product2_ss != "") {
+            if (gwp_trigger_on_all_products && gwp_gift_product != cart.items[i].handle || cart.items[i].handle == gwp_trigger_product2 || cart.items[i].product_id == gwp_trigger_product2_ss) {
+              gwp_trigger_quantity2 -= cart.items[i].quantity;
+            }
+            if (gwp_trigger_quantity <= 0 && gwp_trigger_quantity2 <= 0) hasTriggerProduct = true;
+          } else {
+            if (gwp_trigger_quantity <= 0) hasTriggerProduct = true;
+          }
+
+          if (
+						(cart.items[i].handle == gwp_gift_product && cart.items[i].properties != null && '_gwp_product' in cart.items[i].properties && cart.items[i].properties._gwp_product == 'true')
+						||
+						(cart.items[i].properties != null && '_ax_charge_code' in cart.items[i].properties && cart.items[i].properties._ax_charge_code == gwp_charge_code)
+					) {
+            hasGiftProduct = true;
+            var giftProductLine = i + 1;
+          }
+        }
+      }
+
+      if (cart.total_price >= gwp_threshold) {
+        if ( hasTriggerProduct && !hasGiftProduct) {
+          // get gift product variant
+          $.getJSON('/products/' + gwp_gift_product + '.js', function (product) {
+            gwp_gift_product_data = product;
+            openGPWOverlay();
+          });
+        }
+      }
+
+      if ((cart.total_price < gwp_threshold && hasGiftProduct) || (!hasTriggerProduct && hasGiftProduct)) {
+          // remove free gift
+          $.post('/cart/change.js', {
+            line: giftProductLine,
+            quantity: 0
+          }).always(function () {
+            if ($('body').hasClass('template-cart')) location.reload();
+          });
+        }
+
+    });
+    //}
+
+    $(document).on('click', '.gwp-atc__button', function (e) {
+      e.preventDefault();
+
+      $(this).addGiftProductToCart();
+    });
+
+    $(document).on('click', '.gwp-atc__cancel > span, .gwp-popup__container > .close', function (e) {
+      e.preventDefault();
+      closeGPWOverlay();
+    });
+
+    $(document).on('click', '.gwp-popup__container .variants .single-option-radio label', function (e) {
+      e.preventDefault();
+      let el = $(this);
+
+      let target = el.find('input');
+
+      el.parent().find('label').removeClass('active');
+      el.parent().find('input').prop('checked', false);
+
+      el.toggleClass('active');
+      target.prop('checked', true);
+    });
+
+    $.fn.addGiftProductToCart = function () {
+      let btn = $(this);
+      let form = btn.closest('form');
+
+      let options = [];
+      let currentVariant = null;
+
+      // build the options array to find the correct variant later on
+      form.find('.product-form__item').each(function () {
+        let item = $(this);
+        let select = item.find('select');
+        let radios = item.find('.single-option-radio');
+
+        if (select.length > 0) {
+          options.push(select.val());
+        } else if (radios.length > 0) {
+          radios.each(function () {
+            let el = $(this);
+
+            el.find('input[type="radio"]').each(function () {
+              let radio = $(this);
+              if (radio.prop('checked')) {
+                options.push(radio.val());
+              }
+            })
+          });
+        }
+
+      });
+
+      // find the correct variant
+      gwp_gift_product_data.variants.forEach(function (variant) {
+        if (compareArrays(variant.options, options)) {
+          currentVariant = variant;
+        }
+      });
+
+      // add the current variant of the gift product to cart
+      if (null != currentVariant && currentVariant.available) {
+        let properties = {
+          '_ax_charge_code': gwp_charge_code,
+          '_gwp_product': 'true',
+        };
+
+        let items = [
+          {
+            quantity: 1,
+            id: currentVariant.id,
+            properties: properties
+          }
+        ];
+        $.post('/cart/add.js', {
+          items: items
+        }).always(function () {
+          GWPPopupOpen = false;
+          sessionStorage.setItem('gwp-added-to-cart', 'true');
+          if ($('body').hasClass('template-cart')) location.reload();
+          else location.href = '/cart';
+        });
+      }
+      else {
+        $('.gwp-message').addClass('active');
+        setTimeout(function() {
+          $('.gwp-message').removeClass('active');
+        }, 5000)
+      }
+    };
+
+    // compare values between two arrays, order not important
+    function compareArrays(a, b) {
+      if (a.length !== b.length) return false;
+      const uniqueValues = new Set([...a, ...b]);
+      for (const v of uniqueValues) {
+        const aCount = a.filter(e => e === v).length;
+        const bCount = b.filter(e => e === v).length;
+        if (aCount !== bCount) return false;
+      }
+      return true;
+    }
+  }
+
+}(jQuery));
+{% endif %}

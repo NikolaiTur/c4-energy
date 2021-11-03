@@ -80,9 +80,9 @@
     	{% assign widget_active_bg = widget_settings.background_color | default: "#F8F8F8" %}
     	{% assign widget_icon = widget_settings.widget_icon | default: "black" %}
     	{% if widget_icon == "white" %}
-    		{% assign widget_icon = "//rechargestatic-bootstrapheroes.netdna-ssl.com/static/images/widget/rc_widget__icon__white@2x.png" %}
+    		{% assign widget_icon = "//static.rechargecdn.com/static/images/widget/rc_widget__icon__white@2x.png" %}
     	{% else %}
-    		{% assign widget_icon = "//rechargestatic-bootstrapheroes.netdna-ssl.com/static/images/widget/rc_widget__icon__black@2x.png" %}
+    		{% assign widget_icon = "//static.rechargecdn.com/static/images/widget/rc_widget__icon__black@2x.png" %}
     	{% endif %}
     	{% assign popup_zindex = widget_settings.popup_zindex | default: "56" %}
     	{% assign popup_background_color = widget_settings.popup_background_color | default: "#474747" %}
@@ -251,7 +251,7 @@
 						{% if show_poweredby %}
 							<div class="rc_popup__block__footer">
 								<a href="{{ poweredby_url }}" target="_blank" aria-label="ReCharge Payments homepage">
-									<img src="//rechargestatic-bootstrapheroes.netdna-ssl.com/static/images/widget/rc_widget__banner@2x.png" height="28" width="153" alt="ReCharge Subscriptions company banner" class="rc_popup__badge">
+									<img src="//static.rechargecdn.com/static/images/widget/rc_widget__banner@2x.png" height="28" width="153" alt="ReCharge Subscriptions company banner" class="rc_popup__badge">
 								</a>
 							</div>
 						{% endif %}
@@ -266,9 +266,13 @@
     <script src="//rechargeassets-bootstrapheroes-rechargeapps.netdna-ssl.com/static/js/rcWidget.js"></script>
 	<script>
 		(function() {
+			// check for override
+			var urlCheck = new URLSearchParams(window.location.search);
+			var select_subscription_first = urlCheck.has('ssf') ? urlCheck.get('ssf') === 'true' ? true : false : {{ select_subscription_first }};
+
 			var options = {
 					active: {{ subscription_active }},
-					select_subscription_first: {{ select_subscription_first }},
+					select_subscription_first: select_subscription_first,
 					money_format: '{{ shop.money_format }}',
 					disable_duplicates: {{ disable_duplicates }},
 				},
