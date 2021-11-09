@@ -1,3 +1,59 @@
+<style>
+  {% for block in section.blocks %}
+    {% case block.settings.slide_title_font_size %}
+      {% when 'sm' %}
+        {% assign title_font_size = 36 %}
+        {% assign title_line_height = 40 %}
+      {% when 'md' %}
+        {% assign title_font_size = 48 %}
+        {% assign title_line_height = 54 %}
+      {% when 'lg' %}
+        {% assign title_font_size = 60 %}
+        {% assign title_line_height = 66 %}
+    {% endcase %}
+    {% case block.settings.slide_text_font_size %}
+      {% when 'sm' %}
+        {% assign text_font_size = 28 %}
+        {% assign text_line_height = 40 %}
+      {% when 'md' %}
+        {% assign text_font_size = 32 %}
+        {% assign text_line_height = 54 %}
+      {% when 'lg' %}
+        {% assign text_font_size = 38 %}
+        {% assign text_line_height = 66 %}
+    {% endcase %}
+    {% case block.settings.slide_cta_size %}
+      {% when 'sm' %}
+        {% assign cta_size = 18 %}
+      {% when 'md' %}
+        {% assign cta_size = 28 %}
+      {% when 'lg' %}
+        {% assign cta_size = 38 %}
+    {% endcase %}
+    {% assign index = forloop.index | minus: 1 %}
+    .c4-home-slider--item[data-slick-index="{{ index }}"] .slide-title {
+      font-size: {{ title_font_size }}px !important;
+      line-height: {{ title_line_height }}px !important;
+      color: {{ block.settings.slide_title_color }} !important;
+    }
+    .c4-home-slider--item[data-slick-index="{{ index }}"] .slide-text {
+      font-size: {{ text_font_size }}px !important;
+      line-height: {{ text_line_height }}px !important;
+      color: {{ block.settings.slide_text_color }} !important;
+    }
+    .c4-home-slider--item[data-slick-index="{{ index }}"] .slide-item--cta {
+      font-size: {{ cta_size }}px !important;
+    }
+    @media (max-width: 768px) {
+      .c4-home-slider--item[data-slick-index="{{ index }}"] .slide-title {
+        color: {{ block.settings.slide_title_mobile_color }} !important;
+      }
+      .c4-home-slider--item[data-slick-index="{{ index }}"] .slide-text {
+        color: {{ block.settings.slide_text_mobile_color }} !important;
+      }
+    }
+  {% endfor %}
+</style>
 {% if section.blocks.size > 0 %}
   <section id="home-slider" role="contentinfo" data-speed="{{ section.settings.home_slider_speed }}">
   	<div id="home-slider--content">
@@ -41,32 +97,10 @@
               <div class="container-fluid">
                 <div class="c4-home-slider--item-content--wrapper">
                   {% if block.settings.slide_title != blank %}
-                    {% case block.settings.slide_title_font_size %}
-                      {% when 'sm' %}
-                        {% assign f_size = 36 %}
-                        {% assign l_height = 40 %}
-                      {% when 'md' %}
-                        {% assign f_size = 48 %}
-                        {% assign l_height = 54 %}
-                      {% when 'lg' %}
-                        {% assign f_size = 60 %}
-                        {% assign l_height = 66 %}
-                    {% endcase %}
-                    <h2 class="slide-title text-upper" style="color: {{ block.settings.slide_title_color }};font-size: {{ f_size }}px;line-height: {{ l_height }}px;">{{ block.settings.slide_title }}</h2>
+                    <h2 class="slide-title text-upper">{{ block.settings.slide_title }}</h2>
                   {% endif %}
                   {% if block.settings.slide_text != blank %}
-                    {% case block.settings.slide_text_font_size %}
-                      {% when 'sm' %}
-                        {% assign f_size = 28 %}
-                        {% assign l_height = 40 %}
-                      {% when 'md' %}
-                        {% assign f_size = 32 %}
-                        {% assign l_height = 54 %}
-                      {% when 'lg' %}
-                        {% assign f_size = 38 %}
-                        {% assign l_height = 66 %}
-                    {% endcase %}
-                    <h3 class="slide-text text-upper" style="color: {{ block.settings.slide_text_color }};font-size: {{ f_size }}px;line-height: {{ l_height }}px;">{{ block.settings.slide_text }}</h3>
+                    <h3 class="slide-text text-upper">{{ block.settings.slide_text }}</h3>
                   {% endif %}
 
                   {% if block.settings.slide_cta_label != blank and block.settings.slide_cta_url != blank %}
@@ -82,8 +116,6 @@
   	</div>
   </section>
 {% endif %}
-
-
 {% schema %}
 {
   "name": "Home Slider",
@@ -142,6 +174,11 @@
           "label": "Slide Title Color"
         },
         {
+          "type": "color",
+          "id": "slide_title_mobile_color",
+          "label": "Slide Title Mobile Color"
+        },
+        {
           "type": "textarea",
           "id": "slide_text",
           "label": "Slide Text"
@@ -170,6 +207,11 @@
           "type": "color",
           "id": "slide_text_color",
           "label": "Slide Text Color"
+        },
+        {
+          "type": "color",
+          "id": "slide_text_mobile_color",
+          "label": "Slide Text Mobile Color"
         },
         {
           "type": "image_picker",
@@ -210,6 +252,26 @@
           "type": "url",
           "id": "slide_cta_url",
           "label": "Slide CTA Url"
+        },
+        {
+          "type": "radio",
+          "id": "slide_cta_size",
+          "label": "Slide CTA Size",
+          "options": [
+            {
+              "value": "lg",
+              "label": "Large"
+            },
+            {
+              "value": "md",
+              "label": "Medium"
+            },
+            {
+              "value": "sm",
+              "label": "Small"
+            }
+          ],
+          "default": "md"
         }
       ]
     }
